@@ -1,19 +1,24 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/pages/Home';
-import Login from './components/pages/Login';
+import { useNavigate } from 'react-router-dom';
+import Button from './components/buttons/Button'; // Giả sử bạn có một component Button
 
 
 const App = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />} /> {/* Trang mặc định */}
-      </Routes>
-    </Router>
-  );
+ const navigate = useNavigate();
+
+
+ const handleLoginClick = () => {
+   navigate('/login'); // Điều hướng sang trang login
+ };
+
+
+ return (
+   <div>
+     <h1>Welcome to the Homepage</h1>
+     <Button onClick={handleLoginClick}>Login</Button>
+   </div>
+ );
 };
+
 
 export default App;
