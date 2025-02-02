@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from './components/buttons/Button'; // Giả sử bạn có một component Button
+import Button from './components/buttons/Button';
 
 
 const App = () => {
