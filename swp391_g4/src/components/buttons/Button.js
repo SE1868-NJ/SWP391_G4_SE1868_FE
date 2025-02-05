@@ -11,11 +11,9 @@ class Button extends React.Component {
         };
     }
 
-    // Tạo style dựa trên props
     getButtonStyle = () => {
         const { variant = 'default', size = 'medium', style } = this.props;
         
-        // Kết hợp các styles
         return {
             ...ButtonStyles.baseStyle,
             ...ButtonStyles.variants[variant],
