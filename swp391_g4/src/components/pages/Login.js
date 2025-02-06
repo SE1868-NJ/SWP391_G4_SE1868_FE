@@ -37,7 +37,6 @@ const Login = () => {
     try {
       console.log("Sending login data:", formData);
 
-      // Gửi yêu cầu đăng nhập
       const response = await axios.post(
         "http://localhost:5000/api/login",
         formData,
@@ -52,11 +51,9 @@ const Login = () => {
       console.log("Login response:", response.data);
 
       if (response.data.success) {
-        // Lưu thông tin người dùng vào localStorage
         localStorage.setItem("shipperName", response.data.shipper.FullName);
         localStorage.setItem("shipperId", response.data.shipper.ShipperID);
 
-        // Chuyển hướng đến trang shipper dashboard
         navigate("/shipper");
       } else {
         setError(response.data.message || "Đăng nhập thất bại.");
@@ -64,16 +61,13 @@ const Login = () => {
     } catch (error) {
       console.error("Login error:", error);
       if (error.response) {
-        // Lỗi từ phía backend
         setError(
           error.response.data.message ||
             "Đăng nhập thất bại. Vui lòng thử lại sau."
         );
       } else if (error.request) {
-        // Không nhận được phản hồi từ backend
         setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
       } else {
-        // Lỗi khác
         setError("Đã xảy ra lỗi. Vui lòng thử lại.");
       }
     } finally {
@@ -82,6 +76,7 @@ const Login = () => {
   };
 
   return (
+
     <div className="login-container">
       <h1 className="login-title">Đăng nhập</h1>
 
@@ -139,5 +134,4 @@ const Login = () => {
     </div>
   );
 };
-
 export default Login; 
