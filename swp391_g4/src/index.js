@@ -7,6 +7,10 @@ import Home from './components/pages/Home';
 import Register from './components/pages/Register';
 import Shipper from './components/pages/Shipper';
 import Contact from './components/pages/Contact';
+import ShipperAccount from './components/pages/ShipperAccount';
+import UpdatePersonalInfo from './components/pages/UpdatePersonalInfo';
+import CancelShipperAccount from './components/pages/CancelShipperAccount';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,6 +22,9 @@ root.render(
      <Route path="/register" element={<Register />} />
      <Route path="/shipper" element={<Shipper />}></Route>
      <Route path="/contact" element={<Contact />}></Route>
+     <Route path="/ShipperAccount" element={<ShipperAccount />}></Route>
+     <Route path="/update-personal-info" element={<UpdatePersonalInfo />}></Route>
+     <Route path="/cancel-shipper-account" element={<CancelShipperAccount />}></Route>
    </Routes>
  </Router>
 );
