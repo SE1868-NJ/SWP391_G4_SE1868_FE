@@ -7,7 +7,6 @@ import Home from './components/pages/Home';
 import Register from './components/pages/Register';
 import Shipper from './components/pages/Shipper';
 import Contact from './components/pages/Contact';
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
  <Router>
