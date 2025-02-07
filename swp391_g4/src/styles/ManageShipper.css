@@ -1,0 +1,149 @@
+/* Định dạng chung */
+.container {
+  width: 90%;
+  margin: auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-top: 20px;
+  color: #555;
+}
+
+/* Bảng shipper */
+.shipper-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.shipper-table th, .shipper-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.shipper-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.shipper-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Form nhập shipper */
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container .input-group {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px;
+  width: 280px;
+}
+
+.form-container .input-group svg {
+  margin-right: 10px;
+  color: #007bff;
+  font-size: 18px;
+}
+
+.form-container input, .form-container select {
+  border: none;
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  outline: none;
+}
+
+/* Phần Add New Shipper */
+.add-button {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+.add-button:hover {
+  background-color: #218838;
+}
+
+.add-button:active {
+  transform: scale(0.98);
+}
+
+/* Phần Edit Shipper */
+.save-button {
+  background-color: #007bff; /* Màu xanh dương cho nút Save */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+.save-button:active {
+  transform: scale(0.98);
+}
+
+/* Định dạng riêng cho phần chỉnh sửa */
+.form-container.edit-mode {
+  background: #e9f7fd;  /* Thêm màu nền nhạt khi chỉnh sửa */
+  border: 2px solid #007bff; /* Đặt border màu xanh dương cho phần chỉnh sửa */
+}
+
+/* Định dạng nút Edit */
+.edit-button {
+  background-color: #ffc107;  /* Màu vàng cho nút Edit */
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+.edit-button:active {
+  transform: scale(0.98);
+}
