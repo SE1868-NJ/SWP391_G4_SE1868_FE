@@ -13,8 +13,11 @@ const ManageShipper = () => {
     Address: "", 
     BankAccountNumber: "", 
     VehicleDetails: "", 
-    Status: "" 
+    Status: "" ,
+    Password: ""
   });
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     axios
@@ -29,19 +32,36 @@ const ManageShipper = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    setErrorMessage("");
   };
 
   const handleAddShipper = () => {
+    setErrorMessage("");
     console.log("handleAddShipper is being called");
     axios
       .post("http://localhost:5000/api/shippers", form)
       .then((response) => {
         console.log("Shipper added successfully:", response.data);
         setShippers((prev) => [...prev, { ShipperID: response.data.ShipperID, ...form }]);
-        setForm({ FullName: "", PhoneNumber: "", Email: "", DateOfBirth: "", Address: "", BankAccountNumber: "", VehicleDetails: "", Status: "Active" });
+        setForm({ FullName: "", 
+          PhoneNumber: "", 
+          Email: "", 
+          DateOfBirth: "", 
+          Address: "", 
+          BankAccountNumber: "", 
+          VehicleDetails: "", 
+          Status: "Active" ,
+          Password: ""});
       })
-      .catch((error) => console.error("Error adding shipper:", error));
+      .catch((error) => {
+        if (error.response && error.response.data.error) {
+          setErrorMessage(error.response.data.error);  // Cập nhật lỗi từ backend
+        } else {
+          setErrorMessage("Lỗi không xác định!");
+        }
+      });
   };
+  
   const handleEditShipper = (shipper) => {
     setForm({
       ShipperID: shipper.ShipperID,   // Set the ShipperID to identify which shipper to edit
@@ -75,7 +95,8 @@ const ManageShipper = () => {
           Address: "", 
           BankAccountNumber: "", 
           VehicleDetails: "", 
-          Status: "Active"
+          Status: "Active",
+          Password: ""
         });
         alert("Shipper updated successfully!");
       })
@@ -120,6 +141,7 @@ const ManageShipper = () => {
         </tbody>
       </table>
       <h2 className="subtitle">Add New Shipper</h2>
+      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
       <div className="form-container">
         <div className="input-group"><FaUser /><input type="text" name="FullName" placeholder="Full Name" value={form.FullName} onChange={handleInputChange} /></div>
         <div className="input-group"><FaPhone /><input type="text" name="PhoneNumber" placeholder="Phone Number" value={form.PhoneNumber} onChange={handleInputChange} /></div>
