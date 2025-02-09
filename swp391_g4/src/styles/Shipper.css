@@ -260,3 +260,8 @@
   background-color: #575757;
   transform: translateX(10px); /* Thêm hiệu ứng trượt nhẹ khi hover */
 } 
+
+
+.table-orders{
+  min-height: 75vh;
+}
