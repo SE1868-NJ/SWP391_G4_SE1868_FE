@@ -12,7 +12,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -21,15 +20,13 @@ const Login = () => {
     }));
   };
 
-  // Xử lý đăng nhập
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Kiểm tra dữ liệu đầu vào
     if (!formData.email || !formData.password) {
-      setError("Vui lòng điền đầy đủ email và mật khẩu.");
+      setError("Please enter your email and password.");
       setLoading(false);
       return;
     }
@@ -48,27 +45,26 @@ const Login = () => {
         }
       );
 
-      console.log("Login response:", response.data);
-
       if (response.data.success) {
-        localStorage.setItem("shipperName", response.data.shipper.FullName);
-        localStorage.setItem("shipperId", response.data.shipper.ShipperID);
 
+        localStorage.setItem('shipperName', response.data.shipper.FullName);
+        localStorage.setItem('shipperId', response.data.shipper.ShipperID);
+        
         navigate("/shipper");
       } else {
-        setError(response.data.message || "Đăng nhập thất bại.");
+        setError(response.data.message || "Login failed.");
       }
     } catch (error) {
       console.error("Login error:", error);
       if (error.response) {
         setError(
           error.response.data.message ||
-            "Đăng nhập thất bại. Vui lòng thử lại sau."
+          "Login failed. Please try again later."
         );
       } else if (error.request) {
-        setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+setError("Unable to connect to the server. Please try again later.");
       } else {
-        setError("Đã xảy ra lỗi. Vui lòng thử lại.");
+        setError("An error occurred. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -78,10 +74,9 @@ const Login = () => {
   return (
 
     <div className="login-container">
-      <h1 className="login-title">Đăng nhập</h1>
+      <h1 className="login-title">Login</h1>
 
       <form className="login-form" onSubmit={handleLogin}>
-        {/* Email input */}
         <input
           className="login-input"
           type="email"
@@ -92,46 +87,43 @@ const Login = () => {
           required
         />
 
-        {/* Password input */}
         <input
           className="login-input"
           type="password"
           name="password"
-          placeholder="Mật khẩu"
+          placeholder="Password"
           value={formData.password}
           onChange={handleChange}
           required
         />
 
-        {/* Login button */}
         <button
           className="login-button"
           type="submit"
           disabled={loading}
         >
-          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
 
-      {/* Hiển thị thông báo lỗi */}
       {error && <p className="login-error">{error}</p>}
 
-      {/* Các liên kết khác */}
       <div className="login-links">
         <button
           className="login-transparent-button"
           onClick={() => navigate("/forgot-password")}
         >
-          Quên mật khẩu?
+          Forgot Password?
         </button>
         <button
           className="login-transparent-button"
           onClick={() => navigate("/register")}
         >
-          Đăng ký
+          Register
         </button>
       </div>
     </div>
   );
 };
 export default Login; 
+
