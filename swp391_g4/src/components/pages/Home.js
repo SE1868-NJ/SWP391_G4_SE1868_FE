@@ -12,7 +12,7 @@ const Home = () => {
       <header className="header">
         <div className="logo">
           <img
-            src="https://via.placeholder.com/150x50?text=EcoShipper+Logo"
+            src="img/logo.jpg"
             alt="EcoShipper"
           />
         </div>
@@ -22,7 +22,13 @@ const Home = () => {
               <Button onClick={() => navigate('/home')}>Home</Button>
             </li>
             <li>
+<<<<<<< Updated upstream
               <Button onClick={() => navigate('/about')}>About Us</Button>
+=======
+              {/* <Button onClick={() => navigate('/infor')}>Về chúng tôi</Button> */}
+              <Button onClick={() => navigate('/about')}>Về chúng tôi</Button>
+
+>>>>>>> Stashed changes
             </li>
             <li>
               <Button onClick={() => navigate('/news')}>News</Button>
@@ -43,7 +49,7 @@ const Home = () => {
 
       {/* Banner */}
       <div className="banner">
-        <img src="https://via.placeholder.com/1200x400?text=EcoShipper+Banner" alt="Banner" />
+        <img src="https://img.pikbest.com/backgrounds/20200423/2d-labor-day-delivery-banner_1910020.jpg!bw700" alt="Banner" />
       </div>
 
       {/* Services */}

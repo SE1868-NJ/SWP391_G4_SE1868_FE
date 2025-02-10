@@ -60,7 +60,11 @@ const Login = () => {
         setError(
           error.response.data.message ||
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "Login failed. Please try again later."
+=======
+          "Đăng nhập thất bại. Vui lòng thử lại sau."
+>>>>>>> Stashed changes
 =======
           "Đăng nhập thất bại. Vui lòng thử lại sau."
 >>>>>>> Stashed changes
