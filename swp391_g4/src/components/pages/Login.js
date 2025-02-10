@@ -59,7 +59,11 @@ const Login = () => {
       if (error.response) {
         setError(
           error.response.data.message ||
+<<<<<<< Updated upstream
           "Login failed. Please try again later."
+=======
+          "Đăng nhập thất bại. Vui lòng thử lại sau."
+>>>>>>> Stashed changes
         );
       } else if (error.request) {
 setError("Unable to connect to the server. Please try again later.");
@@ -115,6 +119,7 @@ setError("Unable to connect to the server. Please try again later.");
         >
           Forgot Password?
         </button>
+
         <button
           className="login-transparent-button"
           onClick={() => navigate("/register")}
