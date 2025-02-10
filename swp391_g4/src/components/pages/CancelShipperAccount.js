@@ -1,32 +1,102 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../../styles/CancelShipperAccount.css';
 
 const CancelShipperAccount = () => {
   const navigate = useNavigate();
+  const [reason, setReason] = useState('');
+  const [otherReason, setOtherReason] = useState('');
+  const [error, setError] = useState('');
+
+  const reasons = [
+    'Không còn nhu cầu sử dụng',
+    'Dịch vụ không đáp ứng nhu cầu',
+    'Chuyển sang nền tảng khác',
+    'Khác'
+  ];
+
+  const handleReasonChange = (selectedReason) => {
+    setReason(selectedReason);
+  };
 
   const handleCancel = async () => {
-    const confirmCancel = window.confirm('Bạn có chắc muốn huỷ tài khoản này?');
+    const shipperId = localStorage.getItem('shipperId');
+    
+    if (!shipperId) {
+      setError('Không tìm thấy thông tin tài khoản');
+      return;
+    }
 
-    if (confirmCancel) {
-      // Gọi API để huỷ tài khoản
-      const response = await fetch('/api/shippers/cancel', {
-        method: 'DELETE',
+    const finalReason = reason === 'Khác' ? otherReason : reason;
+
+    if (!finalReason) {
+      setError('Vui lòng chọn hoặc nhập lý do hủy tài khoản');
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5000/api/shippers/${shipperId}`, {
+        data: { reason: finalReason }
       });
 
-      if (response.ok) {
-        alert('Tài khoản đã bị huỷ');
-        navigate('/');
-      } else {
-        alert('Lỗi khi huỷ tài khoản');
-      }
+      // Xóa thông tin đăng nhập
+      localStorage.removeItem('shipperId');
+      localStorage.removeItem('shipperName');
+
+      // Chuyển hướng về trang chủ
+      navigate('/');
+      alert('Tài khoản đã được hủy thành công');
+    } catch (error) {
+      console.error('Lỗi hủy tài khoản:', error);
+      setError('Không thể hủy tài khoản. Vui lòng thử lại.');
     }
   };
 
   return (
-    <div className="cancel-shipper-account">
-      <h2>Huỷ tài khoản shipper</h2>
-      <p>Việc huỷ tài khoản sẽ xoá vĩnh viễn dữ liệu của bạn. Bạn có chắc chắn muốn tiếp tục?</p>
-      <button onClick={handleCancel}>Huỷ tài khoản</button>
+    <div className="cancel-account-container">
+      <h2>Hủy Tài Khoản Shipper</h2>
+      
+      <div className="cancel-reasons">
+        <p>Vui lòng cho chúng tôi biết lý do bạn muốn hủy tài khoản:</p>
+        {reasons.map((r) => (
+          <div key={r} className="reason-option">
+            <input
+              type="radio"
+              id={r}
+              name="cancelReason"
+              checked={reason === r}
+              onChange={() => handleReasonChange(r)}
+            />
+            <label htmlFor={r}>{r}</label>
+          </div>
+        ))}
+
+        {reason === 'Khác' && (
+          <textarea
+            placeholder="Nhập lý do của bạn"
+            value={otherReason}
+            onChange={(e) => setOtherReason(e.target.value)}
+          />
+        )}
+      </div>
+
+      {error && <p className="error-message">{error}</p>}
+
+      <div className="cancel-actions">
+        <button 
+          className="confirm-cancel-button" 
+          onClick={handleCancel}
+        >
+          Xác Nhận Hủy Tài Khoản
+        </button>
+        <button 
+          className="back-button" 
+          onClick={() => navigate('/ShipperAccount')}
+        >
+          Quay Lại
+        </button>
+      </div>
     </div>
   );
 };
