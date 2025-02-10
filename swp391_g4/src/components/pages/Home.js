@@ -12,7 +12,7 @@ const Home = () => {
       <header className="header">
         <div className="logo">
           <img
-            src="https://via.placeholder.com/150x50?text=EcoShipper+Logo"
+            src="EcoShipper.jpg"
             alt="EcoShipper"
           />
         </div>
@@ -28,7 +28,7 @@ const Home = () => {
               <Button onClick={() => navigate('/news')}>News</Button>
             </li>
             <li>
-              <Button onClick={() => navigate('/contact')}>Contact</Button>
+              <Button onClick={() => navigate('/shipper-contact')}>Contact</Button>
             </li>
           </ul>
         </nav>

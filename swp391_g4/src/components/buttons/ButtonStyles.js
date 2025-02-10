@@ -14,11 +14,11 @@ export const ButtonStyles = {
     variants: {
         // Style cho button login
         login: {
-            backgroundColor: '#007bff',
+            backgroundColor: '#4CAF50',
             color: 'white',
             fontWeight: 'bold',
             '&:hover': {
-                backgroundColor: '#0056b3',
+                backgroundColor: '#4A753E',
             }
         },
 
