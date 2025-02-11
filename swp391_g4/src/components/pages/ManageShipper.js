@@ -7,8 +7,11 @@ const ManageShipper = () => {
   const [pendingShippers, setPendingShippers] = useState([]);
   const [approvedShippers, setApprovedShippers] = useState([]);
   const [editingShipper, setEditingShipper] = useState(null);
-
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
+    fetchShippers();
+  }, []);
+  const fetchShippers = () => {
     axios.get("http://localhost:5000/api/pending-shippers")
       .then((response) => setPendingShippers(response.data))
       .catch((error) => console.error("Error fetching pending shippers:", error));
@@ -16,8 +19,24 @@ const ManageShipper = () => {
     axios.get("http://localhost:5000/api/approved-shippers")
       .then((response) => setApprovedShippers(response.data))
       .catch((error) => console.error("Error fetching approved shippers:", error));
-  }, []);
+  };
+  // Xử lý tìm kiếm
+  const handleSearch = (query) => {
+    setSearchQuery(query);
 
+    if (query.trim() === "") {
+      fetchShippers(); // Nếu ô tìm kiếm trống, lấy lại toàn bộ danh sách
+      return;
+    }
+
+    axios.get(`http://localhost:5000/api/search-pending-shippers?query=${query}`)
+      .then((response) => setPendingShippers(response.data))
+      .catch((error) => console.error("Error searching pending shippers:", error));
+
+    axios.get(`http://localhost:5000/api/search-approved-shippers?query=${query}`)
+      .then((response) => setApprovedShippers(response.data))
+      .catch((error) => console.error("Error searching approved shippers:", error));
+  };
   const handleApprove = (id) => {
     axios.post("http://localhost:5000/api/approve-shipper", { id })
       .then(() => {
@@ -61,6 +80,16 @@ const ManageShipper = () => {
 
   return (
     <div className="manage-shipper-container">
+      <h2>Quản lý Shipper</h2>
+
+      {/* Ô tìm kiếm */}
+      <input
+        type="text"
+        placeholder="Tìm kiếm theo tên, số điện thoại, email..."
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)}
+        className="search-bar"
+      />
       <h2>Danh sách đăng ký chờ duyệt</h2>
       <table className="shipper-table">
         <thead>
