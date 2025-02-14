@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../styles/Login.css";
+import "../../../styles/Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,14 +26,12 @@ const Login = () => {
     setLoading(true);
 
     if (!formData.email || !formData.password) {
-      setError("Please enter your email and password.");
+      setError("Vui lòng nhập email và mật khẩu.");
       setLoading(false);
       return;
     }
 
     try {
-      console.log("Sending login data:", formData);
-
       const response = await axios.post(
         "http://localhost:5000/api/login",
         formData,
@@ -46,25 +44,27 @@ const Login = () => {
       );
 
       if (response.data.success) {
-
+        // Lưu token và thông tin shipper
+        localStorage.setItem('token', response.data.token);
         localStorage.setItem('shipperName', response.data.shipper.FullName);
         localStorage.setItem('shipperId', response.data.shipper.ShipperID);
         
+        // Chuyển hướng đến trang shipper
         navigate("/shipper");
       } else {
-        setError(response.data.message || "Login failed.");
+        setError(response.data.message || "Đăng nhập thất bại.");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Lỗi đăng nhập:", error);
       if (error.response) {
         setError(
           error.response.data.message ||
-          "Login failed. Please try again later."
+          "Đăng nhập thất bại. Vui lòng thử lại sau."
         );
       } else if (error.request) {
-        setError("Unable to connect to the server. Please try again later.");
+        setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
       } else {
-        setError("An error occurred. Please try again.");
+        setError("Đã xảy ra lỗi. Vui lòng thử lại.");
       }
     } finally {
       setLoading(false);
@@ -72,9 +72,8 @@ const Login = () => {
   };
 
   return (
-
     <div className="login-container">
-      <h1 className="login-title">Login</h1>
+      <h1 className="login-title">Đăng Nhập</h1>
 
       <form className="login-form" onSubmit={handleLogin}>
         <input
@@ -91,7 +90,7 @@ const Login = () => {
           className="login-input"
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Mật khẩu"
           value={formData.password}
           onChange={handleChange}
           required
@@ -102,7 +101,7 @@ const Login = () => {
           type="submit"
           disabled={loading}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Đang đăng nhập..." : "Đăng Nhập"}
         </button>
       </form>
 
@@ -113,17 +112,17 @@ const Login = () => {
           className="login-transparent-button"
           onClick={() => navigate("/forgot-password")}
         >
-          Forgot Password?
+          Quên mật khẩu?
         </button>
         <button
           className="login-transparent-button"
           onClick={() => navigate("/register")}
         >
-          Register
+          Đăng Ký
         </button>
       </div>
     </div>
   );
 };
-export default Login; 
 
+export default Login;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/ShipperContact.css";
+import "../../../styles/ShipperContact.css";
 
 function ShipperContact() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });

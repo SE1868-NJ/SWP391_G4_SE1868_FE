@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/ManageShipper.css";
+import "../../../styles/ManageShipper.css";
 import { FaUser, FaPhone, FaEnvelope, FaCalendar, FaMapMarkerAlt, FaTruck, FaUniversity,FaLock } from 'react-icons/fa';
 
 const ManageShipper = () => {
