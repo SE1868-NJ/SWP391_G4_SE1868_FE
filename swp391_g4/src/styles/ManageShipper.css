@@ -1,10 +1,10 @@
 /* Định dạng chung */
 .manage-shipper-container {
-  width: 95%;
+  width: 98%;
   margin: auto;
   text-align: center;
   font-family: "Arial", sans-serif;
-  background-color: #4de052; /* Nền xanh lá cây */
+  background-color: #23a728; /* Nền xanh lá cây */
   padding: 20px;
   border-radius: 10px;
 }
@@ -71,22 +71,28 @@ button {
   font-weight: bold;
 }
 
-.approve-btn {
-  background-color: #2e7d32;
+.approve-btn i, .reject-btn i {
+  font-size: 20px;
   color: white;
 }
 
-.approve-btn:hover {
-  background-color: #1b5e20;
+.approve-btn {
+  background-color: green;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .reject-btn {
-  background-color: #d32f2f;
-  color: white;
+  margin-left: 10px;
+  background-color: red;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-.reject-btn:hover {
-  background-color: #b71c1c;
+.approve-btn:hover, .reject-btn:hover {
+  opacity: 0.8;
 }
 
 .edit-btn {
@@ -124,4 +130,17 @@ button {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+}
+.delete-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.delete-btn:hover {
+  background-color: darkred;
 }

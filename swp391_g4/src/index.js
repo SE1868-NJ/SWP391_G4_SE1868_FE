@@ -8,6 +8,7 @@ import Register from './components/pages/Register';
 import Shipper from './components/pages/Shipper';
 import Contact from './components/pages/Contact';
 import ManageShipper from './components/pages/ManageShipper';
+import ShipperDetail from './components/pages/ShipperDetail';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
  <Router>
@@ -19,6 +20,7 @@ root.render(
      <Route path="/shipper" element={<Shipper />}></Route>
      <Route path="/contact" element={<Contact />}></Route>
     <Route path="/manage-shipper" element={<ManageShipper />}></Route>
+    <Route path="/shipper-detail" element={<ShipperDetail />}></Route>
    </Routes>
  </Router>
 );
