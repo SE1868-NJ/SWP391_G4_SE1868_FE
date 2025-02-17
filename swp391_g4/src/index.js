@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css';
 import Login from './components/pages/Login/Login';
 import Home from './components/pages/Home/Home';
-import Register from './components/pages/Login/Register';
+import Register from './components/pages/Login/ShipperRegister';
 import Shipper from './components/pages/Shipper';
 import ManageShipper from './components/pages/ShipperAccount/ManageShipper';
 import ForgotPassword from './components/pages/Login/ForgotPassword';
@@ -15,6 +15,7 @@ import UpdateShipperInfo from './components/pages/ShipperAccount/UpdateShipperIn
 import EventDetail from './components/pages/Home/EventDetail';
 import About from './components/pages/Home/About';
 import News from './components/pages/Home/News';
+import ShipperRegister from './components/pages/Login/ShipperRegister';
 
 
 const PrivateRoute = ({ children }) => {
@@ -29,8 +30,7 @@ root.render(
      <Route path="/" element={<Home />} />
      <Route path="/home" element={<Home />} />
      <Route path="/login" element={<Login />} />
-     <Route path="/register" element={<Register />} />
-     
+    <Route path="/register" element={<ShipperRegister />} />     
      {/* Các route yêu cầu đăng nhập */}
      <Route 
        path="/shipper" 
