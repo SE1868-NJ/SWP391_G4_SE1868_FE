@@ -1,0 +1,158 @@
+:root {
+  --primary-color: #4CAF50;
+  --light-mint: #f0fff4;
+  --dark-mint: #3e8e41;
+  --light-gray: #f9f9f9;
+  --med-gray: #ccc;
+  --dark-gray: #333;
+}
+
+/* Định dạng chung */
+.container {
+  width: 90%;
+  margin: auto;
+  text-align: center;  
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--dark-gray);
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-top: 20px;  
+  color: #555;
+}
+
+/* Bảng shipper */
+.shipper-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.shipper-table th, .shipper-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;    
+}
+
+.shipper-table th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.shipper-table tr:nth-child(even) {
+  background-color: var(--light-mint);
+}
+
+/* Form nhập shipper */
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 20px;
+  background: var(--light-gray);
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container .input-group {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid var(--med-gray);
+  border-radius: 5px;
+  padding: 8px;
+  width: 280px;
+}
+
+.form-container .input-group svg {
+  margin-right: 10px;
+  color: var(--primary-color);
+  font-size: 18px;
+}
+
+.form-container input, .form-container select {
+  border: none;
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  outline: none;
+}
+
+/* Phần Add New Shipper */
+.add-button {
+  background-color: var(--dark-mint);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+.add-button:hover {
+  background-color: #218838;
+}
+
+.add-button:active {
+  transform: scale(0.98);
+}
+
+/* Phần Edit Shipper */
+.save-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+.save-button:hover {
+  background-color: var(--dark-mint);
+}
+
+.save-button:active {
+  transform: scale(0.98);
+}
+
+/* Định dạng riêng cho phần chỉnh sửa */
+.form-container.edit-mode {
+  background: var(--light-mint);
+  border: 2px solid var(--primary-color);
+}
+
+/* Định dạng nút Edit */  
+.edit-button {
+  background-color: #ffc107;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.edit-button:hover {
+  background-color: #e0a800; 
+}
+
+.edit-button:active {
+  transform: scale(0.98);
+}

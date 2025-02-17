@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../styles/Login.css";
+import "../../../styles/Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,7 +12,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -21,22 +20,18 @@ const Login = () => {
     }));
   };
 
-  // Xử lý đăng nhập
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Kiểm tra dữ liệu đầu vào
     if (!formData.email || !formData.password) {
-      setError("Vui lòng điền đầy đủ email và mật khẩu.");
+      setError("Vui lòng nhập email và mật khẩu.");
       setLoading(false);
       return;
     }
 
     try {
-      console.log("Sending login data:", formData);
-
       const response = await axios.post(
         "http://localhost:5000/api/login",
         formData,
@@ -48,22 +43,23 @@ const Login = () => {
         }
       );
 
-      console.log("Login response:", response.data);
-
       if (response.data.success) {
-        localStorage.setItem("shipperName", response.data.shipper.FullName);
-        localStorage.setItem("shipperId", response.data.shipper.ShipperID);
-
+        // Lưu token và thông tin shipper
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('shipperName', response.data.shipper.FullName);
+        localStorage.setItem('shipperId', response.data.shipper.ShipperID);
+        
+        // Chuyển hướng đến trang shipper
         navigate("/shipper");
       } else {
         setError(response.data.message || "Đăng nhập thất bại.");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Lỗi đăng nhập:", error);
       if (error.response) {
         setError(
           error.response.data.message ||
-            "Đăng nhập thất bại. Vui lòng thử lại sau."
+          "Đăng nhập thất bại. Vui lòng thử lại sau."
         );
       } else if (error.request) {
         setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
@@ -76,12 +72,10 @@ const Login = () => {
   };
 
   return (
-
     <div className="login-container">
-      <h1 className="login-title">Đăng nhập</h1>
+      <h1 className="login-title">Đăng Nhập</h1>
 
       <form className="login-form" onSubmit={handleLogin}>
-        {/* Email input */}
         <input
           className="login-input"
           type="email"
@@ -92,7 +86,6 @@ const Login = () => {
           required
         />
 
-        {/* Password input */}
         <input
           className="login-input"
           type="password"
@@ -103,20 +96,17 @@ const Login = () => {
           required
         />
 
-        {/* Login button */}
         <button
           className="login-button"
           type="submit"
           disabled={loading}
         >
-          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          {loading ? "Đang đăng nhập..." : "Đăng Nhập"}
         </button>
       </form>
 
-      {/* Hiển thị thông báo lỗi */}
       {error && <p className="login-error">{error}</p>}
 
-      {/* Các liên kết khác */}
       <div className="login-links">
         <button
           className="login-transparent-button"
@@ -128,10 +118,11 @@ const Login = () => {
           className="login-transparent-button"
           onClick={() => navigate("/register")}
         >
-          Đăng ký
+          Đăng Ký
         </button>
       </div>
     </div>
   );
 };
-export default Login; 
+
+export default Login;

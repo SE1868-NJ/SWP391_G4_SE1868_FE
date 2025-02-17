@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/ShipperAccount.css';
+// import '../../styles/ShipperAccount.css';
 import axios from 'axios';
 
 
