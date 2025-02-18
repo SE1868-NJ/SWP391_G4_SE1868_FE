@@ -7,6 +7,7 @@ import Home from './components/pages/Home';
 import Register from './components/pages/Register';
 import Shipper from './components/pages/Shipper';
 import ShipperContact from './components/pages/ShipperContact';
+import MapWithDistance from './components/pages/MapWithDistance';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
  <Router>
@@ -17,6 +18,7 @@ root.render(
      <Route path="/register" element={<Register />} />
      <Route path="/shipper" element={<Shipper />}></Route>
      <Route path="/contact" element={<ShipperContact />}></Route>
+     <Route path="/map" element={<MapWithDistance />}></Route>
    </Routes>
  </Router>
 );
