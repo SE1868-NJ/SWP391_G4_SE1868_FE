@@ -1,34 +1,42 @@
-
-
-import React from 'react';
+import React, { useState } from 'react';
 import '../../../styles/Home.css';
+import { Header } from "../../header/Header";
+import Footer from "../../footer/Footer";
+import Login from "../Login/Login";
 import { Link } from 'react-router-dom';
 
 const News = () => {
+  // Navigation Items
+  const newsNavigationItems = [
+    { text: "Trang chủ", path: "/home" },
+    { text: "Về chúng tôi", path: "/about" },
+    { text: "Tin tức", path: "/news", isActive: true },
+    { text: "Liên hệ", path: "/shipper-contact" },
+  ];
+
+  // Login Popup State
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+
+  const openLoginPopup = () => {
+    setIsLoginPopupOpen(true);
+  };
+
+  const closeLoginPopup = () => {
+    setIsLoginPopupOpen(false);
+  };
+
   return (
     <div className="news">
       {/* Header */}
-      <header className="header">
-        <div className="logo">
-          <img
-            src="https://via.placeholder.com/150x50?text=EcoShipper+Logo"
-            alt="EcoShipper"
-          />
-        </div>
-        <nav className="nav">
-          <ul>
-            <li><Link to="/home">Trang chủ</Link></li>
-            <li><Link to="/about">Về chúng tôi</Link></li>
-            <li><Link to="/news">Tin tức</Link></li>
-            <li><Link to="/contact">Liên hệ</Link></li>
-          </ul>
-        </nav>
-      </header>
+      <Header
+        navigationItems={newsNavigationItems}
+        showLoginButton={true}
+        onLoginClick={openLoginPopup}
+      />
 
       {/* News Section */}
       <section className="news-section">
         <h2>Tin tức & Sự kiện</h2>
-
 
         <div className="news-list">
           {/* Sự kiện 1 */}
@@ -55,9 +63,9 @@ const News = () => {
                 className="news-image"
               />
               <h3>Hội thảo: Tối ưu giao nhận trong nội khu</h3>
-                    <p>
-                      Hội thảo về cải tiến giao hàng nội khu, tập trung vào các phương pháp tối ưu tuyến đường và giao hàng nhanh.
-                    </p>
+              <p>
+                Hội thảo về cải tiến giao hàng nội khu, tập trung vào các phương pháp tối ưu tuyến đường và giao hàng nhanh.
+              </p>
             </Link>
           </div>
 
@@ -70,9 +78,9 @@ const News = () => {
                 className="news-image"
               />
               <h3>EcoShipper hỗ trợ giao hàng miễn phí cho các tiểu thương</h3>
-                    <p>
-                      Hỗ trợ giao hàng miễn phí trong nội khu cho các tiểu thương trong thời gian lễ Tết, giúp việc kinh doanh dễ dàng hơn.
-                    </p>
+              <p>
+                Hỗ trợ giao hàng miễn phí trong nội khu cho các tiểu thương trong thời gian lễ Tết, giúp việc kinh doanh dễ dàng hơn.
+              </p>
             </Link>
           </div>
 
@@ -85,9 +93,9 @@ const News = () => {
                 className="news-image"
               />
               <h3>Chương trình "1 giờ giao hàng nội khu"</h3>
-                    <p>
-                      Ra mắt dịch vụ "Giao hàng 1 giờ" tại các quận trung tâm, đảm bảo tốc độ giao hàng nhanh nhất cho khách hàng nội khu.
-                    </p>
+              <p>
+                Ra mắt dịch vụ "Giao hàng 1 giờ" tại các quận trung tâm, đảm bảo tốc độ giao hàng nhanh nhất cho khách hàng nội khu.
+              </p>
             </Link>
           </div>
 
@@ -100,74 +108,63 @@ const News = () => {
                 className="news-image"
               />
              <h3>Trao thưởng cho Shipper xuất sắc tháng 1</h3>
-                   <p>
-                     Tôn vinh những shipper đạt hiệu quả cao nhất trong tháng với chương trình trao thưởng "Shipper xuất sắc nội khu".
-                   </p>
+             <p>
+               Tôn vinh những shipper đạt hiệu quả cao nhất trong tháng với chương trình trao thưởng "Shipper xuất sắc nội khu".
+             </p>
             </Link>
           </div>
 
-
           {/* Sự kiện 6 */}
-  <div className="news-item">
-    <Link to="/news/6">
-      <img
-        src="https://i.pinimg.com/originals/90/98/8a/90988a283f78e68a9349694554bc2d52.jpg"
-        alt="Ứng dụng xe đạp điện trong nội khu"
-        className="news-image"
-      />
-      <h3>Ứng dụng xe đạp điện thân thiện môi trường</h3>
-      <p>
-        EcoShipper triển khai đội xe đạp điện tại các quận trung tâm, vừa nhanh chóng vừa bảo vệ môi trường.
-      </p>
-    </Link>
-  </div>
+          <div className="news-item">
+            <Link to="/news/6">
+              <img
+                src="https://i.pinimg.com/originals/90/98/8a/90988a283f78e68a9349694554bc2d52.jpg"
+                alt="Ứng dụng xe đạp điện trong nội khu"
+                className="news-image"
+              />
+              <h3>Ứng dụng xe đạp điện thân thiện môi trường</h3>
+              <p>
+                EcoShipper triển khai đội xe đạp điện tại các quận trung tâm, vừa nhanh chóng vừa bảo vệ môi trường.
+              </p>
+            </Link>
+          </div>
 
-  {/* Sự kiện 7 */}
-  <div className="news-item">
-    <Link to="/news/7">
-      <img
-        src="https://hoaphatmiennam.vn/wp-content/uploads/2023/01/tet-nguyen-dan-va-nhung-dieu-ban-chua-biet-1.jpg"
-        alt="Tăng cường giao nhận nội khu dịp lễ Tết"
-        className="news-image"
-      />
-      <h3>Tăng cường giao nhận nội khu dịp lễ Tết</h3>
-      <p>
-        EcoShipper triển khai dịch vụ đặc biệt dịp Tết Nguyên Đán, đảm bảo giao hàng nhanh chóng cho khách hàng tại nội khu.
-      </p>
-    </Link>
-  </div>  
-
-
-
-
+          {/* Sự kiện 7 */}
+          <div className="news-item">
+            <Link to="/news/7">
+              <img
+                src="https://hoaphatmiennam.vn/wp-content/uploads/2023/01/tet-nguyen-dan-va-nhung-dieu-ban-chua-biet-1.jpg"
+                alt="Tăng cường giao nhận nội khu dịp lễ Tết"
+                className="news-image"
+              />
+              <h3>Tăng cường giao nhận nội khu dịp lễ Tết</h3>
+              <p>
+                EcoShipper triển khai dịch vụ đặc biệt dịp Tết Nguyên Đán, đảm bảo giao hàng nhanh chóng cho khách hàng tại nội khu.
+              </p>
+            </Link>
+          </div>
         </div>
       </section>
 
+      {/* Login Popup */}
+      {isLoginPopupOpen && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <button className="popup-close" onClick={closeLoginPopup}>
+              &times;
+            </button>
+            <Login isPopup={true} onClose={closeLoginPopup} />
+          </div>
+        </div>
+      )}
+
       {/* Footer */}
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <h3>Liên hệ</h3>
-            <p>Email: support@ecoshipper.vn</p>
-            <p>Điện thoại: 1900 1234 56</p>
-          </div>
-          <div className="footer-section">
-            <h3>Liên kết nhanh</h3>
-            <ul>
-              <li><Link to="/home">Trang chủ</Link></li>
-              <li><Link to="/about">Về chúng tôi</Link></li>
-              <li><Link to="/news">Tin tức</Link></li>
-              <li><Link to="/contact">Liên hệ</Link></li>
-            </ul>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>&copy; 2025 EcoShipper. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer 
+        showAccountSection={true} 
+        onLoginClick={openLoginPopup} 
+      />
     </div>
   );
 };
 
 export default News;
-
