@@ -22,13 +22,12 @@ export class Header extends React.Component {
     const defaultNavItems = [
       { text: "Trang chủ", path: "/home", isActive: true },
       { text: "Về chúng tôi", path: "/about" },
-      { text: "Dịch vụ", path: "/services" },
       { text: "Tin tức", path: "/news" },
       { text: "Liên hệ", path: "/contact" }
     ];
-
+  
     const navItems = this.props.navigationItems || defaultNavItems;
-
+  
     return (
       <header className={styles.header}>
         <nav className={styles.backgroundShadow}>
@@ -44,7 +43,11 @@ export class Header extends React.Component {
             ))}
           </div>
           <div className={styles.authSection}>
-            {this.state.showLoginButton ? <AuthButton /> : <div className={styles.authPlaceholder}></div>}
+            {this.state.showLoginButton ? (
+              <AuthButton onClick={this.props.onLoginClick} />
+            ) : (
+              <div className={styles.authPlaceholder}></div>
+            )}
           </div>
         </nav>
       </header>

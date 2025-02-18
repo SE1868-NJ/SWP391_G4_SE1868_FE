@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../styles/CancelShipperAccount.css';
+import '../../../styles/CancelShipperAccount.css';
 
 const CancelShipperAccount = () => {
   const navigate = useNavigate();
