@@ -49,6 +49,7 @@ root.render(
      <Route path="/about" element={<About />} />
      <Route path="/news" element={<News />} />
      <Route path="/register" element={<ShipperRegister />} />
+     <Route path="/news/:eventId" element={<EventDetail />} />
    </Routes>
  </Router>
 );

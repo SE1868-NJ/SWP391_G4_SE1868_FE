@@ -2,22 +2,8 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const EventDetail = () => {
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * Component để hiển thị chi tiết của một sự kiện.
- * 
- * Truyền vào ID sự kiện qua URL, sau đó lấy ra dữ liệu chi tiết của sự kiện từ
- * đối tượng `events` và hiển thị dưới dạng một trang.
- * 
- * Nếu không tìm thấy sự kiện, sẽ hiển thị thông báo "Không tìm thấy sự kiện" và
- * nút quay lại trang Tin tức.
- * 
- * @param {Object} events - Đối tượng chứa dữ liệu chi tiết của các sự kiện.
- * @param {string} eventId - ID của sự kiện.
- * @returns {ReactElement} Thành phần hiển thị chi tiết của một sự kiện.
- */
-/******  ef545456-5fa9-4922-9546-63c29f842736  *******/  const { eventId } = useParams(); // Lấy ID sự kiện từ URL
-  const navigate = useNavigate();
+const { eventId } = useParams(); // Lấy ID sự kiện từ URL
+const navigate = useNavigate();
 
 
   const events = {
@@ -68,14 +54,6 @@ const EventDetail = () => {
         Sáng kiến này không chỉ giúp giảm thiểu khí thải mà còn mang lại tốc độ giao hàng nhanh và hiệu quả.
       `,
       image: 'https://i.pinimg.com/originals/90/98/8a/90988a283f78e68a9349694554bc2d52.jpg',
-    },
-    7: {
-      title: 'Tăng cường giao nhận nội khu dịp lễ Tết',
-      description: `
-        Trong dịp Tết Nguyên Đán, EcoShipper tăng cường đội ngũ shipper và thời gian hoạt động tại các khu vực nội khu, 
-        đảm bảo giao hàng nhanh chóng và kịp thời cho khách hàng trong dịp lễ.
-      `,
-      image: 'https://hoaphatmiennam.vn/wp-content/uploads/2023/01/tet-nguyen-dan-va-nhung-dieu-ban-chua-biet-1.jpg',
     },
   };
   
