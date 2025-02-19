@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../styles/ManageShipper.css";
+<<<<<<< HEAD
 import moment from "moment";
+=======
+import { FaUser, FaPhone, FaEnvelope, FaCalendar, FaMapMarkerAlt, FaTruck, FaUniversity,FaLock } from 'react-icons/fa';
+>>>>>>> main
 
 const ManageShipper = () => {
   const [pendingShippers, setPendingShippers] = useState([]);

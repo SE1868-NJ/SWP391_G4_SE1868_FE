@@ -1,0 +1,161 @@
+.header {
+  font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+  color: white;
+  font-weight: 500;
+}
+
+.backgroundShadow {
+  background-color: rgb(36, 174, 110);
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  width: 100%;
+  padding: 0 48px;
+  align-items: center;
+  gap: 20px;
+  overflow: hidden;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.navigationItems {
+  align-self: stretch;
+  display: flex;
+  align-items: stretch;
+  font-size: 14px;
+  letter-spacing: 0.32px;
+  flex-wrap: wrap;
+  color: white;
+}
+
+.img {
+  aspect-ratio: 3.88;
+  object-fit: contain;
+  object-position: center;
+  align-self: stretch;
+  margin: auto 0;
+  flex-shrink: 0;
+  max-width: 100%;
+  width: 100px;
+  height: 100px;
+  margin-left: 50px;
+}
+
+.item, .item2, .item3, .item4, .item5, .item6, .item7 {
+  padding: 25px 20px;
+  line-height: 2;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.item3, .item6, .item7 {
+  font-size: 15px;
+}
+
+.item4 {
+  line-height: 1.7;
+}
+
+.item5, .item7 {
+  padding: 27px 20px;
+}
+
+.item7 {
+  white-space: nowrap;
+}
+
+.loginButton {
+  border-radius: 4px;
+  background-color: white;
+  align-self: stretch;
+  margin: auto 0;
+  padding: 11px 33px;
+  font-size: 15px;
+  letter-spacing: 0.48px;
+  line-height: 2;
+  color: black;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Navigation hover effects */
+.navigationItems button {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.navigationItems button::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: rgb(242, 246, 243);
+  transition: width 0.3s ease;
+}
+
+.navigationItems button:hover {
+  color: rgb(251, 252, 251);
+}
+
+.navigationItems button:hover::after {
+  width: 100%;
+}
+
+/* Login button hover effects */
+.loginButton:hover {
+  background-color: rgb(47, 149, 76);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.loginButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 991px) {
+  .backgroundShadow {
+    max-width: 100%;
+    padding: 0 20px;
+  }
+
+  .item7 {
+    white-space: initial;
+  }
+
+  .loginButton {
+    padding: 11px 20px;
+  }
+}
+
+.navigationItems button {
+  color: white;
+  font-weight: bold;
+}
+
+
+
+.authSection {
+  display: flex;
+  align-items: center;
+  min-width: 120px; 
+}
+
+.authPlaceholder {
+  width: 120px; 
+  height: 1px; 
+  visibility: hidden;
+}
+
+.backgroundShadow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 48px;
+}
