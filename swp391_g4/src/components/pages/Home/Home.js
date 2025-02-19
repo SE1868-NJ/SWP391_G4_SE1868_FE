@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../../../styles/Home.css";
-import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
+import Header  from "../../header/Header";
 import Login from "../Login/Login";
+import { useNavigate } from 'react-router-dom';
+
 
 const Home = () => {
   // Navigation Items
@@ -68,18 +70,21 @@ const Home = () => {
 
   const servicesData = [
     {
-      title: "Giao Hàng Nhanh Chóng",
-      description: "Giao hàng nhanh chóng, tiết kiệm thời gian.",
+        id: 'fast-delivery',
+        title: "Giao Hàng Nhanh Chóng",
+        description: "Giao hàng nhanh chóng, tiết kiệm thời gian.",
     },
     {
-      title: "Vận Chuyển Tiết Kiệm",
-      description: "Dịch vụ giao hàng với chi phí hiệu quả.",
+        id: 'eco-delivery',
+        title: "Vận Chuyển Tiết Kiệm",
+        description: "Dịch vụ giao hàng với chi phí hiệu quả.",
     },
     {
-      title: "Vận Chuyển An Toàn",
-      description: "Giao hàng đến bất kỳ nơi đâu với chất lượng đảm bảo.",
+        id: 'safe-delivery',
+        title: "Vận Chuyển An Toàn",
+        description: "Giao hàng đến bất kỳ nơi đâu với chất lượng đảm bảo.",
     },
-  ];
+];
 
   // Job Roles Data
   const jobRolesData = [
@@ -114,6 +119,7 @@ const Home = () => {
   };
 
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="home">
@@ -192,16 +198,20 @@ const Home = () => {
 
       {/* Services Section */}
       <section className="services">
-        <h2>Dịch Vụ Của Chúng Tôi</h2>
-        <div className="service-list">
-          {servicesData.map((service, index) => (
-            <div key={index} className="service-item">
-              <h3>{service.title}</h3>
-              <p>{service.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+    <h2>Dịch Vụ Của Chúng Tôi</h2>
+    <div className="service-list">
+        {servicesData.map((service) => (
+            <button
+                key={service.id}
+                className="service-item"
+                onClick={() => navigate(`/service/${service.id}`)}
+            >
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+            </button>
+        ))}
+    </div>
+</section>
 
       {/* Core Values Section */}
       <section className="container">

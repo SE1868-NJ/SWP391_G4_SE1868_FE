@@ -15,6 +15,9 @@ import UpdateShipperInfo from './components/pages/ShipperAccount/UpdateShipperIn
 import EventDetail from './components/pages/Home/EventDetail';
 import About from './components/pages/Home/About';
 import News from './components/pages/Home/News';
+import ServiceDetailPage from './components/pages/Home/ServiceDetailPage';
+import PrivacyPolicy from './components/pages/Home/PrivacyPolicy';
+import TermsOfUse from './components/pages/Home/TermOfUse';
 
 
 const PrivateRoute = ({ children }) => {
@@ -49,6 +52,10 @@ root.render(
      <Route path="/about" element={<About />} />
      <Route path="/news" element={<News />} />
      <Route path="/register" element={<ShipperRegister />} />
+     <Route path="/news/:eventId" element={<EventDetail />} />
+     <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
+     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+     <Route path="/terms-of-use" element={<TermsOfUse />} />
    </Routes>
  </Router>
 );
