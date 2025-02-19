@@ -3,6 +3,7 @@ import "../../../styles/Home.css";
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 
+
 const Home = () => {
   const homeNavigationItems = [
     { text: "Trang chủ", path: "/home", isActive: true },
@@ -10,6 +11,7 @@ const Home = () => {
     { text: "Tin tức", path: "/news" },
     { text: "Liên hệ", path: "/shipper-contact" },
   ];
+
 
   const bannerData = [
     {
@@ -20,23 +22,26 @@ const Home = () => {
     },
     {
       image:
-        "https://useless-gold-stingray.myfilebase.com/ipfs/QmWt3tW6Q4NFWG2iKUUFVH8K2M94ogiY34rZT2Xuf976f5",
+        "https://useless-gold-stingray.myfilebase.com/ipfs/QmQUTBK6HSgGfvduZ4aSrqkVDNckhiFZsS2E5EbjN5qJcg",
       title: "Dịch Vụ Vận Chuyển Chuyên Nghiệp",
       subtitle: "Đảm bảo an toàn và uy tín cho mọi đơn hàng",
     },
     {
       image:
-        "https://useless-gold-stingray.myfilebase.com/ipfs/QmQUTBK6HSgGfvduZ4aSrqkVDNckhiFZsS2E5EbjN5qJcg",
+        "https://useless-gold-stingray.myfilebase.com/ipfs/QmaGUSB9pARbkDWMAipkkWA7LZQp4JdHkWrX9wUz61fy4f",
       title: "Phủ Sóng Toàn Quốc",
       subtitle: "Kết nối mọi miền, vận chuyển mọi nơi",
     },
   ];
 
+
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+
 
   const nextBanner = () => {
     setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
   };
+
 
   const prevBanner = () => {
     setCurrentBannerIndex(
@@ -44,14 +49,15 @@ const Home = () => {
     );
   };
 
+
   const goToBanner = (index) => {
     setCurrentBannerIndex(index);
   };
 
+
   return (
     <div className="home">
       <Header navigationItems={homeNavigationItems} />
-
       {/* Banner Slider */}
       <div className="banner">
         <div className="banner-slider">
@@ -81,6 +87,7 @@ const Home = () => {
           </div>
         </div>
 
+
         <div className="banner-dots">
           {bannerData.map((_, index) => (
             <span
@@ -91,11 +98,11 @@ const Home = () => {
           ))}
         </div>
 
+
         <button className="banner-nav-button next" onClick={nextBanner}>
           &#10095;
         </button>
       </div>
-
       {/* Services */}
       <section className="services">
         <h2>Dịch Vụ Của Chúng Tôi</h2>
@@ -114,7 +121,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
       <section className="container">
         <div className="valuesGrid">
           <article className="valueColumn">
@@ -130,6 +136,7 @@ const Home = () => {
             </div>
           </article>
 
+
           <article className="secondColumn">
             <div className="secondContent">
               <h2 className="smartTitle">Smart</h2>
@@ -142,6 +149,7 @@ const Home = () => {
               </p>
             </div>
           </article>
+
 
           <article className="thirdColumn">
             <div className="thirdContent">
@@ -157,108 +165,76 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="container">
-        <div className="jobs-grid" background-color URL={"https://i.pinimg.com/736x/79/a9/11/79a911b32d94771d78aa269a826655f1.jpg"}>
-          <article className="job-column first-job-column">
-            <div className="job-card">
-              <h2 className="job-title">Nhân viên văn phòng</h2>
-              <p className="job-text">Nhân viên Hành chính kho</p>
-              <div className="job-footer">
-                <div className="job-footer-content">
-                  <div>
-                    <p className="job-footer-text">Chuyên viên Đào tạo</p>
-                  </div>
-                  <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/26a04c21c27e0b97271e9cf0ddf6c7c8164d9c9087456eeba525d5695b1bc552?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
-                    alt=""
-                  />
-                </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/494e0269a78ee5656b3ea72de4809592310766624f2e4bce46dd3a730f6df377?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
-                  className="job-card-image"
-                  alt=""
-                />
-              </div>
-            </div>
-          </article>
 
-          <article className="job-column">
-            <div className="job-card">
-              <h2 className="job-title">Trung tâm công nghệ</h2>
-              <div className="job-footer">
-                <div className="job-footer-content">
-                  <div>
-                    <p className="job-footer-text">Java Developer</p>
-                    <p className="job-footer-text">Data Scientist</p>
-                  </div>
-                  <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/78cba487e07efeee6d180405d0b7bded10ec2c18d04137d856093daf50c76694?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
-                    alt=""
-                  />
-                </div>
+      <section className="jobs-section">
+        <div className="container">
+          <h1 color="">Mỗi người mỗi vai trò khác nhau</h1>
+          <div className="jobs-grid">
+            <article className="job-column">
+              <div className="job-card">
+                <h2 className="job-title">Nhân viên văn phòng</h2>
+                <p className="job-text">Nhân viên Hành chính kho</p>
+                <p className="job-text">Chuyên viên Đào tạo</p>
                 <img
                   loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/d216ddc5022a32c3f04229c740815e9e9c5003f9397c1cd0be49cbe5ccea0cd6?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/494e0269a78ee5656b3ea72de4809592310766624f2e4bce46dd3a730f6df377"
                   className="job-card-image"
-                  alt=""
+                  alt="Office staff icon"
                 />
               </div>
-            </div>
-          </article>
+            </article>
 
-          <article className="job-column">
-            <div className="job-card">
-              <h2 className="job-title">Nhân viên vận hành</h2>
-              <p className="job-text">Nhân viên Bưu cục</p>
-              <p className="job-text">Giám sát Kho vận</p>
-              <div className="job-footer-content">
+
+            <article className="job-column">
+              <div className="job-card">
+                <h2 className="job-title">Trung tâm công nghệ</h2>
+                <p className="job-text">Java Developer</p>
+                <p className="job-text">Data Scientist</p>
                 <img
                   loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/b73a2f3472f9c0fab5516728ca0ebc39123b357e9082950a18db590965668314?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
-                  alt=""
-                />
-              </div>
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/7bbd21615b0b97711e3084f59325cecc832497e7f733ebaf0ee900d514f743ac?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
-                className="job-card-image"
-                alt=""
-              />
-            </div>
-          </article>
-
-          <article className="job-column">
-            <div className="job-card">
-              <h2 className="job-title">Nhân viên lấy giao, tài xế</h2>
-              <p className="job-text">Giám sát Xe tải</p>
-              <div className="job-footer">
-                <div className="job-footer-content">
-                  <div>
-                    <p className="job-text">Nhân viên giao hàng</p>
-                  </div>
-                  <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/761bfcea9c9cd8aef19389aabfc1f9f96a22c3a9e55b58a2fed886c125386567?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
-                    alt=""
-                  />
-                </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/543006c1ed70b70af66b9021927fcee73a2db9240e17b821df89a3ab73376147?placeholderIfAbsent=true&apiKey=d3c7d63cc85240fa9b02be10879aea8b"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/d216ddc5022a32c3f04229c740815e9e9c5003f9397c1cd0be49cbe5ccea0cd6"
                   className="job-card-image"
-                  alt=""
+                  alt="Technology center icon"
                 />
               </div>
-            </div>
-          </article>
+            </article>
+
+
+            <article className="job-column">
+              <div className="job-card">
+                <h2 className="job-title">Nhân viên vận hành</h2>
+                <p className="job-text">Nhân viên Bưu cục</p>
+                <p className="job-text">Giám sát Kho vận</p>
+                <img
+                  loading="lazy"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/7bbd21615b0b97711e3084f59325cecc832497e7f733ebaf0ee900d514f743ac"
+                  className="job-card-image"
+                  alt="Operations staff icon"
+                />
+              </div>
+            </article>
+
+
+            <article className="job-column">
+              <div className="job-card">
+                <h2 className="job-title">Nhân viên lấy giao, tài xế</h2>
+                <p className="job-text">Giám sát Xe tải</p>
+                <p className="job-text">Nhân viên giao hàng</p>
+                <img
+                  loading="lazy"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/543006c1ed70b70af66b9021927fcee73a2db9240e17b821df89a3ab73376147"
+                  className="job-card-image"
+                  alt="Delivery staff icon"
+                />
+              </div>
+            </article>
+          </div>
         </div>
       </section>
       <Footer />
     </div>
   );
 };
+
 
 export default Home;
