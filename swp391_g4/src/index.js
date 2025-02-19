@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css';
 import Login from './components/pages/Login/Login';
 import Home from './components/pages/Home/Home';
-import Register from './components/pages/Login/Register';
 import Shipper from './components/pages/Shipper';
-import ManageShipper from './components/pages/ShipperAccount/ManageShipper';
+import ManageShipper from './components/pages/ManageShipper';
+import ShipperRegister from './components/pages/Login/ShipperRegister';
 import ForgotPassword from './components/pages/Login/ForgotPassword';
 import ResetPassword from './components/pages/Login/ResetPassword';
 import ShipperContact from './components/pages/Home/ShipperContact';
@@ -29,8 +29,7 @@ root.render(
      <Route path="/" element={<Home />} />
      <Route path="/home" element={<Home />} />
      <Route path="/login" element={<Login />} />
-     <Route path="/register" element={<Register />} />
-     
+    <Route path="/register" element={<ShipperRegister />} />     
      {/* Các route yêu cầu đăng nhập */}
      <Route 
        path="/shipper" 
@@ -49,6 +48,7 @@ root.render(
      <Route path="/eventdetail" element={<EventDetail />} />
      <Route path="/about" element={<About />} />
      <Route path="/news" element={<News />} />
+     <Route path="/register" element={<ShipperRegister />} />
    </Routes>
  </Router>
 );
