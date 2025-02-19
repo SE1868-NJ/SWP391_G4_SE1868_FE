@@ -13,7 +13,6 @@ class Button extends React.Component {
     getButtonStyle = () => {
         const { variant = 'default', size = 'medium', style } = this.props;
         
-        // Safely access hover styles
         const variantStyles = ButtonStyles.variants[variant] || ButtonStyles.variants['default'];
         const hoverStyles = variantStyles['&:hover'] || {};
         

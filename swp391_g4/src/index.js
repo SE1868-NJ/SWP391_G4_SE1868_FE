@@ -1,68 +1,27 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import './index.css';
-// import Login from './components/pages/Login';
-// import Home from './components/pages/Home';
-// import Register from './components/pages/Register';
-// import Shipper from './components/pages/Shipper';
-// import Contact from './components/pages/Contact';
-// import ShipperAccount from './components/pages/ShipperAccount';
-// import UpdatePersonalInfo from './components/pages/UpdatePersonalInfo';
-// import CancelShipperAccount from './components/pages/CancelShipperAccount';
-// import ForgotPassword from './components/pages/ForgotPassword';
-// import ResetPassword from './components/pages/ResetPassword';
-// import About from './components/pages/About';
-
-
-// const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//  <Router>
-//    <Routes>
-//      <Route path="/" element={<Home />} />
-//      <Route path="/home" element={<Home />} />
-//      <Route path="/login" element={<Login />} />
-//      <Route path="/register" element={<Register />} />
-//      <Route path="/shipper" element={<Shipper />}></Route>
-//      <Route path="/contact" element={<Contact />}></Route>
-//      <Route path="/ShipperAccount" element={<ShipperAccount />}></Route>
-//      <Route path="/update-personal-info" element={<UpdatePersonalInfo />}></Route>
-//      <Route path="/cancel-shipper-account" element={<CancelShipperAccount />}></Route>
-//      <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-//      <Route path="/about" element={<About />} />
-//      <Route path="/reset-password" element={<ResetPassword />} />
-
-
-//    </Routes>
-//  </Router>
-// );
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css';
-import Login from './components/pages/Login';
-import Home from './components/pages/Home';
-import Register from './components/pages/Register';
+import Login from './components/pages/Login/Login';
+import Home from './components/pages/Home/Home';
 import Shipper from './components/pages/Shipper';
-import Contact from './components/pages/Contact';
-<<<<<<< Updated upstream
 import ManageShipper from './components/pages/ManageShipper';
-=======
-import ShipperAccount from './components/pages/ShipperAccount';
-import UpdatePersonalInfo from './components/pages/UpdatePersonalInfo';
-import CancelShipperAccount from './components/pages/CancelShipperAccount';
-import ForgotPassword from './components/pages/ForgotPassword';
-import ResetPassword from './components/pages/ResetPassword';
-<<<<<<< Updated upstream
+import ShipperRegister from './components/pages/Login/ShipperRegister';
+import ForgotPassword from './components/pages/Login/ForgotPassword';
+import ResetPassword from './components/pages/Login/ResetPassword';
+import ShipperContact from './components/pages/Home/ShipperContact';
+import ShipperAccount from './components/pages/ShipperAccount/ShipperAccount';
+import UpdateShipperInfo from './components/pages/ShipperAccount/UpdateShipperInfo';
+import EventDetail from './components/pages/Home/EventDetail';
+import About from './components/pages/Home/About';
+import News from './components/pages/Home/News';
 
-=======
-import About from './components/pages/About';
-import News from './components/pages/News'; // Import News
-import EventDetail from './components/pages/EventDetail'; // Import EventDetail
->>>>>>> Stashed changes
 
->>>>>>> Stashed changes
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? children : <navigate to="/login" />;
+};
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
  <Router>
@@ -70,72 +29,27 @@ root.render(
      <Route path="/" element={<Home />} />
      <Route path="/home" element={<Home />} />
      <Route path="/login" element={<Login />} />
-     <Route path="/register" element={<Register />} />
-<<<<<<< Updated upstream
-     <Route path="/shipper" element={<Shipper />}></Route>
-     <Route path="/contact" element={<Contact />}></Route>
-<<<<<<< Updated upstream
-    <Route path="/manage-shipper" element={<ManageShipper />}></Route>
-=======
-     <Route path="/ShipperAccount" element={<ShipperAccount />}></Route>
-     <Route path="/update-personal-info" element={<UpdatePersonalInfo />}></Route>
-     <Route path="/cancel-shipper-account" element={<CancelShipperAccount />}></Route>
-     <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-     <Route path="/reset-password" element={<ResetPassword />} />
->>>>>>> Stashed changes
-=======
-     <Route path="/shipper" element={<Shipper />} />
-     <Route path="/contact" element={<Contact />} />
-     <Route path="/ShipperAccount" element={<ShipperAccount />} />
-     <Route path="/update-personal-info" element={<UpdatePersonalInfo />} />
-     <Route path="/cancel-shipper-account" element={<CancelShipperAccount />} />
+    <Route path="/register" element={<ShipperRegister />} />     
+     {/* Các route yêu cầu đăng nhập */}
+     <Route 
+       path="/shipper" 
+       element={
+         <PrivateRoute>
+           <Shipper />
+         </PrivateRoute>
+       } 
+     />
+     <Route path="/shipperaccount" element={<PrivateRoute><ShipperAccount/></PrivateRoute>} />
+     <Route path="/manage-shipper" element={<ManageShipper />} />
      <Route path="/forgot-password" element={<ForgotPassword />} />
+     <Route path="/reset-password" element={<ResetPassword />} />  
+     <Route path="/shipper-contact" element={<ShipperContact />} />
+     <Route path="/update-personal-info" element={<UpdateShipperInfo />} />
+     <Route path="/eventdetail" element={<EventDetail />} />
      <Route path="/about" element={<About />} />
-     <Route path="/reset-password" element={<ResetPassword />} />
-
-     {/* Thêm các route mới */}
      <Route path="/news" element={<News />} />
+     <Route path="/register" element={<ShipperRegister />} />
      <Route path="/news/:eventId" element={<EventDetail />} />
->>>>>>> Stashed changes
    </Routes>
  </Router>
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,168 +1,189 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Shipper.css';
-import Button from '../buttons/Button';
+import axios from 'axios';
+import "bootstrap/dist/css/bootstrap.min.css";
+import OrderStatusSelect from '../buttons/OrderStatusSelect';
+import ReactPaginate from 'react-paginate';
+import { format } from 'date-fns';
+import { Input, initMDB } from 'mdb-ui-kit';
+import { Button } from 'react-bootstrap';
+import Header from '../common/header';
+import ProfileShipper from '../common/profileShipper';
+
+initMDB({ Input });
 
 const Shipper = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [shipperName, setShipperName] = useState('');
-  const dropdownRef = useRef(null);
+  const [shipper, setShipper] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentLimit, setCurrentLimit] = useState(8);
+  const [totalOrders, setTotalOrders] = useState('');
+  const [totalPages, setTotalPages] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false); // ✅ Thêm state để điều khiển dropdown menu
 
-  const orders = [
-    {
-      id: 1,
-      name: 'Order A',
-      details: 'Details of Order A',
-      category: 'List Order',
-      status: 'Pending',
-    },
-    {
-      id: 2,
-      name: 'Order B',
-      details: 'Details of Order B',
-      category: 'History Orders',
-      status: 'Completed',
-    },
-    {
-      id: 3,
-      name: 'Order C',
-      details: 'Details of Order C',
-      category: 'List Order',
-      status: 'In Progress',
-    },
-  ];
+  const shipperID = localStorage.getItem('shipperId');
+  const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
 
-  const [selectedOrder, setSelectedOrder] = useState(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const checkAuth = () => {
-      const storedShipperName = localStorage.getItem('shipperName');
-      const shipperId = localStorage.getItem('shipperId');
-      
-      if (shipperId) {
-        setIsLoggedIn(true);
-        setShipperName(storedShipperName || 'Shipper');
-      } else {
-        setIsLoggedIn(false);
-        navigate('/login');
-      }
-    };
-
-    checkAuth();
-  }, [navigate]);
-
-  const handleOrderClick = (order) => {
-    setSelectedOrder(order);
+  // ✅ Hàm xử lý logout
+  const handleLogout = () => {
+    localStorage.removeItem('shipperId');
+    localStorage.removeItem('shipperName');
+    navigate('/login');
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('shipperName');
-    localStorage.removeItem('shipperId');
-    setIsLoggedIn(false);
-    navigate('/login');
+  const FetchOrders = () => {
+    axios.get(`http://localhost:5000/api/getOrders?shipperID=${shipperID}&search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
+    .then((response) => {
+      console.log(response);
+      setTotalOrders(response.data.totalRows);
+      setTotalPages(response.data.totalPages);
+      setOrders(response.data.orders);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
+
+  useEffect(() => {
+    axios.get(`http://localhost:5000/api/getShipperById?id=${shipperID}`)
+    .then((response) => {
+      setShipper(response.data.shipper);
+    }) 
+  }, []);
+
+  const ChangeOrderStatus = async (orderId, newStatus) => {
+    const postData = {
+      "OrderID": orderId,
+      "Status": newStatus
+    };
+  
+    try {
+      const response = await axios.post('http://localhost:5000/api/changeStatusOrder', postData);
+      console.log(response);
+    } catch (error) {
+      console.error("Error changing order status:", error);
+    }
+  };
+
+  useEffect(() => {
+    FetchOrders();
+  }, [currentPage]);
+
+  const handlePageClick = (event) => {
+    setCurrentPage(+event.selected + 1);
+  };
+
+  const handleStatusChange = (orderId, newStatus) => {
+    ChangeOrderStatus(orderId, newStatus);
+    FetchOrders();
+    console.log("Change status for order ID", orderId, "to", newStatus);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearch = () => {
+    FetchOrders();
   };
 
   return (
     <div className="form shipper">
-      <header className="form shipper-header">
-        <div className="form shipper-header-left">
-          <h1>Shipper Dashboard</h1>
-        </div>
-        <div className="form shipper-header-right">
-          {!isLoggedIn ? (
-            <Button variant="login" onClick={() => navigate('/login')}>
-              Login
+      <Header />
+
+      <main className="mx-md-5">
+        {/* ✅ Thêm dropdown menu */}
+        <div className="shipper-dropdown">
+          <Button
+            variant="default"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+          </Button>
+          <div className={`form shipper-dropdown-menu ${showDropdown ? 'show' : ''}`}>
+            <Button variant="dropdown" onClick={() => navigate('/shipperaccount')}>
+              Shipper Account
             </Button>
-          ) : (
-            <div className="form shipper-dropdown" ref={dropdownRef}>
-              <div 
-                className="dropdown-toggle"
-                onClick={() => setShowDropdown(!showDropdown)}
-              >
-                <span className="shipper-name">{shipperName}</span>
-                <span className="dropdown-icon">▼</span>
-              </div>
-              <div className={`form shipper-dropdown-menu ${showDropdown ? 'show' : ''}`}>
-                <Button variant="dropdown" onClick={() => navigate('/shipperaccount')}>
-                  Shipper Account
-                </Button>
-                <Button variant="dropdown" onClick={() => navigate('/historyorder')}>
-                  Order History
-                </Button>
-                <Button variant="dropdown" onClick={handleLogout}>
-                  Logout
-                </Button>
+            <Button variant="dropdown" onClick={() => navigate('/historyorder')}>
+              History Order
+            </Button>
+            <Button variant="dropdown" onClick={() => navigate('/revenue')}>
+              Revenue
+            </Button>
+            <Button variant="dropdown" onClick={handleLogout}>
+              Logout
+            </Button>
+          </div>
+        </div>
+
+        <div className="my-3">
+          <ProfileShipper props={shipper} />
+        </div>
+
+        <h2 className="text-center">My Shipping Orders</h2>
+
+        <div className="row">
+          <div className='col-6 align-content-end'>
+            <h5>Total Orders: {totalOrders}</h5> 
+          </div>
+          <div className='col-6'>
+            <div className='d-flex justify-content-end my-2'>
+              <div className="input-group w-50">
+                <input 
+                  type="search" 
+                  className="form-control rounded" 
+                  placeholder="Name, phone or email"
+                  aria-label="Search" 
+                  aria-describedby="search-addon" 
+                  onChange={handleSearchChange} 
+                />
+                <button type="button" className="btn btn-outline-primary" onClick={handleSearch}>Search</button>
               </div>
             </div>
-          )}
+          </div>
         </div>
-      </header>
 
-      {isLoggedIn && (
-        <>
-          <main className="form shipper-orders">
-            <h2>All Orders</h2>
-            <ul>
-              {orders.map((order) => (
-                <li
-                  key={order.id}
-                  className={`form shipper-order-item ${selectedOrder?.id === order.id ? 'form shipper-order-item-selected' : ''}`}
-                  onClick={() => handleOrderClick(order)}
-                >
-                  <h3>{order.name}</h3>
-                  <p>{order.details}</p>
-                  <div className="form shipper-order-status">
-                    Status: <span className={`form status-${order.status.toLowerCase()}`}>
-                      {order.status}
-                    </span>
-                  </div>
-                </li>
+        <div className="table-orders">
+          <table className="table table-hover">
+            <thead className='table-light'>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Customer Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Address</th>
+                <th scope="col">Estimated Time</th>
+                <th scope="col">Fee</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.length === 0 && (
+                <tr>
+                  <td colSpan="9">No orders found</td>
+                </tr>
+              )}
+              {orders.map((order, index) => (
+                <tr className={`${index % 2 !== 0 ? 'table-active' : ''}`} key={order.OrderID} onClick={() => navigate(`/orderdetail/${order.OrderID}`)}>
+                  <td className="py-2 align-content-center">#{order.OrderID}</td>
+                  <td className="py-2 align-content-center">{order.FullName}</td>
+                  <td className="py-2 align-content-center">{order.PhoneNumber}</td>
+                  <td className="py-2 align-content-center">{order.Email}</td>
+                  <td className="py-2 align-content-center">{order.DeliveryAddress}</td>
+                  <td className="py-2 align-content-center">{format(new Date(order.EstimatedDeliveryTime), 'MMMM dd, yyyy hh:mm:ss a')}</td>
+                  <td className="py-2 align-content-center">{order.ShippingFee}$</td>
+                  <td className="py-2 align-content-center" onClick={(e) => e.stopPropagation()}>
+                    <OrderStatusSelect order={order} orderStatusList={orderStatus} handleStatusChange={handleStatusChange} />
+                  </td>
+                </tr>
               ))}
-            </ul>
-          </main>
+            </tbody>
+          </table>
+        </div>
 
-          {selectedOrder && (
-            <section className="form shipper-selected-order">
-              <h2>Order Details</h2>
-              <div className="form shipper-order-details">
-                <p><strong>Order ID:</strong> #{selectedOrder.id}</p>
-                <p><strong>Order Name:</strong> {selectedOrder.name}</p>
-                <p><strong>Details:</strong> {selectedOrder.details}</p>
-                <p><strong>Status:</strong> {selectedOrder.status}</p>
-              </div>
-              <Button
-                variant="default"
-                onClick={() => setSelectedOrder(null)}
-                style={{ marginTop: '1rem' }}
-              >
-                Close Details
-              </Button>
-            </section>
-          )}
-        </>
-      )}
-
-      <footer className="form shipper-footer">
-        <h2>Contact Information</h2>
-        <p>Email: contact@shippers.com</p>
-        <p>Phone: 123-456-789</p>
-      </footer>
+      </main>
     </div>
   );
 };
