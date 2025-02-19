@@ -4,7 +4,6 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
 
-
 const Home = () => {
   // Navigation Items
   const homeNavigationItems = [
@@ -14,11 +13,7 @@ const Home = () => {
     { text: "Liên hệ", path: "/shipper-contact" },
   ];
 
-<<<<<<< HEAD
-
-=======
   // Banner Data
->>>>>>> main
   const bannerData = [
     {
       image:
@@ -34,23 +29,15 @@ const Home = () => {
     },
     {
       image:
-<<<<<<< HEAD
         "https://useless-gold-stingray.myfilebase.com/ipfs/QmaGUSB9pARbkDWMAipkkWA7LZQp4JdHkWrX9wUz61fy4f",
-=======
-        "https://useless-gold-stingray.myfilebase.com/ipfs/QmWt3tW6Q4NFWG2iKUUFVH8K2M94ogiY34rZT2Xuf976f5",
->>>>>>> main
       title: "Phủ Sóng Toàn Quốc",
       subtitle: "Kết nối mọi miền, vận chuyển mọi nơi",
     },
   ];
 
-
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [direction, setDirection] = useState("left");
 
-<<<<<<< HEAD
-
-=======
   // Auto-sliding Effect
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -62,12 +49,10 @@ const Home = () => {
   }, [bannerData.length]);
 
   // Manual Navigation Functions
->>>>>>> main
   const nextBanner = () => {
     setDirection("left");
     setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
   };
-
 
   const prevBanner = () => {
     setDirection("right");
@@ -76,20 +61,11 @@ const Home = () => {
     );
   };
 
-
   const goToBanner = (index) => {
     setDirection(index > currentBannerIndex ? "left" : "right");
     setCurrentBannerIndex(index);
   };
 
-<<<<<<< HEAD
-
-  return (
-    <div className="home">
-      <Header navigationItems={homeNavigationItems} />
-      {/* Banner Slider */}
-=======
-  // Services Data
   const servicesData = [
     {
       title: "Giao Hàng Nhanh Chóng",
@@ -148,7 +124,6 @@ const Home = () => {
       />
 
       {/* Banner Section */}
->>>>>>> main
       <div className="banner">
         <div className="banner-slider">
           <button
@@ -203,7 +178,6 @@ const Home = () => {
           </button>
         </div>
 
-
         <div className="banner-dots">
           {bannerData.map((_, index) => (
             <span
@@ -214,19 +188,9 @@ const Home = () => {
             ></span>
           ))}
         </div>
-<<<<<<< HEAD
-
-
-        <button className="banner-nav-button next" onClick={nextBanner}>
-          &#10095;
-        </button>
-      </div>
-      {/* Services */}
-=======
       </div>
 
       {/* Services Section */}
->>>>>>> main
       <section className="services">
         <h2>Dịch Vụ Của Chúng Tôi</h2>
         <div className="service-list">
@@ -238,11 +202,8 @@ const Home = () => {
           ))}
         </div>
       </section>
-<<<<<<< HEAD
-=======
 
       {/* Core Values Section */}
->>>>>>> main
       <section className="container">
         <div className="valuesGrid">
           <article className="valueColumn">
@@ -259,7 +220,6 @@ const Home = () => {
             </div>
           </article>
 
-
           <article className="secondColumn">
             <div className="secondContent">
               <h2 className="smartTitle">Smart</h2>
@@ -272,7 +232,6 @@ const Home = () => {
               </p>
             </div>
           </article>
-
 
           <article className="thirdColumn">
             <div className="thirdContent">
@@ -288,71 +247,6 @@ const Home = () => {
         </div>
       </section>
 
-<<<<<<< HEAD
-
-      <section className="jobs-section">
-        <div className="container">
-          <h1 color="">Mỗi người mỗi vai trò khác nhau</h1>
-          <div className="jobs-grid">
-            <article className="job-column">
-              <div className="job-card">
-                <h2 className="job-title">Nhân viên văn phòng</h2>
-                <p className="job-text">Nhân viên Hành chính kho</p>
-                <p className="job-text">Chuyên viên Đào tạo</p>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/494e0269a78ee5656b3ea72de4809592310766624f2e4bce46dd3a730f6df377"
-                  className="job-card-image"
-                  alt="Office staff icon"
-                />
-              </div>
-            </article>
-
-
-            <article className="job-column">
-              <div className="job-card">
-                <h2 className="job-title">Trung tâm công nghệ</h2>
-                <p className="job-text">Java Developer</p>
-                <p className="job-text">Data Scientist</p>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/d216ddc5022a32c3f04229c740815e9e9c5003f9397c1cd0be49cbe5ccea0cd6"
-                  className="job-card-image"
-                  alt="Technology center icon"
-                />
-              </div>
-            </article>
-
-
-            <article className="job-column">
-              <div className="job-card">
-                <h2 className="job-title">Nhân viên vận hành</h2>
-                <p className="job-text">Nhân viên Bưu cục</p>
-                <p className="job-text">Giám sát Kho vận</p>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/7bbd21615b0b97711e3084f59325cecc832497e7f733ebaf0ee900d514f743ac"
-                  className="job-card-image"
-                  alt="Operations staff icon"
-                />
-              </div>
-            </article>
-
-
-            <article className="job-column">
-              <div className="job-card">
-                <h2 className="job-title">Nhân viên lấy giao, tài xế</h2>
-                <p className="job-text">Giám sát Xe tải</p>
-                <p className="job-text">Nhân viên giao hàng</p>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/543006c1ed70b70af66b9021927fcee73a2db9240e17b821df89a3ab73376147"
-                  className="job-card-image"
-                  alt="Delivery staff icon"
-                />
-              </div>
-            </article>
-=======
       {/* Jobs Section */}
       <section className="jobs-section">
         <div className="container">
@@ -379,10 +273,10 @@ const Home = () => {
                 </div>
               </article>
             ))}
->>>>>>> main
           </div>
         </div>
       </section>
+
       {isLoginPopupOpen && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -393,10 +287,10 @@ const Home = () => {
           </div>
         </div>
       )}
+
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );
 };
-
 
 export default Home;
