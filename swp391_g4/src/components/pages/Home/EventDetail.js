@@ -1,13 +1,24 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../../../styles/News.css';
 
 const EventDetail = () => {
-  const { eventId } = useParams(); // Lấy ID sự kiện từ URL
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Component để hiển thị chi tiết của một sự kiện.
+ * 
+ * Truyền vào ID sự kiện qua URL, sau đó lấy ra dữ liệu chi tiết của sự kiện từ
+ * đối tượng `events` và hiển thị dưới dạng một trang.
+ * 
+ * Nếu không tìm thấy sự kiện, sẽ hiển thị thông báo "Không tìm thấy sự kiện" và
+ * nút quay lại trang Tin tức.
+ * 
+ * @param {Object} events - Đối tượng chứa dữ liệu chi tiết của các sự kiện.
+ * @param {string} eventId - ID của sự kiện.
+ * @returns {ReactElement} Thành phần hiển thị chi tiết của một sự kiện.
+ */
+/******  ef545456-5fa9-4922-9546-63c29f842736  *******/  const { eventId } = useParams(); // Lấy ID sự kiện từ URL
   const navigate = useNavigate();
 
-
- 
 
   const events = {
     1: {
@@ -71,7 +82,6 @@ const EventDetail = () => {
 
   const event = events[eventId];
 
-  // Kiểm tra nếu không tìm thấy sự kiện
   if (!event) {
     return (
       <div className="event-detail">
