@@ -3,7 +3,6 @@ import React from 'react';
 import { ButtonStyles } from './ButtonStyles.js';
 
 class Button extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -14,12 +13,15 @@ class Button extends React.Component {
     getButtonStyle = () => {
         const { variant = 'default', size = 'medium', style } = this.props;
         
+        const variantStyles = ButtonStyles.variants[variant] || ButtonStyles.variants['default'];
+        const hoverStyles = variantStyles['&:hover'] || {};
+        
         return {
             ...ButtonStyles.baseStyle,
-            ...ButtonStyles.variants[variant],
+            ...variantStyles,
             ...ButtonStyles.sizes[size],
-            ...(this.state.isHovered ? ButtonStyles.variants[variant]['&:hover'] : {}),
-            ...style, // Custom style từ props
+            ...(this.state.isHovered ? hoverStyles : {}),
+            ...style,
         };
     };
 

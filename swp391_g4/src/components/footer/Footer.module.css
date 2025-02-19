@@ -1,0 +1,672 @@
+
+.footer {
+    background-color: rgba(255, 255, 255, 1);
+    padding: 120px 48px 48px;
+  }
+  
+  .footer {
+    background-color: white; 
+    padding: 120px 48px 48px;
+  }
+  
+  .background {
+    display: flex;
+    border-radius: 24px;
+    width: 100%;
+    padding: 56px 64px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .logoContainer {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    
+  }
+  
+  @media (max-width: 991px) {
+    .logoContainer {
+      max-width: 100%;
+    }
+  }
+  
+  .logo {
+    aspect-ratio: 3.91;
+    object-fit: contain;
+    object-position: center;
+    width: 400px;
+    height: 200px;
+    margin-top: 30px;
+    margin-left: -89px;
+    margin-right: -80px;
+}
+  
+  @media (max-width: 991px) {
+    .logo {
+      max-width: 100%;
+    }
+  }
+  
+  .socialContainer {
+    align-self: start;
+    display: flex;
+    margin-top: 8px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .socialText {
+    color: rgba(0, 0, 0, 1);
+    font-size: 15px;
+    font-family:
+      Inter,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-weight: 400;
+    line-height: 2;
+    letter-spacing: 0.32px;
+    align-self: center;
+    margin-left: -50px;
+  }
+  
+  .socialIcons {
+    display: flex;
+    margin-top: 19px;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .socialIcon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 30px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  
+  .mainContent {
+    margin-top: 64px;
+    width: 100%;
+  }
+  
+  @media (max-width: 991px) {
+    .mainContent {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .contentGrid {
+    gap: 20px;
+    display: flex;
+  }
+  
+  @media (max-width: 991px) {
+    .contentGrid {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0px;
+    }
+  }
+  
+  .leftColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 38%;
+    margin-left: 0px;
+  }
+  
+  @media (max-width: 991px) {
+    .leftColumn {
+      width: 100%;
+    }
+  }
+  
+  .linksContainer {
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 991px) {
+    .linksContainer {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .linksGrid {
+    gap: 20px;
+    display: flex;
+  }
+  
+  @media (max-width: 991px) {
+    .linksGrid {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0px;
+    }
+  }
+  
+  .linkColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 33%;
+    margin-left: 0px;
+  }
+  
+  @media (max-width: 991px) {
+    .linkColumn {
+      width: 100%;
+    }
+  }
+  
+  .linkList {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    font-family:
+      Inter,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 1);
+    font-weight: 400;
+    letter-spacing: 0.32px;
+  }
+  
+  @media (max-width: 991px) {
+    .linkList {
+      margin-top: 40px;
+    }
+  }
+  
+  .linkHeader {
+    color: rgb(24, 122, 40);
+    font-size: 16px;
+    line-height: 2;
+    font-weight: bold;
+  }
+  
+  .link {
+    line-height: 2;
+    margin-top: 43px;
+  }
+  
+  @media (max-width: 991px) {
+    .link {
+      margin-top: 40px;
+    }
+  }
+  
+  .subLink {
+    line-height: 2;
+    margin-top: 18px;
+  }
+  
+  .rightColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+    width: 62%;
+    margin-left: 20px;
+  }
+  
+  @media (max-width: 991px) {
+    .rightColumn {
+      width: 100%;
+    }
+  }
+  
+  .contactContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: start;
+    font-family:
+      Inter,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    color: rgba(0, 0, 0, 1);
+    letter-spacing: 0.32px;
+  }
+  
+  .contactGrid {
+    display: flex;
+    width: 303px;
+    max-width: 100%;
+    align-items: stretch;
+    gap: 40px 57px;
+  }
+  
+  .contactInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    font-weight: 400;
+    flex: 1;
+  }
+  
+  .hotline {
+    font-size: 14px;
+    line-height: 2;
+    margin-top: 44px;
+  }
+  
+  .phoneContainer {
+    align-self: stretch;
+    display: flex;
+    margin-top: 10px;
+    align-items: stretch;
+    gap: 6px;
+    font-size: 17px;
+    font-weight: 500;
+    white-space: nowrap;
+    line-height: 1.4;
+    margin-top: 0px;
+  }
+  
+  
+  .phoneIcon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+
+    margin-right: 10px;
+  }
+  
+  .phoneNumber {
+    margin-top: 3px;
+    margin-bottom: auto;
+  }
+  
+  .supportContainer {
+    align-self: end;
+    display: flex;
+    margin-top: 57px;
+    flex-direction: column;
+    align-items: stretch;
+    flex: 1;
+  }
+  
+  .supportText {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 2;
+    align-self: start;
+  }
+  
+  .chatContainer {
+    display: flex;
+    margin-top: 8px;
+    align-items: stretch;
+    gap: 6px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  
+  .chatIcon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 24px;
+    flex-shrink: 0;
+  }
+  
+  .emailContainer {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    white-space: nowrap;
+    line-height: 2;
+    margin-top: 25px;
+  }
+  
+  .emailIcon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 24px;
+    flex-shrink: 0;
+    margin-top: -14px;
+  }
+  
+  .emailText {
+    margin-bottom: auto;
+    margin-top: -15px;
+    color: black;
+    text-decoration: none;
+  }
+  .emailText:hover{
+    color: #45a049;
+  }
+  
+  .addressContainer {
+    align-self: stretch;
+    display: flex;
+    margin-top: 8px;
+    align-items: stretch;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+  
+  .addressIcon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 24px;
+    align-self: start;
+    flex-shrink: 0;
+  }
+  
+  .addressText {
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 346px;
+    flex-basis: auto;
+  }
+  
+  .bottomBorder {
+    border-color: rgba(11, 16, 12, 1);
+    border-top-width: 1px;
+    display: flex;
+    margin-top: 38px;
+    padding-top: 26px;
+    padding-bottom: 3px;
+    align-items: stretch;
+    gap: 20px;
+    font-family:
+      Inter,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 1);
+    line-height: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .companyInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .companyDetails {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .companyName {
+    font-weight: 500;
+    letter-spacing: 0.56px;
+  }
+  
+  .registrationInfo {
+    font-weight: 400;
+    letter-spacing: 0.32px;
+  }
+  
+  .licenseInfo {
+    font-weight: 400;
+    letter-spacing: 0.32px;
+    align-self: end;
+    margin-top: 27px;
+  }
+  
+  .certification {
+    aspect-ratio: 2.66;
+    object-fit: contain;
+    object-position: center;
+    width: 178px;
+    align-self: start;
+    flex-shrink: 0;
+    max-width: 100%;
+  }
+  
+.link,
+.subLink {
+  color: black;
+  text-decoration: none; 
+  font-size: 14px;
+}
+
+.link:hover,
+.subLink:hover {
+  color: rgba(33, 162, 54, 1);;
+}
+ 
+
+/* Trang trí nút Chat ngay */
+.chatButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    color: black;   
+    text-decoration: none; /* Không có gạch chân */
+    border-radius: 5px; /* Bo góc */
+    font-size: 16px;
+    white-space: nowrap;
+    margin-bottom: -7px;
+  }
+
+  .chatButton:hover {
+    color: #45a049;
+  }
+  
+  .chatIcon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px; /* Khoảng cách giữa icon và chữ */
+  }
+  
+  .footer {
+    display: flex;
+    flex-direction: row; /* Đặt tất cả các phần tử vào cùng một hàng */
+    justify-content: space-between; /* Căn đều các phần tử */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 20px;
+    
+  }
+  
+
+  
+  .logoContainer {
+    flex: 1; /* Để logo chiếm một phần */
+  }
+  
+  .socialContainer {
+    flex: 1; /* Để phần kết nối với EcoShipper chiếm một phần */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .mainContent {
+    flex: 2; 
+  }
+  
+  .contentGrid {
+    display: flex;
+    justify-content: space-between; 
+  }
+  
+  .socialText {
+    font-size: 16px;
+  }
+  
+  .socialIcons {
+    display: flex;
+    gap: 10px;
+  }
+  .footer {
+    display: flex;
+    flex-direction: row; /* Đặt các phần tử vào cùng một hàng */
+    justify-content: space-between; /* Căn đều các phần tử */
+    align-items: flex-start; /* Căn phần tử con theo đầu trên cùng */
+    padding: 20px;
+  }
+  
+  .logoContainer {
+    flex: 1;
+  }
+  
+  .mainContent {
+    flex: 2; /* Cho phần main content chiếm nhiều không gian */
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .leftColumn,
+  .rightColumn {
+    flex: 1;
+  }
+  
+  .linksContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .socialContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .contactContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .contactGrid {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .contactInfo,
+  .supportContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chatContainer {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .link,
+  .subLink,
+  .emailText,
+  .addressText,
+  .socialText {
+    white-space: nowrap; 
+  }
+  
+
+
+  .chatIcon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  .contentGrid{
+    margin-top: -50px;
+  }
+
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .toggleButton {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+  }
+  
+  .toggleButton:hover {
+    opacity: 0.7;
+  }
+
+.linkHeader{
+  white-space: nowrap;
+}
+
+.linkColumn{
+  padding-right: 180px;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+}
+
+.closeButton {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+

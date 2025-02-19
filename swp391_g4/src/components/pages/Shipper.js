@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/Shipper.css';
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
-import OrderStatusSelect from '../buttons/OrderStatusSelect';
 import ReactPaginate from 'react-paginate';
 import { format } from 'date-fns';
 import { Input, initMDB } from 'mdb-ui-kit';
@@ -24,7 +23,7 @@ const Shipper = () => {
   const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
 
   const FetchOrders = () => {
-    axios.get(`http://localhost:5000/api/getOrders?shipperID=${shipperID}&search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
+    axios.get(`http://localhost:5000/api/getOrdersInProgress?search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
     .then((response) => {
       console.log(response);
 
@@ -86,10 +85,10 @@ const Shipper = () => {
       <main className="mx-md-5">
         
 
-        <div className="my-3">
+        <div className="my-3 d-flex justify-content-end ">
           <ProfileShipper props={shipper} />
         </div>
-        <h2 className="text-center">My Shipping Orders</h2>
+        <h2 className="text-center">Shipping Orders</h2>
         <div className="row">
           <div className='col-6 align-content-end'>
             <h5>Total Orders: {totalOrders}</h5> 
@@ -114,8 +113,6 @@ const Shipper = () => {
                 <th scope="col">Email</th>
                 <th scope="col">Address</th>
                 <th scope="col">Estimated Time</th>
-                <th scope="col">Fee</th>
-                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody  >
@@ -132,10 +129,6 @@ const Shipper = () => {
                   <td className="py-2 align-content-center">{order.Email}</td>
                   <td className="py-2 align-content-center">{order.DeliveryAddress}</td>
                   <td className="py-2 align-content-center">{format(new Date(order.EstimatedDeliveryTime), 'MMMM dd, yyyy hh:mm:ss a')}</td>
-                  <td className="py-2 align-content-center">{order.ShippingFee}$</td>
-                  <td className="py-2 align-content-center" onClick={(e) => e.stopPropagation()}>
-                    <OrderStatusSelect order={order} orderStatusList={orderStatus} handleStatusChange={handleStatusChange} />
-                  </td>
                 </tr>
               ))}
             </tbody>

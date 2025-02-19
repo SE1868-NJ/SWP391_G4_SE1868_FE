@@ -63,6 +63,7 @@ const Header = () => {
             <nav className={`form shipper-menu ${menuOpen ? 'open' : ''}`} style={{ zIndex: 1000 }}>
                 <ul>
                     <>
+                    <li onClick={() => handleMenuClick('/shipper')}>Shipper Home</li>
                     <li onClick={() => handleMenuClick('/shipperaccount')}>Shipper Account</li>
                     <li onClick={() => handleMenuClick('/historyorder')}>History Order</li>
                     <li onClick={() => handleMenuClick('/revenue')}>Revenue</li>
