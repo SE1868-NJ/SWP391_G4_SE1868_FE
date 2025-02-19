@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../styles/ManageShipper.css";
-import 'font-awesome/css/font-awesome.min.css';
-import { format, parseISO } from 'date-fns';
+import moment from "moment";
 
 const ManageShipper = () => {
   const [pendingShippers, setPendingShippers] = useState([]);
@@ -78,20 +77,7 @@ const ManageShipper = () => {
       .catch(error => console.error("❌ Error updating shipper:", error));
   };
   
-  const handleDelete = (shipperId) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa shipper này?")) {
-      axios.post("http://localhost:5000/api/delete-shipper", { id: shipperId })
-        .then(() => {
-          // Cập nhật lại danh sách shipper sau khi xóa
-          setApprovedShippers(approvedShippers.filter(shipper => shipper.ShipperID !== shipperId));
-          setPendingShippers(pendingShippers.filter(shipper => shipper.id !== shipperId));
-        })
-        .catch((error) => {
-          console.error("❌ Error deleting shipper:", error); // Thêm dòng này để log lỗi từ frontend
-          alert("Có lỗi xảy ra khi xóa shipper.");
-        });
-    }
-  };
+
   return (
     <div className="manage-shipper-container">
       <h2>Quản lý Shipper</h2>
@@ -112,11 +98,11 @@ const ManageShipper = () => {
             <th>Số điện thoại</th>
             <th>Email</th>
             <th>Ngày sinh</th>
-            <th>Địa chỉ</th>
-            <th>Số tài khoản</th>
-            <th>Chi tiết phương tiện</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
+            <th>Tỉnh(Thành Phố)</th>
+            <th>Căn cước công dân</th>
+            <th>Loại phương tiện</th>
+            <th>Ngân hàng</th>
+            <th>Chi tiết</th>
           </tr>
         </thead>
         <tbody>
@@ -125,15 +111,12 @@ const ManageShipper = () => {
               <td>{shipper.FullName}</td>
               <td>{shipper.PhoneNumber}</td>
               <td>{shipper.Email}</td>
-              <td>{shipper.DateOfBirth}</td>
-              <td>{shipper.Address}</td>
-              <td>{shipper.BankAccountNumber}</td>
-              <td>{shipper.VehicleDetails}</td>
-              <td>{shipper.RegistrationStatus}</td>
-              <td>
-                <button className="approve-btn" onClick={() => handleApprove(shipper.id)}><i className="fa fa-check" aria-hidden="true"></i></button>
-                <button className="reject-btn" onClick={() => handleReject(shipper.id)}><i className="fa fa-times" aria-hidden="true"></i></button>
-              </td>
+              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td> {/* Định dạng ngày sinh */}
+              <td>{shipper.City}</td>
+              <td>{shipper.CitizenID}</td>
+              <td>{shipper.VehicleType}</td>
+              <td>{shipper.BankName}</td>
+              <td></td>
             </tr>
           ))}
         </tbody>
@@ -147,11 +130,10 @@ const ManageShipper = () => {
             <th>Số điện thoại</th>
             <th>Email</th>
             <th>Ngày sinh</th>
-            <th>Địa chỉ</th>
-            <th>Số tài khoản</th>
-            <th>Chi tiết phương tiện</th>
-            <th>Trạng thái</th>
-            <th>Cập nhật</th>
+            <th>Quận</th>
+            <th>Ngân Hàng</th>
+            <th>Loại xe</th>
+            <th></th>
             <th></th>
           </tr>
         </thead>
@@ -161,35 +143,11 @@ const ManageShipper = () => {
               <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.FullName : shipper.FullName} onChange={(e) => setEditingShipper({ ...shipper, FullName: e.target.value })} /></td>
               <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.PhoneNumber : shipper.PhoneNumber} onChange={(e) => setEditingShipper({ ...shipper, PhoneNumber: e.target.value })} /></td>
               <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.Email : shipper.Email} onChange={(e) => setEditingShipper({ ...shipper, Email: e.target.value })} /></td>
-              <td>
-                <input
-                  value={editingShipper?.ShipperID === shipper.ShipperID
-                    ? format(new Date(editingShipper.DateOfBirth), 'yyyy-MM-dd')
-                    : format(new Date(shipper.DateOfBirth), 'yyyy-MM-dd')}
-                  onChange={(e) => setEditingShipper({ ...shipper, DateOfBirth: e.target.value })}
-                />
-              </td>
-              <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.Address : shipper.Address} onChange={(e) => setEditingShipper({ ...shipper, Address: e.target.value })} /></td>
-              <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.BankAccountNumber : shipper.BankAccountNumber} onChange={(e) => setEditingShipper({ ...shipper, BankAccountNumber: e.target.value })} /></td>
-              <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.VehicleDetails : shipper.VehicleDetails} onChange={(e) => setEditingShipper({ ...shipper, VehicleDetails: e.target.value })} /></td>
-              <td>
-              <select 
-                value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.Status : shipper.Status} 
-                onChange={(e) => setEditingShipper({ ...shipper, Status: e.target.value })}
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="Pending">Pending</option>
-                <option value="Suspended">Suspended</option>
-                {}
-              </select>
-              </td>
+              <td><input type="date" value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.DateOfBirth : shipper.DateOfBirth} onChange={(e) => setEditingShipper({ ...shipper, DateOfBirth: e.target.value })} /></td>
+              <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.District : shipper.District} onChange={(e) => setEditingShipper({ ...shipper, District: e.target.value })} /></td>
+              <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.BankName : shipper.BankName} onChange={(e) => setEditingShipper({ ...shipper, BankName: e.target.value })} /></td>
+              <td><input value={editingShipper?.ShipperID === shipper.ShipperID ? editingShipper.VehicleType : shipper.VehicleType} onChange={(e) => setEditingShipper({ ...shipper, VehicleType: e.target.value })} /></td>
               <td><button onClick={handleUpdate}>Lưu</button></td>
-              <td>
-              <button onClick={() => handleDelete(shipper.ShipperID)} className="delete-btn">
-                <i className="fa fa-trash" aria-hidden="true"></i>
-              </button>
-              </td>
             </tr>
           ))}
         </tbody>

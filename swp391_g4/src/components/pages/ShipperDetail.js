@@ -53,8 +53,8 @@ const ShipperDetail = () => {
               <Package2 className="shipper-icon" />
             </div>
             <div>
-              <h1 className="shipper-title">Shipper Management</h1>
-              <p className="shipper-subtitle">Review and verify shipper applications</p>
+              <h1 className="shipper-title">Quản lý Shipper</h1>
+              <p className="shipper-subtitle">Xem xét và xác minh các đơn đăng ký của shipper</p>
             </div>
           </div>
         </div>
@@ -67,11 +67,11 @@ const ShipperDetail = () => {
           <div className="shipper-sidebar">
             <Card className="shipper-sidebar-card">
               <div className="shipper-sidebar-header">
-                <h2 className="shipper-sidebar-title">Applications</h2>
+                <h2 className="shipper-sidebar-title">Các Đơn Đăng Ký</h2>
                 <div className="shipper-sidebar-stats">
-                  <span className="shipper-pending-text">5 pending reviews</span>
+                  <span className="shipper-pending-text">5 đơn đang chờ xét duyệt</span>
                   <Badge className="shipper-active-badge">
-                    Active
+                    Đang hoạt động
                   </Badge>
                 </div>
               </div>
@@ -97,7 +97,7 @@ const ShipperDetail = () => {
                       <Badge className={`shipper-status-badge ${
                         shipper.Status === 'Pending' ? 'shipper-status-pending' : 'shipper-status-approved'
                       }`}>
-                        {shipper.Status}
+                        {shipper.Status === 'Pending' ? 'Đang chờ' : 'Đã duyệt'}
                       </Badge>
                     </div>
                   </div>
@@ -118,7 +118,7 @@ const ShipperDetail = () => {
                         <Shield className="shipper-stat-icon" />
                       </div>
                       <div className="shipper-stat-text">
-                        <p className="shipper-stat-label">Shipper ID</p>
+                        <p className="shipper-stat-label">Mã Shipper</p>
                         <p className="shipper-stat-value">#{selectedShipper.id}</p>
                       </div>
                     </div>
@@ -130,7 +130,7 @@ const ShipperDetail = () => {
                         <Calendar className="shipper-stat-icon" />
                       </div>
                       <div className="shipper-stat-text">
-                        <p className="shipper-stat-label">Submitted On</p>
+                        <p className="shipper-stat-label">Ngày Đăng Ký</p>
                         <p className="shipper-stat-value">{selectedShipper.SubmitDate}</p>
                       </div>
                     </div>
@@ -142,8 +142,8 @@ const ShipperDetail = () => {
                         <AlertCircle className="shipper-stat-icon" />
                       </div>
                       <div className="shipper-stat-text">
-                        <p className="shipper-stat-label">Current Status</p>
-                        <p className="shipper-stat-value">Under Review</p>
+                        <p className="shipper-stat-label">Trạng Thái Hiện Tại</p>
+                        <p className="shipper-stat-value">Đang xem xét</p>
                       </div>
                     </div>
                   </Card>
@@ -156,19 +156,19 @@ const ShipperDetail = () => {
                       <TabsList className="shipper-tabslist">
                         <TabsTrigger value="personal" className="shipper-tab">
                           <User className="shipper-tab-icon" />
-                          Personal Info
+                          Thông Tin Cá Nhân
                         </TabsTrigger>
                         <TabsTrigger value="vehicle" className="shipper-tab">
                           <Truck className="shipper-tab-icon" />
-                          Vehicle Details
+                          Thông Tin Phương Tiện
                         </TabsTrigger>
                         <TabsTrigger value="documents" className="shipper-tab">
                           <FileCheck className="shipper-tab-icon" />
-                          Documents
+                          Tài Liệu
                         </TabsTrigger>
                         <TabsTrigger value="bank" className="shipper-tab">
                           <CircleDollarSign className="shipper-tab-icon" />
-                          Financial Info
+                          Thông Tin Tài Chính
                         </TabsTrigger>
                       </TabsList>
                     </div>
@@ -177,40 +177,40 @@ const ShipperDetail = () => {
                       <TabsContent value="personal">
                         <div className="shipper-personal-info">
                           <div className="shipper-section-header">
-                            <h3 className="shipper-section-title">Personal Information</h3>
+                            <h3 className="shipper-section-title">Thông Tin Cá Nhân</h3>
                             <div className="shipper-verification-checkbox">
                               <Checkbox 
                                 checked={verificationStatus.personalInfo}
                                 onCheckedChange={() => handleVerifySection('personalInfo')}
                                 className="shipper-checkbox"
                               />
-                              <span className="shipper-verification-text">Mark as Verified</span>
+                              <span className="shipper-verification-text">Đánh dấu là đã xác minh</span>
                             </div>
                           </div>
 
                           <div className="shipper-info-grid">
                             <div className="shipper-info-item">
-                              <p className="shipper-info-label">Full Name</p>
+                              <p className="shipper-info-label">Họ và Tên</p>
                               <p className="shipper-info-value">Lý Minh Tài</p>
                             </div>
                             <div className="shipper-info-item">
-                              <p className="shipper-info-label">Phone Number</p>
+                              <p className="shipper-info-label">Số Điện Thoại</p>
                               <p className="shipper-info-value">0905647382</p>
                             </div>
                             <div className="shipper-info-item">
-                              <p className="shipper-info-label">Email Address</p>
+                              <p className="shipper-info-label">Địa Chỉ Email</p>
                               <p className="shipper-info-value">lyminhtai@example.com</p>
                             </div>
                             <div className="shipper-info-item">
-                              <p className="shipper-info-label">ID Card Number</p>
+                              <p className="shipper-info-label">Số CMND</p>
                               <p className="shipper-info-value">079201001234</p>
                             </div>
                             <div className="shipper-info-item">
-                              <p className="shipper-info-label">Date of Birth</p>
+                              <p className="shipper-info-label">Ngày Sinh</p>
                               <p className="shipper-info-value">15/11/1990</p>
                             </div>
                             <div className="shipper-info-item">
-                              <p className="shipper-info-label">Current Address</p>
+                              <p className="shipper-info-label">Địa Chỉ Hiện Tại</p>
                               <p className="shipper-info-value">234 Lý Tự Trọng, P. An Lạc, Q. Tân Bình</p>
                             </div>
                           </div>
@@ -222,7 +222,7 @@ const ShipperDetail = () => {
 
                 {/* Verification Status Grid */}
                 <Card className="shipper-verification-card">
-                  <h3 className="shipper-verification-title">Verification Progress</h3>
+                  <h3 className="shipper-verification-title">Tiến Độ Xác Minh</h3>
                   <div className="shipper-verification-grid">
                     {Object.entries(verificationStatus).map(([key, value]) => (
                       <div
@@ -247,22 +247,22 @@ const ShipperDetail = () => {
                 {/* Action Buttons */}
                 <div className="shipper-actions">
                   <Button variant="outline" className="shipper-reject-button">
-                    Reject Application
+                    Từ Chối Đơn Đăng Ký
                   </Button>
                   <Button
                     variant="default"
                     disabled={!allSectionsVerified}
                     className={`shipper-approve-button ${!allSectionsVerified ? 'shipper-button-disabled' : ''}`}
                   >
-                    Approve Application
+                    Duyệt Đơn Đăng Ký
                   </Button>
                 </div>
               </>
             ) : (
               <Card className="shipper-empty-state">
                 <UserCheck className="shipper-empty-icon" />
-                <h3 className="shipper-empty-title">Select a Profile</h3>
-                <p className="shipper-empty-text">Choose a shipper from the list to view their details</p>
+                <h3 className="shipper-empty-title">Chọn Hồ Sơ</h3>
+                <p className="shipper-empty-text">Chọn một shipper từ danh sách để xem chi tiết</p>
               </Card>
             )}
           </div>
