@@ -30,7 +30,7 @@ const Home = () => {
     },
     {
       image:
-        "https://useless-gold-stingray.myfilebase.com/ipfs/QmWt3tW6Q4NFWG2iKUUFVH8K2M94ogiY34rZT2Xuf976f5",
+        "https://useless-gold-stingray.myfilebase.com/ipfs/QmaGUSB9pARbkDWMAipkkWA7LZQp4JdHkWrX9wUz61fy4f",
       title: "Phủ Sóng Toàn Quốc",
       subtitle: "Kết nối mọi miền, vận chuyển mọi nơi",
     },
@@ -67,7 +67,6 @@ const Home = () => {
     setCurrentBannerIndex(index);
   };
 
-  // Services Data
   const servicesData = [
     {
       id: "fast-delivery",
@@ -127,11 +126,13 @@ const Home = () => {
 
   return (
     <div className="home">
+      <div className="header">
       <Header
         navigationItems={homeNavigationItems}
         showLoginButton={true}
         onLoginClick={openLoginPopup}
       />
+      </div>
 
       {/* Banner Section */}
       <div className="banner">
@@ -295,6 +296,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+
       {isLoginPopupOpen && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -305,6 +307,7 @@ const Home = () => {
           </div>
         </div>
       )}
+
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );

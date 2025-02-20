@@ -14,3 +14,12 @@
   background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Đảm bảo header luôn ở trên các phần tử khác */
+  width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
+}

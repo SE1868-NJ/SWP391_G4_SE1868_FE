@@ -88,20 +88,15 @@ const ServiceDetailsPage = () => {
 
   const serviceDetails = serviceDetailsData[serviceId];
 
-  const navigationItems = [
-    { text: "Trang chủ", path: "/home" },
-    { text: "Về chúng tôi", path: "/about" },
-    { text: "Tin tức", path: "/news" },
-    { text: "Liên hệ", path: "/shipper-contact" },
-  ];
 
   return (
     <div className="service-details-page">
-      <Header
-        navigationItems={navigationItems}
-        showLoginButton={true}
-        onLoginClick={openLoginPopup}
-      />
+      <div className="header">
+        <Header
+          showLoginButton={true}
+          onLoginClick={openLoginPopup}
+        />
+      </div>
 
       <div className="service-details-content">
         <div className="service-hero">

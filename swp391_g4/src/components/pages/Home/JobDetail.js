@@ -254,11 +254,13 @@ const JobDetail = () => {
 
   return (
     <div className="job-detail-page">
-      <Header
-        navigationItems={navigationItems}
-        showLoginButton={true}
-        onLoginClick={openLoginPopup}
-      />
+      <div className="header">
+        <Header
+          navigationItems={navigationItems}
+          showLoginButton={true}
+          onLoginClick={openLoginPopup}
+        />
+      </div>
       <div className="job-banner">
         <img
           src="https://useless-gold-stingray.myfilebase.com/ipfs/Qmd9G4vTQzh48KmUSsMVjgSBBJvZe54Sj4tjLJoLW4ZZGp"
