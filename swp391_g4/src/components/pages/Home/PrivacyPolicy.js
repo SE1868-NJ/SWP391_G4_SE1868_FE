@@ -11,24 +11,18 @@ const PrivacyPolicy = () => {
     setIsLoginPopupOpen(true);
   };
 
-  const navigationItems = [
-    { text: "Trang chủ", path: "/home" },
-    { text: "Về chúng tôi", path: "/about" },
-    { text: "Tin tức", path: "/news" },
-    { text: "Liên hệ", path: "/shipper-contact" },
-  ];
-
   const closeLoginPopup = () => {
     setIsLoginPopupOpen(false);
   };
 
   return (
     <div className="policy-wrapper">
-      <Header
-        navigationItems={navigationItems}
-        showLoginButton={true}
-        onLoginClick={openLoginPopup}
-      />
+      <div className="header">
+              <Header
+                showLoginButton={true}
+                onLoginClick={openLoginPopup}
+              />
+            </div>
 
       <main className="policy-main">
         <div className="policy-content">

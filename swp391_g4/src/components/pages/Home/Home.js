@@ -123,11 +123,13 @@ const Home = () => {
 
   return (
     <div className="home">
+      <div className="header">
       <Header
         navigationItems={homeNavigationItems}
         showLoginButton={true}
         onLoginClick={openLoginPopup}
       />
+      </div>
 
       {/* Banner Section */}
       <div className="banner">

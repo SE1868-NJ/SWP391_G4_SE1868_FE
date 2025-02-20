@@ -28,11 +28,13 @@ const News = () => {
   return (
     <div className="news">
       {/* Header */}
+      <div className='header'>
       <Header
         navigationItems={newsNavigationItems}
         showLoginButton={true}
         onLoginClick={openLoginPopup}
       />
+      </div>
 
       {/* News Section */}
       <section className="news-section">
