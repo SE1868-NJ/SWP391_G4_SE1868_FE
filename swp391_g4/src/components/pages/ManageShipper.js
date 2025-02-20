@@ -1,182 +1,248 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../styles/ManageShipper.css";
-import { FaUser, FaPhone, FaEnvelope, FaCalendar, FaMapMarkerAlt, FaTruck, FaUniversity,FaLock } from 'react-icons/fa';
+import moment from "moment";
 
 const ManageShipper = () => {
-  const [shippers, setShippers] = useState([]);
-  const [form, setForm] = useState({ 
-    FullName: "", 
-    PhoneNumber: "", 
-    Email: "", 
-    DateOfBirth: "", 
-    Address: "", 
-    BankAccountNumber: "", 
-    VehicleDetails: "", 
-    Status: "" ,
-    Password: ""
-  });
-
-  const [errorMessage, setErrorMessage] = useState("");
+  const [pendingRegisterShippers, setPendingRegisterShippers] = useState([]);
+  const [updatingShippers, setUpdatingShippers] = useState([]);
+  const [cancelingShippers, setCancelingShippers] = useState([]);
+  const [approvedShippers, setApprovedShippers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/shippers")
-      .then((response) => {
-        console.log("Shippers:", response.data);
-        setShippers(response.data);
-      })
-      .catch((error) => console.error("Error fetching shippers:", error));
+    fetchShippers();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setErrorMessage("");
+  const fetchShippers = () => {
+    // Fetch data for each category
+    axios.get("http://localhost:5000/api/pending-register-shippers")
+      .then((response) => setPendingRegisterShippers(response.data))
+      .catch((error) => console.error("Error fetching pending register shippers:", error));
+
+    axios.get("http://localhost:5000/api/pending-update-shippers")
+      .then((response) => setUpdatingShippers(response.data))
+      .catch((error) => console.error("Error fetching updating shippers:", error));
+
+    axios.get("http://localhost:5000/api/pending-cancel-shippers")
+      .then((response) => setCancelingShippers(response.data))
+      .catch((error) => console.error("Error fetching canceling shippers:", error));
+
+    axios.get("http://localhost:5000/api/active-shippers")
+      .then((response) => setApprovedShippers(response.data))
+      .catch((error) => console.error("Error fetching approved shippers:", error));
   };
 
-  const handleAddShipper = () => {
-    setErrorMessage("");
-    console.log("handleAddShipper is being called");
-    axios
-      .post("http://localhost:5000/api/shippers", form)
-      .then((response) => {
-        console.log("Shipper added successfully:", response.data);
-        setShippers((prev) => [...prev, { ShipperID: response.data.ShipperID, ...form }]);
-        setForm({ FullName: "", 
-          PhoneNumber: "", 
-          Email: "", 
-          DateOfBirth: "", 
-          Address: "", 
-          BankAccountNumber: "", 
-          VehicleDetails: "", 
-          Status: "Active" ,
-          Password: ""});
+  // Xử lý tìm kiếm
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+
+    if (query.trim() === "") {
+      fetchShippers(); // Nếu ô tìm kiếm trống, lấy lại toàn bộ danh sách
+      return;
+    }
+
+    axios.get(`http://localhost:5000/api/search-pending-shippers?query=${query}`)
+      .then((response) => setPendingRegisterShippers(response.data))
+      .catch((error) => console.error("Error searching pending register shippers:", error));
+
+    axios.get(`http://localhost:5000/api/search-updating-shippers?query=${query}`)
+      .then((response) => setUpdatingShippers(response.data))
+      .catch((error) => console.error("Error searching updating shippers:", error));
+
+    axios.get(`http://localhost:5000/api/search-canceling-shippers?query=${query}`)
+      .then((response) => setCancelingShippers(response.data))
+      .catch((error) => console.error("Error searching canceling shippers:", error));
+
+    axios.get(`http://localhost:5000/api/search-approved-shippers?query=${query}`)
+      .then((response) => setApprovedShippers(response.data))
+      .catch((error) => console.error("Error searching approved shippers:", error));
+  
+  };
+  const handleStateChange = (id, newStatus) => {
+    axios.post("http://localhost:5000/api/change-shipper-status", { id, newStatus })
+      .then(() => {
+        fetchShippers(); // Làm mới danh sách sau khi thay đổi trạng thái
       })
-      .catch((error) => {
-        if (error.response && error.response.data.error) {
-          setErrorMessage(error.response.data.error);  // Cập nhật lỗi từ backend
-        } else {
-          setErrorMessage("Lỗi không xác định!");
-        }
-      });
+      .catch(error => console.error("Lỗi khi thay đổi trạng thái shipper:", error));
   };
   
-  const handleEditShipper = (shipper) => {
-    setForm({
-      ShipperID: shipper.ShipperID,   // Set the ShipperID to identify which shipper to edit
-      FullName: shipper.FullName,      // Set the FullName field
-      PhoneNumber: shipper.PhoneNumber, // Set the PhoneNumber field
-      Email: shipper.Email,            // Set the Email field
-      DateOfBirth: shipper.DateOfBirth, // Set the DateOfBirth field
-      Address: shipper.Address,        // Set the Address field
-      BankAccountNumber: shipper.BankAccountNumber, // Set the BankAccountNumber field
-      VehicleDetails: shipper.VehicleDetails, // Set the VehicleDetails field
-      Status: shipper.Status           // Set the Status field (Active/Inactive)
-    });
-  };
-  const handleSaveEdit = () => {
-    axios
-      .put("http://localhost:5000/api/shippers", form)  // Gửi form chứa thông tin cần cập nhật
-      .then((response) => {
-        setShippers((prev) =>
-          prev.map((shipper) =>
-            shipper.ShipperID === form.ShipperID
-              ? { ...shipper, ...form }
-              : shipper
-          )
-        );
-        setForm({
-          ShipperID: "",
-          FullName: "", 
-          PhoneNumber: "", 
-          Email: "", 
-          DateOfBirth: "", 
-          Address: "", 
-          BankAccountNumber: "", 
-          VehicleDetails: "", 
-          Status: "Active",
-          Password: ""
-        });
-        alert("Shipper updated successfully!");
-      })
-      .catch((error) => console.error("Error updating shipper:", error));
-  };
   
+
+  const handleShipperDetail = () => {
+    window.location.href = `/shipper-detail`;
+  };
   return (
-    <div className="container">
-      <h1 className="title">Manage Shippers</h1>
+    <div className="manage-shipper-container">
+      <h2>Quản lý Shipper</h2>
+
+      {/* Ô tìm kiếm */}
+      <input
+        type="text"
+        placeholder="Tìm kiếm theo tên, số điện thoại, email..."
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)}
+        className="search-bar"
+      />
+
+      {/* Pending Register */}
+      <h2>Danh sách đăng ký chờ duyệt</h2>
       <table className="shipper-table">
         <thead>
           <tr>
-            <th>Full Name</th>
-            <th>Phone Number</th>
+            <th>Họ tên</th>
+            <th>Số điện thoại</th>
             <th>Email</th>
-            <th>Date of Birth</th>
-            <th>Address</th>
-            <th>Bank Account</th>
-            <th>Vehicle Details</th>
-            <th>Status</th>
-            <th>Password</th>
-            <th>Actions</th>
+            <th>Ngày sinh</th>
+            <th>Quận</th>
+            <th>Ngân Hàng</th>
+            <th>Loại xe</th>
+            <th>Trạng thái</th>
           </tr>
         </thead>
         <tbody>
-          {shippers.map((shipper) => (
+          {pendingRegisterShippers.map((shipper) => (
             <tr key={shipper.ShipperID}>
               <td>{shipper.FullName}</td>
               <td>{shipper.PhoneNumber}</td>
               <td>{shipper.Email}</td>
-              <td>{shipper.DateOfBirth}</td>
-              <td>{shipper.Address}</td>
-              <td>{shipper.BankAccountNumber}</td>
-              <td>{shipper.VehicleDetails}</td>
+              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+              <td>{shipper.District}</td>
+              <td>{shipper.BankName}</td>
+              <td>{shipper.VehicleType}</td>
               <td>{shipper.Status}</td>
-              <td>{shipper.Password}</td>
+
+            </tr>
+          ))}
+        </tbody>
+      </table>
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <button 
+                  className="detail-button"
+                  onClick={() => handleShipperDetail()}
+                >
+                  Duyệt chi tiết
+                </button>
+        </div>
+      {/* Pending Update */}
+      <h2>Danh sách shipper đang chờ cập nhật</h2>
+      <table className="shipper-table">
+        <thead>
+          <tr>
+            <th>Họ tên</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th>Ngày sinh</th>
+            <th>Quận</th>
+            <th>Ngân Hàng</th>
+            <th>Loại xe</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          {updatingShippers.map((shipper) => (
+            <tr key={shipper.ShipperID}>
+              <td>{shipper.FullName}</td>
+              <td>{shipper.PhoneNumber}</td>
+              <td>{shipper.Email}</td>
+              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+              <td>{shipper.District}</td>
+              <td>{shipper.BankName}</td>
+              <td>{shipper.VehicleType}</td>
               <td>
-                <button onClick={() => handleEditShipper(shipper)}>Edit</button>
+              <select value={shipper.Status}
+               onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="PendingUpdate">Pending Update</option>
+                <option value="PendingCancel">Pending Cancel</option>
+                <option value="Updated">Updated</option>
+              </select>
+            </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Pending Cancel */}
+      <h2>Danh sách shipper đang chờ hủy tài khoản</h2>
+      <table className="shipper-table">
+        <thead>
+          <tr>
+            <th>Họ tên</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th>Ngày sinh</th>
+            <th>Quận</th>
+            <th>Ngân Hàng</th>
+            <th>Loại xe</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cancelingShippers.map((shipper) => (
+            <tr key={shipper.ShipperID}>
+              <td>{shipper.FullName}</td>
+              <td>{shipper.PhoneNumber}</td>
+              <td>{shipper.Email}</td>
+              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+              <td>{shipper.District}</td>
+              <td>{shipper.BankName}</td>
+              <td>{shipper.VehicleType}</td>
+              <td>
+                <select value={shipper.Status}
+                onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="PendingUpdate">Pending Update</option>
+                  <option value="PendingCancel">Pending Cancel</option>
+                  <option value="Updated">Updated</option>
+                </select>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <h2 className="subtitle">Add New Shipper</h2>
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-      <div className="form-container">
-        <div className="input-group"><FaUser /><input type="text" name="FullName" placeholder="Full Name" value={form.FullName} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaPhone /><input type="text" name="PhoneNumber" placeholder="Phone Number" value={form.PhoneNumber} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaEnvelope /><input type="email" name="Email" placeholder="Email" value={form.Email} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaCalendar /><input type="date" name="DateOfBirth" value={form.DateOfBirth} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaMapMarkerAlt /><input type="text" name="Address" placeholder="Address" value={form.Address} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaUniversity /><input type="text" name="BankAccountNumber" placeholder="Bank Account Number" value={form.BankAccountNumber} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaTruck /><input type="text" name="VehicleDetails" placeholder="Vehicle Details" value={form.VehicleDetails} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaLock /><input type="password" name="Password" placeholder="Password" value={form.Password} onChange={handleInputChange} /></div>
-        <select name="Status" value={form.Status} onChange={handleInputChange}>
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-        <button className="add-button" onClick={handleAddShipper}>Add Shipper</button>
-      </div>
-      {form.ShipperID && (
-      <div className="form-container edit-mode"> {}
-      <div><h2 className="subtitle">Edit Shipper</h2></div>
-        
-        {/* Edit Shipper form */}
-        <div className="input-group"><FaUser /><input type="text" name="FullName" placeholder="Full Name" value={form.FullName} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaPhone /><input type="text" name="PhoneNumber" placeholder="Phone Number" value={form.PhoneNumber} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaEnvelope /><input type="email" name="Email" placeholder="Email" value={form.Email} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaCalendar /><input type="date" name="DateOfBirth" value={form.DateOfBirth} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaMapMarkerAlt /><input type="text" name="Address" placeholder="Address" value={form.Address} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaUniversity /><input type="text" name="BankAccountNumber" placeholder="Bank Account Number" value={form.BankAccountNumber} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaTruck /><input type="text" name="VehicleDetails" placeholder="Vehicle Details" value={form.VehicleDetails} onChange={handleInputChange} /></div>
-        <div className="input-group"><FaLock /><input type="password" name="Password" placeholder="Password" value={form.Password} onChange={handleInputChange} /></div>
-        <select name="Status" value={form.Status} onChange={handleInputChange}>
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-        <button className="save-button" onClick={handleSaveEdit}>Save Changes</button>
-      </div>
-    )}
+
+      {/* Approved Shippers */}
+      <h2>Danh sách shipper đã duyệt</h2>
+      <table className="shipper-table">
+        <thead>
+          <tr>
+            <th>Họ tên</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th>Ngày sinh</th>
+            <th>Quận</th>
+            <th>Ngân Hàng</th>
+            <th>Loại xe</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          {approvedShippers.map((shipper) => (
+            <tr key={shipper.ShipperID}>
+              <td>{shipper.FullName}</td>
+              <td>{shipper.PhoneNumber}</td>
+              <td>{shipper.Email}</td>
+              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+              <td>{shipper.District}</td>
+              <td>{shipper.BankName}</td>
+              <td>{shipper.VehicleType}</td>
+              <td>
+              <select value={shipper.Status}
+              onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="PendingUpdate">Pending Update</option>
+                <option value="PendingCancel">Pending Cancel</option>
+                <option value="Updated">Updated</option>
+              </select>
+            </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

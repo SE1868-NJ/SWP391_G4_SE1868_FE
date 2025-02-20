@@ -1,3 +1,4 @@
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -19,6 +20,7 @@ import ServiceDetailPage from "./components/pages/Home/ServiceDetailPage";
 import PrivacyPolicy from "./components/pages/Home/PrivacyPolicy";
 import TermsOfUse from "./components/pages/Home/TermOfUse";
 import JobDetail from "./components/pages/Home/JobDetail";
+import ShipperDetail from "./components/pages/ShipperDetail";
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <navigate to="/login" />;
@@ -63,6 +65,7 @@ root.render(
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/terms-of-use" element={<TermsOfUse />} />
       <Route path="/job/:jobId" element={<JobDetail />} />
+      <Route path='/shipper-detail' element={<ShipperDetail />} />
     </Routes>
   </Router>
 );
