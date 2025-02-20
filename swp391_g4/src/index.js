@@ -16,7 +16,6 @@ import UpdateShipperInfo from './components/pages/ShipperAccount/UpdateShipperIn
 import EventDetail from './components/pages/Home/EventDetail';
 import About from './components/pages/Home/About';
 import News from './components/pages/Home/News';
-import ShipperDetail from './components/pages/ShipperDetail';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
