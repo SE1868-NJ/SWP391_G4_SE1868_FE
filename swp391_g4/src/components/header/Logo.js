@@ -6,7 +6,7 @@ export const Logo = () => {
   return (
     <img
       loading="lazy"
-      src="EcoShipper_rbg.png"
+      src="/EcoShipper_rbg.png"
       className={styles.img}
       alt="EcoShipper Logo"
     />
