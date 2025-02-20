@@ -13,6 +13,7 @@ import ShipperContact from './components/pages/Home/ShipperContact';
 import ShipperAccount from './components/pages/ShipperAccount/ShipperAccount';
 import UpdateShipperInfo from './components/pages/ShipperAccount/UpdateShipperInfo';
 import EventDetail from './components/pages/Home/EventDetail';
+import ActivityDetail from './components/pages/Home/ActivityDetail';
 import About from './components/pages/Home/About';
 import News from './components/pages/Home/News';
 import ServiceDetailPage from './components/pages/Home/ServiceDetailPage';
@@ -53,6 +54,7 @@ root.render(
      <Route path="/news" element={<News />} />
      <Route path="/register" element={<ShipperRegister />} />
      <Route path="/news/:eventId" element={<EventDetail />} />
+     <Route path="/activities/:activityId" element={<ActivityDetail />} /> 
      <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
      <Route path="/terms-of-use" element={<TermsOfUse />} />
