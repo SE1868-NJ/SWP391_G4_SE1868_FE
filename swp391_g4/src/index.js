@@ -19,7 +19,6 @@ import ServiceDetailPage from "./components/pages/Home/ServiceDetailPage";
 import PrivacyPolicy from "./components/pages/Home/PrivacyPolicy";
 import TermsOfUse from "./components/pages/Home/TermOfUse";
 import JobDetail from "./components/pages/Home/JobDetail";
-
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <navigate to="/login" />;

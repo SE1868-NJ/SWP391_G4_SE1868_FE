@@ -10,7 +10,7 @@ const navigate = useNavigate();
     1: {
       title: 'Khai trương chi nhánh EcoShipper tại Hà Nội',
       description: `
-        EcoShipper chính thức khai trương chi nhánh mới tại TP.HCM, với đội ngũ shipper chuyên nghiệp và hệ thống kho bãi hiện đại.
+        EcoShipper chính thức khai trương chi nhánh mới tại Hà Nội, với đội ngũ shipper chuyên nghiệp và hệ thống kho bãi hiện đại.
         Chi nhánh này sẽ đáp ứng nhu cầu giao nhận hàng hóa nội khu, đặc biệt là tại các quận trung tâm như Quận Ba Đình, Quận Hoàng Mai.
       `,
       image: 'https://thietbidungcubuffet.com/images/tin-tuc/cau-chuc-khai-truong-nha-h%C3%A0ng.jpg',
@@ -34,7 +34,7 @@ const navigate = useNavigate();
     4: {
       title: 'Chương trình "1 giờ giao hàng nội khu"',
       description: `
-        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm TP.HCM. 
+        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm Hà Nội. 
         Dịch vụ này cam kết giao hàng nhanh chóng, đảm bảo đáp ứng nhu cầu khẩn cấp của khách hàng trong nội khu.
       `,
       image: 'https://xwatch.vn/upload_images/images/2023/01/11/1-ngay-co-bao-nhieu-gio-phut-giay.jpg',

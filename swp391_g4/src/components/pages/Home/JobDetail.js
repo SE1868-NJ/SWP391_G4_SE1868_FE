@@ -34,7 +34,7 @@ const JobDetail = () => {
         {
           role: "Nhân viên Hành chính kho",
           salary: "8-12 triệu",
-          location: "TP.HCM, Hà Nội",
+          location: "Hà Nội, Hà Nội",
           requirements: [
             "Tốt nghiệp Cao đẳng/Đại học chuyên ngành Quản trị văn phòng hoặc tương đương",
             "Có ít nhất 1 năm kinh nghiệm trong lĩnh vực hành chính kho",
@@ -58,7 +58,7 @@ const JobDetail = () => {
         {
           role: "Chuyên viên Đào tạo",
           salary: "12-15 triệu",
-          location: "TP.HCM",
+          location: "Hà Nội",
           requirements: [
             "Tốt nghiệp Đại học chuyên ngành Quản trị nhân sự, Giáo dục hoặc tương đương",
             "Có ít nhất 2 năm kinh nghiệm trong lĩnh vực đào tạo",
@@ -89,7 +89,7 @@ const JobDetail = () => {
         {
           role: "Java Developer",
           salary: "15-30 triệu",
-          location: "TP.HCM",
+          location: "Hà Nội",
           requirements: [
             "Tốt nghiệp Đại học chuyên ngành CNTT hoặc tương đương",
             "Có ít nhất 2 năm kinh nghiệm với Java",
@@ -114,7 +114,7 @@ const JobDetail = () => {
         {
           role: "Data Scientist",
           salary: "20-35 triệu",
-          location: "TP.HCM",
+          location: "Hà Nội",
           requirements: [
             "Tốt nghiệp Đại học/Thạc sĩ chuyên ngành CNTT, Toán học hoặc tương đương",
             "Thành thạo Python và các thư viện ML",
@@ -170,7 +170,7 @@ const JobDetail = () => {
         {
           role: "Giám sát Kho vận",
           salary: "12-18 triệu",
-          location: "TP.HCM, Hà Nội",
+          location: "Hà Nội, Hà Nội",
           requirements: [
             "Tốt nghiệp Cao đẳng/Đại học",
             "Có ít nhất 2 năm kinh nghiệm quản lý kho",
@@ -201,7 +201,7 @@ const JobDetail = () => {
         {
           role: "Giám sát Xe tải",
           salary: "10-15 triệu",
-          location: "TP.HCM, Hà Nội, Đà Nẵng",
+          location: "Hà Nội, Hà Nội, Đà Nẵng",
           requirements: [
             "Có bằng lái xe B2 trở lên",
             "Ít nhất 2 năm kinh nghiệm lái xe tải",
