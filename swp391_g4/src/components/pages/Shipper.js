@@ -103,7 +103,7 @@ const Shipper = () => {
           >
           </Button>
           <div className={`form shipper-dropdown-menu ${showDropdown ? 'show' : ''}`}>
-            <Button variant="dropdown" onClick={() => navigate('/shipperaccount')}>
+            <Button variant="dropdown" onClick={() => navigate('/shipper-account')}>
               Shipper Account
             </Button>
             <Button variant="dropdown" onClick={() => navigate('/historyorder')}>

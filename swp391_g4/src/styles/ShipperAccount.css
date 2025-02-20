@@ -1,0 +1,285 @@
+.shipper-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.shipper-main {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f5f5f5;
+}
+
+.shipper-account-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.left-sidebar {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sidebar-item {
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #f0f0f0;
+}
+
+.sidebar-item.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.right-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: bold;
+  color: #666;
+}
+
+.value {
+  font-size: 1.1rem;
+}
+
+.account-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.update-button,
+.cancel-account-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.update-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.cancel-account-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.update-button:hover,
+.cancel-account-button:hover {
+  opacity: 0.9;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.popup-content h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.popup-content p {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+.reason-options {
+  display: flex;
+  flex-direction: column; /* Stack the options vertically */
+  align-items: flex-start; /* Align items to the left */
+  gap: 1rem; /* Space between each option */
+  padding-left: 20px; /* Optional padding to give it a margin from the left */
+}
+
+.reason-option {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between radio button and label */
+}
+
+.reason-option input[type="radio"] {
+  margin: 0; /* Remove default margin */
+}
+
+.reason-option label {
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.other-reason-input {
+  width: 100%;
+  height: 100px;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  resize: none;
+  margin-top: 1rem;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.popup-actions button {
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.popup-actions .cancel-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.popup-actions .cancel-button:hover {
+  background-color: #c82333;
+}
+
+.popup-actions .close-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.popup-actions .close-button:hover {
+  background-color: #e0e0e0;
+}
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.document-item {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.document-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.document-item h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.document-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.document-item p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.ok-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ok-button:hover {
+  background-color: #0056b3;
+}
