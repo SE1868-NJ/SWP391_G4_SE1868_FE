@@ -33,7 +33,7 @@ export class Footer extends React.Component {
           <div className={styles.logoContainer}>
             <img
               loading="lazy"
-              src="EcoShipper_rbg.png"
+              src="/EcoShipper_rbg.png"
               className={styles.logo}
               alt="Company logo"
             />
@@ -50,10 +50,10 @@ export class Footer extends React.Component {
                         <a href="/about" className={styles.link}>
                           Về chúng tôi
                         </a>
-                        <a href="#" className={styles.subLink}>
+                        <a href="/privacy-policy" className={styles.subLink}>
                           Điều khoản bảo mật
                         </a>
-                        <a href="#" className={styles.subLink}>
+                        <a href="/terms-of-use" className={styles.subLink}>
                           Chính sách sử dụng
                         </a>
                         <a href="#" className={styles.subLink}>
