@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../../styles/Login.css";
 
-const Login = () => {
+const Login = ({ isPopup = false, onClose }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -33,7 +33,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/login",
+        "http://localhost:4000/api/login",
         formData,
         {
           headers: {
@@ -48,6 +48,11 @@ const Login = () => {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('shipperName', response.data.shipper.FullName);
         localStorage.setItem('shipperId', response.data.shipper.ShipperID);
+        
+        // Nếu là popup thì đóng popup
+        if (isPopup && onClose) {
+          onClose();
+        }
         
         // Chuyển hướng đến trang shipper
         navigate("/shipper");
@@ -72,7 +77,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className={`login-container ${isPopup ? 'popup-mode' : ''}`}>
       <h1 className="login-title">Đăng Nhập</h1>
 
       <form className="login-form" onSubmit={handleLogin}>

@@ -1,19 +1,16 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../../../styles/News.css';
 
 const EventDetail = () => {
-  const { eventId } = useParams(); // Lấy ID sự kiện từ URL
-  const navigate = useNavigate();
+const { eventId } = useParams(); // Lấy ID sự kiện từ URL
+const navigate = useNavigate();
 
-
- 
 
   const events = {
     1: {
       title: 'Khai trương chi nhánh EcoShipper tại Hà Nội',
       description: `
-        EcoShipper chính thức khai trương chi nhánh mới tại TP.HCM, với đội ngũ shipper chuyên nghiệp và hệ thống kho bãi hiện đại.
+        EcoShipper chính thức khai trương chi nhánh mới tại Hà Nội, với đội ngũ shipper chuyên nghiệp và hệ thống kho bãi hiện đại.
         Chi nhánh này sẽ đáp ứng nhu cầu giao nhận hàng hóa nội khu, đặc biệt là tại các quận trung tâm như Quận Ba Đình, Quận Hoàng Mai.
       `,
       image: 'https://thietbidungcubuffet.com/images/tin-tuc/cau-chuc-khai-truong-nha-h%C3%A0ng.jpg',
@@ -37,7 +34,7 @@ const EventDetail = () => {
     4: {
       title: 'Chương trình "1 giờ giao hàng nội khu"',
       description: `
-        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm TP.HCM. 
+        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm Hà Nội. 
         Dịch vụ này cam kết giao hàng nhanh chóng, đảm bảo đáp ứng nhu cầu khẩn cấp của khách hàng trong nội khu.
       `,
       image: 'https://xwatch.vn/upload_images/images/2023/01/11/1-ngay-co-bao-nhieu-gio-phut-giay.jpg',
@@ -58,20 +55,11 @@ const EventDetail = () => {
       `,
       image: 'https://i.pinimg.com/originals/90/98/8a/90988a283f78e68a9349694554bc2d52.jpg',
     },
-    7: {
-      title: 'Tăng cường giao nhận nội khu dịp lễ Tết',
-      description: `
-        Trong dịp Tết Nguyên Đán, EcoShipper tăng cường đội ngũ shipper và thời gian hoạt động tại các khu vực nội khu, 
-        đảm bảo giao hàng nhanh chóng và kịp thời cho khách hàng trong dịp lễ.
-      `,
-      image: 'https://hoaphatmiennam.vn/wp-content/uploads/2023/01/tet-nguyen-dan-va-nhung-dieu-ban-chua-biet-1.jpg',
-    },
   };
   
 
   const event = events[eventId];
 
-  // Kiểm tra nếu không tìm thấy sự kiện
   if (!event) {
     return (
       <div className="event-detail">

@@ -5,34 +5,53 @@ import { NavigationItem } from "./NavigationItem";
 import { Logo } from "./Logo";
 import { AuthButton } from "./AuthButton";
 
-export const Header = ({ navigationItems }) => {
- // Mục điều hướng mặc định nếu không được cung cấp
- const defaultNavItems = [
-   { text: "Trang chủ", path: "/home", isActive: true },
-   { text: "Về chúng tôi", path: "/about" },
-   { text: "Dịch vụ", path: "/services" },
-   { text: "Tin tức", path: "/news" },
-   { text: "Liên hệ", path: "/contact" }
- ];
+export class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showLoginButton: props.showLoginButton || false
+    };
+  }
 
- const navItems = navigationItems || defaultNavItems;
+  // Hàm để thay đổi trạng thái hiển thị nút login
+  showLoginButton = (isShow) => {
+    this.setState({ showLoginButton: isShow });
+  }
 
- return (
-   <header className={styles.header}>
-     <nav className={styles.backgroundShadow}>
-       <Logo />
-       <div className={styles.navigationItems}>
-         {navItems.map((item, index) => (
-           <NavigationItem
-             key={index}
-             text={item.text}
-             path={item.path}
-             isActive={item.isActive}
-           />
-         ))}
-       </div>
-       <AuthButton />
-     </nav>
-   </header>
- );
-};
+  render() {
+    const defaultNavItems = [
+      { text: "Trang chủ", path: "/home", isActive: true },
+      { text: "Về chúng tôi", path: "/about" },
+      { text: "Tin tức", path: "/news" },
+      { text: "Liên hệ", path: "/contact" }
+    ];
+  
+    const navItems = this.props.navigationItems || defaultNavItems;
+  
+    return (
+      <header className={styles.header}>
+        <nav className={styles.backgroundShadow}>
+          <Logo />
+          <div className={styles.navigationItems}>
+            {navItems.map((item, index) => (
+              <NavigationItem
+                key={index}
+                text={item.text}
+                path={item.path}
+                isActive={item.isActive}
+              />
+            ))}
+          </div>
+          <div className={styles.authSection}>
+            {this.state.showLoginButton ? (
+              <AuthButton onClick={this.props.onLoginClick} />
+            ) : (
+              <div className={styles.authPlaceholder}></div>
+            )}
+          </div>
+        </nav>
+      </header>
+    );
+  }
+}
+export default Header;

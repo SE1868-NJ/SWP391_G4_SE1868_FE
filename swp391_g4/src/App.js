@@ -6,11 +6,9 @@ import Button from './components/buttons/Button';
 const App = () => {
  const navigate = useNavigate();
 
-
  const handleLoginClick = () => {
    navigate('/login'); // Điều hướng sang trang login
  };
-
 
  return (
    <div>
