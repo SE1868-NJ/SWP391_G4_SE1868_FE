@@ -1,0 +1,235 @@
+.job-detail-page {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+  }
+  
+  .job-banner {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+  }
+  
+  .job-banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .job-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .job-banner-overlay h1 {
+    color: #ffffff;
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    font-weight: 700;
+  }
+  
+  .job-banner-overlay p {
+    color: #e8f0fe;
+    font-size: 1.4rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .job-detail-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+  }
+  
+  .job-detail-title {
+    color: #3e8e41;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .job-overview {
+    color: #5f6368;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+  
+  .position-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e8eaed;
+  }
+  
+  .position-header {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e8eaed;
+    padding-bottom: 1rem;
+  }
+  
+  .position-title {
+    color: #4CAF50;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .position-meta {
+    display: flex;
+    gap: 2rem;
+    color: #3c4043;
+  }
+  
+  .salary, .location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .detail-section {
+    margin-bottom: 2rem;
+  }
+  
+  .detail-section h3 {
+    color: #202124;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .detail-section ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .detail-section li {
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #3c4043;
+    line-height: 1.5;
+  }
+  
+  .detail-section li:before {
+    content: "•";
+    color: #1a73e8;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+  
+  .apply-button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+  
+  .apply-button:hover {
+    background-color: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .job-apply-section {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  }
+  
+  .job-apply-title {
+    color: #3e8e41;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .job-apply-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .job-apply-method {
+    background: white;
+    padding: 1.8rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e8eaed;
+  }
+  
+  .job-apply-method:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .method-title {
+    color: #4CAF50;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e8eaed;
+    font-weight: 600;
+  }
+  
+  .method-text {
+    color: #3c4043;
+    margin-bottom: 0.8rem;
+    line-height: 1.6;
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .job-banner {
+      height: 200px;
+    }
+  
+    .job-banner-overlay h1 {
+      font-size: 2rem;
+    }
+  
+    .job-banner-overlay p {
+      font-size: 1.1rem;
+    }
+  
+    .job-apply-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .job-apply-section {
+      padding: 0 1rem;
+    }
+  
+    .position-meta {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+

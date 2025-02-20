@@ -7,16 +7,15 @@ import Login from "../Login/Login";
 const PrivacyPolicy = () => {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
-  const openLoginPopup = () => {
-    setIsLoginPopupOpen(true);
-  };
-
   const navigationItems = [
     { text: "Trang chủ", path: "/home" },
     { text: "Về chúng tôi", path: "/about" },
     { text: "Tin tức", path: "/news" },
     { text: "Liên hệ", path: "/shipper-contact" },
   ];
+  const openLoginPopup = () => {
+    setIsLoginPopupOpen(true);
+  };
 
   const closeLoginPopup = () => {
     setIsLoginPopupOpen(false);

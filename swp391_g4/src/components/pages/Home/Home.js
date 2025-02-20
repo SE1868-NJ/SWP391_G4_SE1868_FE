@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../../../styles/Home.css";
 import Footer from "../../footer/Footer";
-import Header  from "../../header/Header";
+import Header from "../../header/Header";
 import Login from "../Login/Login";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   // Navigation Items
@@ -71,40 +70,44 @@ const Home = () => {
   // Services Data
   const servicesData = [
     {
-        id: 'fast-delivery',
-        title: "Giao Hàng Nhanh Chóng",
-        description: "Giao hàng nhanh chóng, tiết kiệm thời gian.",
+      id: "fast-delivery",
+      title: "Giao Hàng Nhanh Chóng",
+      description: "Giao hàng nhanh chóng, tiết kiệm thời gian.",
     },
     {
-        id: 'eco-delivery',
-        title: "Vận Chuyển Tiết Kiệm",
-        description: "Dịch vụ giao hàng với chi phí hiệu quả.",
+      id: "eco-delivery",
+      title: "Vận Chuyển Tiết Kiệm",
+      description: "Dịch vụ giao hàng với chi phí hiệu quả.",
     },
     {
-        id: 'safe-delivery',
-        title: "Vận Chuyển An Toàn",
-        description: "Giao hàng đến bất kỳ nơi đâu với chất lượng đảm bảo.",
+      id: "safe-delivery",
+      title: "Vận Chuyển An Toàn",
+      description: "Giao hàng đến bất kỳ nơi đâu với chất lượng đảm bảo.",
     },
-];
+  ];
 
   // Job Roles Data
   const jobRolesData = [
     {
+      id: "nhan-vien-van-phong",
       title: "Nhân viên văn phòng",
       roles: ["Nhân viên Hành chính kho", "Chuyên viên Đào tạo"],
       icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/494e0269a78ee5656b3ea72de4809592310766624f2e4bce46dd3a730f6df377",
     },
     {
+      id: "trung-tam-cong-nghe",
       title: "Trung tâm công nghệ",
       roles: ["Java Developer", "Data Scientist"],
       icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/d216ddc5022a32c3f04229c740815e9e9c5003f9397c1cd0be49cbe5ccea0cd6",
     },
     {
+      id: "nhan-vien-van-hanh",
       title: "Nhân viên vận hành",
       roles: ["Nhân viên Bưu cục", "Giám sát Kho vận"],
       icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/7bbd21615b0b97711e3084f59325cecc832497e7f733ebaf0ee900d514f743ac",
     },
     {
+      id: "nhan-vien-lay-giao-tai-xe",
       title: "Nhân viên lấy giao, tài xế",
       roles: ["Giám sát Xe tải", "Nhân viên giao hàng"],
       icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/543006c1ed70b70af66b9021927fcee73a2db9240e17b821df89a3ab73376147",
@@ -199,20 +202,20 @@ const Home = () => {
 
       {/* Services Section */}
       <section className="services">
-    <h2>Dịch Vụ Của Chúng Tôi</h2>
-    <div className="service-list">
-        {servicesData.map((service) => (
+        <h2>Dịch Vụ Của Chúng Tôi</h2>
+        <div className="service-list">
+          {servicesData.map((service) => (
             <button
-                key={service.id}
-                className="service-item"
-                onClick={() => navigate(`/service/${service.id}`)}
+              key={service.id}
+              className="service-item"
+              onClick={() => navigate(`/service/${service.id}`)}
             >
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
             </button>
-        ))}
-    </div>
-</section>
+          ))}
+        </div>
+      </section>
 
       {/* Core Values Section */}
       <section className="container">
@@ -267,7 +270,12 @@ const Home = () => {
           </h1>
           <div className="jobs-grid">
             {jobRolesData.map((job, index) => (
-              <article key={index} className="job-column">
+              <article
+                key={index}
+                className="job-column"
+                onClick={() => navigate(`/job/${job.id}`)}
+                style={{ cursor: "pointer" }}
+              >
                 <div className="job-card">
                   <h2 className="job-title">{job.title}</h2>
                   {job.roles.map((role, roleIndex) => (
