@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import '../../../styles/ActivityDetail.css';
 
 const ActivityDetail = () => {
   const { activityId } = useParams(); // Lấy ID hoạt động từ URL
@@ -90,7 +91,8 @@ const ActivityDetail = () => {
 
 
 
-  const activity = activities[activityId];
+  const activity = activities.find(act => act.link === `/activities/${activityId}`);
+
 
   if (!activity) {
     return (

@@ -1,7 +1,9 @@
 import React from 'react';
-// import { useParams, useNavigate } from 'react-router-dom';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import '../../../styles/EventDetail.css';
+import { Header } from "../../header/Header";
+import Footer from "../../footer/Footer";
+import Login from "../Login/Login";
 
 
 const EventDetail = () => {
@@ -74,7 +76,6 @@ const EventDetail = () => {
     return (
       <div className="event-detail">
         <h2>Không tìm thấy sự kiện</h2>
-        {/* <button onClick={() => navigate('/news')}>Quay lại trang Tin tức</button> */}
       </div>
     );
   }
@@ -113,32 +114,36 @@ const EventDetail = () => {
       image: 'https://i.pinimg.com/originals/90/98/8a/90988a283f78e68a9349694554bc2d52.jpg',
     },
   ];
-  
+
 
   const filteredArticles = relatedArticles.filter(article => article.path !== `/news/${eventId}`);
 
 
+
   return (
-    <div className="event-detail">
-      <button className="back-button" onClick={() => navigate('/news')}>Quay lại</button>
-      <h1>{event.title}</h1>
-      <img src={event.image} alt={event.title} className="event-image" />
-      <p>{event.description}</p>
-
-      <h2>Bài viết khác</h2>
-      <div className="related-articles">
-        {relatedArticles.map((article, index) => (
-          <div className="related-article-item" key={index}>
-            <Link to={article.path}>
-              <img src={article.image} alt={article.title} className="related-article-image" />
-              <h3>{article.title}</h3>
-            </Link>
-          </div>
-        ))}
+    <div className="eventdetail-container">
+      <div className='header'>
+        <Header showLoginButton={true} />
       </div>
+      <div className='event-detail'>
+        <button className="back-button" onClick={() => navigate('/news')}>Quay lại</button>
+        <h1>{event.title}</h1>
+        <img src={event.image} alt={event.title} className="event-image" />
+        <p>{event.description}</p>
 
-
-
+        <h2>Bài viết khác</h2>
+        <div className="related-articles">
+          {relatedArticles.map((article, index) => (
+            <div className="related-article-item" key={index}>
+              <Link to={article.path}>
+                <img src={article.image} alt={article.title} className="related-article-image" />
+                <h3>{article.title}</h3>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Footer/>
     </div>
   );
 };
