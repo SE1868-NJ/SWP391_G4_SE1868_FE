@@ -87,13 +87,13 @@ export class Footer extends React.Component {
                       <nav className={styles.linkList}>
                         <h3 className={styles.linkHeader}>Tin tức</h3>
                         <a href="/news" className={styles.link}>
-                          Sự kiện
+                          Sự kiện và tin tức
                         </a>
-                        <a href="#" className={styles.subLink}>
+                        <a href="/news" className={styles.subLink}>
                           Hoạt động xã hội
                         </a>
-                        <a href="#" className={styles.subLink}>
-                          Dành cho Nhà bán
+                        <a href="/manage-shipper" className={styles.subLink}>
+                          Admin
                         </a>
                       </nav>
                     </div>
