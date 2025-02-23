@@ -5,10 +5,10 @@ import {  Table, TableHead, TableCell, TableBody, TableRow } from "@mui/material
 import { Button } from "react-bootstrap";  // Bootstrap button
 import "bootstrap/dist/css/bootstrap.min.css";
 import { format } from "date-fns";
+import MapBox from "../common/Mapbox";
 import Header from "../common/header";
-import mapboxgl from 'mapbox-gl'
 
-import MapBox from "../common/mapbox";
+
 const OrderDetails = () => {
     const { id } = useParams();
     const [order, setOrder] = useState({});

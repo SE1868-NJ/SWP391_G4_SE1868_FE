@@ -40,7 +40,7 @@ function ShipperContact() {
 
       <div className="container">
         <div className="card">
-          <h2 className="title">Contact Page </h2>
+          <h2 className="title">Contact Us </h2>
           <p className="text-center">Hãy để lại thông tin, chúng tôi sẽ liên hệ bạn ngay!</p>
 
           <form className="form" onSubmit={handleSubmit(onSubmit)}>
@@ -103,21 +103,6 @@ function ShipperContact() {
           </form>
         </div>
 
-        <div className="contact-info">
-          <h3>Thông tin liên hệ</h3>
-          <div className="info-item">
-            <i className="fas fa-map-marker-alt"></i>
-            <span>Địa chỉ: 123 Đường ABC, Quận XYZ</span>
-          </div>
-          <div className="info-item">
-            <i className="fas fa-phone-alt"></i>
-            <span>Số điện thoại: (123) 456-7890</span>
-          </div>
-          <div className="info-item">
-            <i className="fas fa-clock"></i>
-            <span>Giờ làm việc: 9:00 AM - 6:00 PM</span>
-          </div>
-        </div>
       </div>
 
       <Footer /> {/* Thêm Footer vào cuối trang */}

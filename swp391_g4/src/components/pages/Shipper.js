@@ -7,7 +7,8 @@ import ReactPaginate from 'react-paginate';
 import { format } from 'date-fns';
 import { Input, initMDB } from 'mdb-ui-kit';
 import Header from '../common/header';
-import ProfileShipper from '../common/profileShipper';
+import ProfileShipper from '../common/ProfileShipper';
+import Footer from '../footer/Footer';
 initMDB({ Input });
 
 const Shipper = () => {
@@ -15,7 +16,7 @@ const Shipper = () => {
   const [shipper, setShipper] = useState([]);
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentLimit, setCurrentLimit] = useState(8);
+  const [currentLimit, setCurrentLimit] = useState(15);
   const [totalOrders, setTotalOrders] = useState('');
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -80,7 +81,7 @@ const Shipper = () => {
   }
   return (
     <div className="form shipper">
-      <Header/>
+      <Header/> {/* Sử dụng Header từ thư mục common */}
 
       <main className="mx-md-5">
         
@@ -159,6 +160,7 @@ const Shipper = () => {
           </div>
         }
       </main>
+      <Footer/>
     </div>
   );
 };

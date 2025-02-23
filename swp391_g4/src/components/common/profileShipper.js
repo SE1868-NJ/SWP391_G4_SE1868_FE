@@ -14,7 +14,7 @@ const ProfileShipper = ( props) => {
                     <div className="d-flex justify-content-between mb-3 ">
                       <div className="flex-shrink-0 me-3  ">
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                          alt="Danny McLoan" className="img-fluid rounded-3" style={{ width: '100px' }}/>
+                          alt="Danny McLoan" className="img-fluid rounded-3" style={{ width: '90px' }}/>
                       </div>
                       <div className="align-content-center">
                         <h6 className="mb-1">{shipper.FullName}</h6>

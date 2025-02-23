@@ -1,141 +1,105 @@
-.container {
+/* Shipper Contact Page - Improved CSS */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-size: cover; /* Đảm bảo ảnh nền phủ toàn bộ màn hình */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Giữ ảnh nền cố định khi cuộn trang */
-    padding: 0 20px;
-  
+    min-height: 100vh;
+    padding: 20px;
   }
-  /* Đảm bảo nền phủ toàn màn hình */
-  /* html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #2e7d32; /* Màu xanh lá đậm */
-  /* } */ */
+  
   .card {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
     width: 100%;
-    max-width: 500px;
-    margin: 20px;
+    text-align: center;
   }
   
   .title {
-    font-size: 26px;
-    font-weight: 600;
-    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
     color: #333;
   }
   
   .text-center {
-    text-align: center;
-    font-size: 16px;
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
   }
   
   .input-group {
     margin-bottom: 20px;
+    text-align: left;
   }
   
-  .form-group {
+  .input-group input,
+  .input-group textarea {
     width: 100%;
     padding: 14px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 18px;
+    outline: none;
+    transition: border-color 0.3s;
   }
   
-  textarea.form-group {
+  .input-group input:focus,
+  .input-group textarea:focus {
+    border-color: #1dc750;
+  }
+  
+  textarea {
     resize: vertical;
-    height: 120px;
+    min-height: 120px;
+  }
+  
+  .error {
+    color: #e63946;
+    font-size: 16px;
+    margin-top: 6px;
   }
   
   .button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
+    background: #159e27;
+    color: #ffffff;
     border: none;
-    border-radius: 8px;
+    padding: 14px;
+    font-size: 18px;
+    border-radius: 10px;
     cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background 0.3s;
+  }
+  
+  .button:hover {
+    background: #1a8d4a;
   }
   
   .button:disabled {
-    background-color: #ccc;
+    background: #ccc;
     cursor: not-allowed;
   }
   
-  .button:hover:not(:disabled) {
-    background-color: #45a049;
+  @media (max-width: 576px) {
+    .card {
+      padding: 25px;
+    }
+    .title {
+      font-size: 24px;
+    }
   }
   
-  .home-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    background-color: #229213;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .home-button:hover {
-    background-color: #9af2b9;
-  }
-  
-  .contact-info {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-  }
-  
-  .contact-info h3 {
-    text-align: center;
-    font-size: 22px;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .info-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .info-item i {
-    margin-right: 15px;
-    font-size: 22px;
-    color: #1d8522; /* Màu của icon */
-  }
-  
-  .info-item span {
-    font-size: 16px;
-    color: #333;
-  }
-  
-  .info-item i:hover {
-    color: #20b677; /* Màu thay đổi khi hover vào icon */
-  }
-  
-  
-  .error{
-    color:red;
-  }

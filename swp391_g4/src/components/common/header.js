@@ -1,54 +1,60 @@
-import Button from '../buttons/Button';
-import '../../styles/Shipper.css';
+import { Logo } from '../header/Logo'; // Import Logo component
+import styles from '../../styles/Header.module.css'; // Import the new styles
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from '../buttons/Button';
+
 
 const Header = () => {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
-     useEffect(() => {
+    useEffect(() => {
         const loggedInStatus = localStorage.getItem('isLoggedIn');
         if (loggedInStatus === 'true') {
-          setIsLoggedIn(true);
+            setIsLoggedIn(true);
         }
-    
-        // Thêm sự kiện lắng nghe khi click ra ngoài menu
+
         const handleClickOutside = (event) => {
-          if (menuOpen && !event.target.closest('.form.shipper-menu') && !event.target.closest('.form.shipper-header-right')) {
-            setMenuOpen(false);
-          }
+            if (menuOpen && !event.target.closest('.form.shipper-menu') && !event.target.closest('.form.shipper-header-right')) {
+                setMenuOpen(false);
+            }
         };
-    
+
         document.addEventListener('click', handleClickOutside);
-    
+
         return () => {
-          document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         };
-      }, [menuOpen]);
-  
+    }, [menuOpen]);
+
     const handleLogout = () => {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('shipperName');
-      localStorage.removeItem('shipperId');
-      setIsLoggedIn(false);
-      setMenuOpen(false);
-      navigate('/login');
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('shipperName');
+        localStorage.removeItem('shipperId');
+        setIsLoggedIn(false);
+        setMenuOpen(false);
+        navigate('/login');
     };
-  
+
     const toggleMenu = (event) => {
-      event.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
-      setMenuOpen(!menuOpen);
+        event.stopPropagation();
+        setMenuOpen(!menuOpen);
     };
-    
+
     const handleMenuClick = (path) => {
         navigate(path);
         setMenuOpen(false);
-      };
+    };
+
     return (
-        <div>
-        <header className="form shipper-header">
+      <div>
+        <header className={styles.header}> {/* Sử dụng styles từ Header.module.css */}
+            <nav className={styles.backgroundShadow}>
+                <div className={styles.logoContainer}> {/* Container cho logo */}
+                    <Logo />
+                </div>
                 <div className="form shipper-header-left">
                 <h1>Homepage Shipper</h1>
                 </div>
@@ -57,13 +63,13 @@ const Header = () => {
                     <span style={{ fontSize: '24px' }}>☰</span>
                 </Button>
                 </div>
-            </header>
-
-            {/* Sidebar menu */}
+                
+            </nav>
+        </header>
+        {/* Sidebar menu */}
             <nav className={`form shipper-menu ${menuOpen ? 'open' : ''}`} style={{ zIndex: 1000 }}>
                 <ul>
                     <>
-                    <li onClick={() => handleMenuClick('/shipper')}>Shipper Home</li>
                     <li onClick={() => handleMenuClick('/shipperaccount')}>Shipper Account</li>
                     <li onClick={() => handleMenuClick('/historyorder')}>History Order</li>
                     <li onClick={() => handleMenuClick('/revenue')}>Revenue</li>
@@ -75,4 +81,4 @@ const Header = () => {
     );
 };
 
-export default Header
+export default Header;
