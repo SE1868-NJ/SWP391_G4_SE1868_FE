@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/ManageShipper.css";
+import "../../../styles/ManageShipper.css";
 import moment from "moment";
 
 const ManageShipper = () => {
@@ -33,12 +33,11 @@ const ManageShipper = () => {
       .catch((error) => console.error("Error fetching approved shippers:", error));
   };
 
-  // Xử lý tìm kiếm
   const handleSearch = (query) => {
     setSearchQuery(query);
 
     if (query.trim() === "") {
-      fetchShippers(); // Nếu ô tìm kiếm trống, lấy lại toàn bộ danh sách
+      fetchShippers(); // If search is empty, fetch all shippers
       return;
     }
 
@@ -57,39 +56,39 @@ const ManageShipper = () => {
     axios.get(`http://localhost:5000/api/search-approved-shippers?query=${query}`)
       .then((response) => setApprovedShippers(response.data))
       .catch((error) => console.error("Error searching approved shippers:", error));
-  
   };
+
   const handleStateChange = (id, newStatus) => {
     axios.post("http://localhost:5000/api/change-shipper-status", { id, newStatus })
       .then(() => {
-        fetchShippers(); // Làm mới danh sách sau khi thay đổi trạng thái
+        fetchShippers(); // Refresh the list after state change
       })
-      .catch(error => console.error("Lỗi khi thay đổi trạng thái shipper:", error));
+      .catch(error => console.error("Error changing shipper status:", error));
   };
-  
-  
 
   const handleShipperDetail = () => {
     window.location.href = `/shipper-detail`;
   };
+
   return (
     <div className="manage-shipper-container">
       <h2>Quản lý Shipper</h2>
 
-      {/* Ô tìm kiếm */}
+      {/* Search bar */}
       <input
         type="text"
         placeholder="Tìm kiếm theo tên, số điện thoại, email..."
         value={searchQuery}
         onChange={(e) => handleSearch(e.target.value)}
-        className="search-bar"
+        className="manage-shipper-search-bar"
       />
 
       {/* Pending Register */}
       <h2>Danh sách đăng ký chờ duyệt</h2>
-      <table className="shipper-table">
+      <table className="manage-shipper-table">
         <thead>
           <tr>
+            <th>ID Shipper</th>
             <th>Họ tên</th>
             <th>Số điện thoại</th>
             <th>Email</th>
@@ -103,6 +102,7 @@ const ManageShipper = () => {
         <tbody>
           {pendingRegisterShippers.map((shipper) => (
             <tr key={shipper.ShipperID}>
+              <td>{shipper.ShipperID}</td>
               <td>{shipper.FullName}</td>
               <td>{shipper.PhoneNumber}</td>
               <td>{shipper.Email}</td>
@@ -111,24 +111,25 @@ const ManageShipper = () => {
               <td>{shipper.BankName}</td>
               <td>{shipper.VehicleType}</td>
               <td>{shipper.Status}</td>
-
             </tr>
           ))}
         </tbody>
       </table>
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <button 
-                  className="detail-button"
-                  onClick={() => handleShipperDetail()}
-                >
-                  Duyệt chi tiết
-                </button>
-        </div>
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <button 
+          className="manage-shipper-detail-button"
+          onClick={handleShipperDetail}
+        >
+          Duyệt chi tiết
+        </button>
+      </div>
+
       {/* Pending Update */}
       <h2>Danh sách shipper đang chờ cập nhật</h2>
-      <table className="shipper-table">
+      <table className="manage-shipper-table">
         <thead>
           <tr>
+            <th>ID Shipper</th>
             <th>Họ tên</th>
             <th>Số điện thoại</th>
             <th>Email</th>
@@ -142,6 +143,7 @@ const ManageShipper = () => {
         <tbody>
           {updatingShippers.map((shipper) => (
             <tr key={shipper.ShipperID}>
+              <td>{shipper.ShipperID}</td>
               <td>{shipper.FullName}</td>
               <td>{shipper.PhoneNumber}</td>
               <td>{shipper.Email}</td>
@@ -150,15 +152,15 @@ const ManageShipper = () => {
               <td>{shipper.BankName}</td>
               <td>{shipper.VehicleType}</td>
               <td>
-              <select value={shipper.Status}
-               onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="PendingUpdate">Pending Update</option>
-                <option value="PendingCancel">Pending Cancel</option>
-                <option value="Updated">Updated</option>
-              </select>
-            </td>
+                <select value={shipper.Status}
+                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="PendingUpdate">Pending Update</option>
+                  <option value="PendingCancel">Pending Cancel</option>
+                  <option value="Updated">Updated</option>
+                </select>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -166,9 +168,10 @@ const ManageShipper = () => {
 
       {/* Pending Cancel */}
       <h2>Danh sách shipper đang chờ hủy tài khoản</h2>
-      <table className="shipper-table">
+      <table className="manage-shipper-table">
         <thead>
           <tr>
+            <th>ID Shipper</th>
             <th>Họ tên</th>
             <th>Số điện thoại</th>
             <th>Email</th>
@@ -182,6 +185,7 @@ const ManageShipper = () => {
         <tbody>
           {cancelingShippers.map((shipper) => (
             <tr key={shipper.ShipperID}>
+              <td>{shipper.ShipperID}</td>
               <td>{shipper.FullName}</td>
               <td>{shipper.PhoneNumber}</td>
               <td>{shipper.Email}</td>
@@ -191,7 +195,7 @@ const ManageShipper = () => {
               <td>{shipper.VehicleType}</td>
               <td>
                 <select value={shipper.Status}
-                onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="PendingUpdate">Pending Update</option>
@@ -206,9 +210,10 @@ const ManageShipper = () => {
 
       {/* Approved Shippers */}
       <h2>Danh sách shipper đã duyệt</h2>
-      <table className="shipper-table">
+      <table className="manage-shipper-table">
         <thead>
           <tr>
+            <th>ID Shipper</th>
             <th>Họ tên</th>
             <th>Số điện thoại</th>
             <th>Email</th>
@@ -222,6 +227,7 @@ const ManageShipper = () => {
         <tbody>
           {approvedShippers.map((shipper) => (
             <tr key={shipper.ShipperID}>
+              <td>{shipper.ShipperID}</td>
               <td>{shipper.FullName}</td>
               <td>{shipper.PhoneNumber}</td>
               <td>{shipper.Email}</td>
@@ -230,15 +236,15 @@ const ManageShipper = () => {
               <td>{shipper.BankName}</td>
               <td>{shipper.VehicleType}</td>
               <td>
-              <select value={shipper.Status}
-              onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="PendingUpdate">Pending Update</option>
-                <option value="PendingCancel">Pending Cancel</option>
-                <option value="Updated">Updated</option>
-              </select>
-            </td>
+                <select value={shipper.Status}
+                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="PendingUpdate">Pending Update</option>
+                  <option value="PendingCancel">Pending Cancel</option>
+                  <option value="Updated">Updated</option>
+                </select>
+              </td>
             </tr>
           ))}
         </tbody>
