@@ -12,7 +12,7 @@ const ManageShipper = () => {
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [selectedShipper, setSelectedShipper] = useState(null);
   const [cancelReason, setCancelReason] = useState("");
-  const [cancelTime, setCancelTime] = useState(moment().format("YYYY-MM-DD"));
+  const [cancelTime, setCancelTime] = useState("Forever");
   useEffect(() => {
     fetchShippers();
   }, []);
@@ -86,25 +86,25 @@ const ManageShipper = () => {
       alert("Vui lòng nhập lý do hủy tài khoản");
       return;
     }
-
+  
     axios.post("http://localhost:5000/api/change-shipper-status", {
       id: selectedShipper.ShipperID,
       newStatus: "Inactive",
       cancelReason: cancelReason,
-      cancelTime: cancelTime
+      cancelTime: cancelTime 
     })
       .then(() => {
         setShowCancelPopup(false);
-        setCancelReason("");
+        setCancelReason('');
         setSelectedShipper(null);
-        fetchShippers(); // Refresh the list after state change
+        fetchShippers();
       })
       .catch(error => console.error("Error canceling shipper account:", error));
   };
 
   const handleCancelPopupClose = () => {
     setShowCancelPopup(false);
-    setCancelReason("");
+    setCancelReason('');
     setSelectedShipper(null);
   };
 
@@ -310,20 +310,20 @@ const ManageShipper = () => {
             </div>
             
             <div className="manage-shipper-popup-form-group">
-              <label>Thời gian khóa tài khoản:</label>
-              <select
-                value={cancelTime}
-                onChange={(e) => setCancelTime(e.target.value)}
-                required
-                className="manage-shipper-popup-select"
-              >
-                <option value="Warning">Cảnh báo</option>
-                <option value="3Days">Khóa 3 ngày</option>
-                <option value="7Days">Khóa 7 ngày</option>
-                <option value="14Days">Khóa 14 ngày</option>
-                <option value="Forever">Khóa vĩnh viễn</option>
-              </select>
-            </div>
+            <label>Thời gian khóa tài khoản:</label>
+            <select
+              value={cancelTime}
+              onChange={(e) => setCancelTime(e.target.value)}
+              required
+              className="manage-shipper-popup-select"
+            >
+              <option value="Warning">Cảnh báo</option>
+              <option value="3Days">Khóa 3 ngày</option>
+              <option value="7Days">Khóa 7 ngày</option>
+              <option value="14Days">Khóa 14 ngày</option>
+              <option value="Forever">Khóa vĩnh viễn</option>
+            </select>
+          </div>
             
             <div className="manage-shipper-popup-buttons">
               <button 
