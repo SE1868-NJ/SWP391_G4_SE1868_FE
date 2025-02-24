@@ -30,7 +30,7 @@ import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperIn
 
 //Trang Shipper
 import Shipper from "./components/pages/Shipper/Shipper";
-import OrderDetails from "./components/pages/Shipper/OrderDetails"
+import OrderDetails from "./components/pages/Shipper/OrderDetails";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -52,6 +52,7 @@ root.render(
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/terms-of-use" element={<TermsOfUse />} />
       <Route path="/job/:jobId" element={<JobDetail />} />
+      <Route path="/about" element={<About />} />
 
       {/* ** Trang Login ** */}
       <Route path="/login" element={<Login />} />
@@ -60,12 +61,33 @@ root.render(
       <Route path="/register" element={<ShipperRegister />} />
 
       {/* ** Trang Shipper** */}
-      <Route path="/shipper" element={<PrivateRoute><Shipper /></PrivateRoute>} />
+      <Route
+        path="/shipper"
+        element={
+          <PrivateRoute>
+            <Shipper />
+          </PrivateRoute>
+        }
+      />
       <Route path="/orderdetail/:id" element={<OrderDetails />} />
 
-      {/* ** Trang ShipperAccount** */}  
-      <Route path="/shipperaccount" element={<PrivateRoute><ShipperAccount /></PrivateRoute>} />
-      <Route path="/update-personal-info" element={<PrivateRoute><UpdateShipperInfo /></PrivateRoute>} />
+      {/* ** Trang ShipperAccount** */}
+      <Route
+        path="/shipperaccount"
+        element={
+          <PrivateRoute>
+            <ShipperAccount />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/update-personal-info"
+        element={
+          <PrivateRoute>
+            <UpdateShipperInfo />
+          </PrivateRoute>
+        }
+      />
 
       {/* ** Trang Operator ** */}
       <Route path="/manage-shipper" element={<ManageShipper />} />

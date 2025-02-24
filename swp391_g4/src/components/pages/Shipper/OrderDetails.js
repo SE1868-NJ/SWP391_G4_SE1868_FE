@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";  // Bootstrap button
 import "bootstrap/dist/css/bootstrap.min.css";
 import { format } from "date-fns";
 import MapBox from "../../common/Mapbox";
-import Header from "../../common/header";
+import Header from "../../header/Header";
 
 
 const OrderDetails = () => {

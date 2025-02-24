@@ -124,6 +124,8 @@ const Home = () => {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const navigate = useNavigate();
 
+  
+
   return (
     <div className="home">
       <div className="header">

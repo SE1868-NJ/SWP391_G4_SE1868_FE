@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPaginate from 'react-paginate';
 import { format } from 'date-fns';
 import { Input, initMDB } from 'mdb-ui-kit';
-import Header from '../../common/header';
+import Header from '../../header/Header'
 import ProfileShipper from '../../common/ProfileShipper';
 import Footer from '../../footer/Footer';
 initMDB({ Input });
@@ -81,7 +81,7 @@ const Shipper = () => {
   }
   return (
     <div className="form shipper">
-      <Header/> {/* Sử dụng Header từ thư mục common */}
+      <Header/>
 
       <main className="mx-md-5">
         

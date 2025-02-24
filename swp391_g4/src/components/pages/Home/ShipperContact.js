@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../../styles/ShiperContact.css";
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
+import Login from "../Login/Login";
 
 function ShipperContact() {
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+
+  const openLoginPopup = () => {
+    setIsLoginPopupOpen(true);
+  };
+
+  const closeLoginPopup = () => {
+    setIsLoginPopupOpen(false);
+  };
+  
   const {
     register,
     handleSubmit,
@@ -35,16 +46,21 @@ function ShipperContact() {
   };
 
   return (
-    <>
-      <Header showLoginButton = {true} /> {/* Thêm Header vào đầu trang */}
+    <div className="shippercontact-container">
+      <div className="shippercontact-header">
+        <Header 
+          showLoginButton={true} 
+          onLoginClick={openLoginPopup} 
+        />
+      </div>
 
-      <div className="container">
-        <div className="card">
-          <h2 className="title">Contact Us </h2>
-          <p className="text-center">Hãy để lại thông tin, chúng tôi sẽ liên hệ bạn ngay!</p>
+      <div className="shippercontact-content-container">
+        <div className="shippercontact-card">
+          <h2 className="shippercontact-title">Liên hệ </h2>
+          <p className="shippercontact-subtitle">Hãy để lại thông tin, chúng tôi sẽ liên hệ bạn ngay!</p>
 
-          <form className="form" onSubmit={handleSubmit(onSubmit)}>
-            <div className="input-group">
+          <form className="shippercontact-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className="shippercontact-input-group">
               <input
                 type="text"
                 placeholder="Họ và Tên"
@@ -54,12 +70,12 @@ function ShipperContact() {
                   maxLength: { value: 64, message: "Tên không được vượt quá 64 ký tự." },
                   pattern: { value: /^[a-zA-Z\s]+$/, message: "Tên chỉ chứa chữ cái và khoảng trắng." }
                 })}
-                className="form-group"
+                className="shippercontact-form-group"
               />
-              <p className="error">{errors.name?.message}</p>
+              <p className="shippercontact-error">{errors.name?.message}</p>
             </div>
 
-            <div className="input-group">
+            <div className="shippercontact-input-group">
               <input
                 type="email"
                 placeholder="Email"
@@ -67,12 +83,12 @@ function ShipperContact() {
                   required: "Vui lòng nhập email.",
                   pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, message: "Email không hợp lệ." }
                 })}
-                className="form-group"
+                className="shippercontact-form-group"
               />
-              <p className="error">{errors.email?.message}</p>
+              <p className="shippercontact-error">{errors.email?.message}</p>
             </div>
 
-            <div className="input-group">
+            <div className="shippercontact-input-group">
               <input
                 type="tel"
                 placeholder="Số điện thoại"
@@ -80,33 +96,43 @@ function ShipperContact() {
                   required: "Vui lòng nhập số điện thoại.",
                   pattern: { value: /^\+?[0-9]{7,15}$/, message: "Số điện thoại không hợp lệ." }
                 })}
-                className="form-group"
+                className="shippercontact-form-group"
               />
-              <p className="error">{errors.phone?.message}</p>
+              <p className="shippercontact-error">{errors.phone?.message}</p>
             </div>
 
-            <div className="input-group">
+            <div className="shippercontact-input-group">
               <textarea
                 placeholder="Nội dung liên hệ"
                 {...register("message", {
                   required: "Vui lòng nhập nội dung liên hệ.",
                   maxLength: { value: 500, message: "Nội dung không được vượt quá 500 ký tự." }
                 })}
-                className="form-group"
+                className="shippercontact-form-group"
               />
-              <p className="error">{errors.message?.message}</p>
+              <p className="shippercontact-error">{errors.message?.message}</p>
             </div>
 
-            <button type="submit" className="button" disabled={isSubmitting}>
+            <button type="submit" className="shippercontact-button" disabled={isSubmitting}>
               {isSubmitting ? "Đang gửi..." : "Gửi liên hệ"}
             </button>
           </form>
         </div>
-
       </div>
 
-      <Footer /> {/* Thêm Footer vào cuối trang */}
-    </>
+      {isLoginPopupOpen && (
+        <div className="shippercontact-popup-overlay">
+          <div className="shippercontact-popup-content">
+            <button className="shippercontact-popup-close" onClick={closeLoginPopup}>
+              &times;
+            </button>
+            <Login isPopup={true} onClose={closeLoginPopup} />
+          </div>
+        </div>
+      )}
+
+      <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
+    </div>
   );
 }
 

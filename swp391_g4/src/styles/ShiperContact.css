@@ -1,5 +1,3 @@
-/* Shipper Contact Page - Improved CSS */
-
 body {
   font-family: 'Arial', sans-serif;
   background: #f8f9fa;
@@ -7,15 +5,15 @@ body {
   padding: 0;
 }
 
-.container {
+.shippercontact-content-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   padding: 20px;
 }
 
-.card {
+.shippercontact-card {
   background: #ffffff;
   padding: 40px;
   border-radius: 12px;
@@ -25,30 +23,30 @@ body {
   text-align: center;
 }
 
-.title {
+.shippercontact-title {
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 15px;
   color: #333;
 }
 
-.text-center {
+.shippercontact-subtitle {
   color: #666;
   margin-bottom: 25px;
 }
 
-.form {
+.shippercontact-form {
   display: flex;
   flex-direction: column;
 }
 
-.input-group {
+.shippercontact-input-group {
   margin-bottom: 20px;
   text-align: left;
 }
 
-.input-group input,
-.input-group textarea {
+.shippercontact-form-group,
+.shippercontact-form-group textarea {
   width: 100%;
   padding: 14px;
   border: 1px solid #ccc;
@@ -58,8 +56,8 @@ body {
   transition: border-color 0.3s;
 }
 
-.input-group input:focus,
-.input-group textarea:focus {
+.shippercontact-form-group:focus,
+.shippercontact-form-group textarea:focus {
   border-color: #1dc750;
 }
 
@@ -68,13 +66,13 @@ textarea {
   min-height: 120px;
 }
 
-.error {
+.shippercontact-error {
   color: #e63946;
   font-size: 16px;
   margin-top: 6px;
 }
 
-.button {
+.shippercontact-button {
   background: #159e27;
   color: #ffffff;
   border: none;
@@ -85,20 +83,62 @@ textarea {
   transition: background 0.3s;
 }
 
-.button:hover {
+.shippercontact-button:hover {
   background: #1a8d4a;
 }
 
-.button:disabled {
+.shippercontact-button:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
 @media (max-width: 576px) {
-  .card {
+  .shippercontact-content-container {
+    margin-top: 50px;
+  }
+  
+  .shippercontact-card {
     padding: 25px;
   }
-  .title {
+  
+  .shippercontact-title {
     font-size: 24px;
   }
+}
+
+.shippercontact-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.shippercontact-popup-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+  padding: 30px;
+  z-index: 1100;
+}
+
+.shippercontact-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
