@@ -23,7 +23,7 @@ export class Header extends React.Component {
       { text: "Trang chủ", path: "/home", isActive: true },
       { text: "Về chúng tôi", path: "/about" },
       { text: "Tin tức", path: "/news" },
-      { text: "Liên hệ", path: "/contact" }
+      { text: "Liên hệ", path: "/shipper-contact" }
     ];
   
     const navItems = this.props.navigationItems || defaultNavItems;
