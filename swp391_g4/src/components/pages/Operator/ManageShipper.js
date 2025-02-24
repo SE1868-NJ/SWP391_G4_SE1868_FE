@@ -9,7 +9,10 @@ const ManageShipper = () => {
   const [cancelingShippers, setCancelingShippers] = useState([]);
   const [approvedShippers, setApprovedShippers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const [selectedShipper, setSelectedShipper] = useState(null);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelTime, setCancelTime] = useState("Forever");
   useEffect(() => {
     fetchShippers();
   }, []);
@@ -58,12 +61,51 @@ const ManageShipper = () => {
       .catch((error) => console.error("Error searching approved shippers:", error));
   };
 
-  const handleStateChange = (id, newStatus) => {
-    axios.post("http://localhost:5000/api/change-shipper-status", { id, newStatus })
+
+  const handleStateChange = (id, newStatus, currentStatus) => {
+    // Nếu chuyển từ PendingCancel sang Inactive
+    if (currentStatus === "PendingCancel" && newStatus === "Inactive") {
+      // Tìm shipper để hiển thị thông tin trong popup
+      const shipper = cancelingShippers.find(s => s.ShipperID === id);
+      if (shipper) {
+        setSelectedShipper(shipper);
+        setShowCancelPopup(true);
+      }
+    } else {
+      // Xử lý các trường hợp khác
+      axios.post("http://localhost:5000/api/change-shipper-status", { id, newStatus })
+        .then(() => {
+          fetchShippers(); // Refresh the list after state change
+        })
+        .catch(error => console.error("Error changing shipper status:", error));
+    }
+  };
+
+  const handleConfirmCancel = () => {
+    if (!selectedShipper || !cancelReason.trim()) {
+      alert("Vui lòng nhập lý do hủy tài khoản");
+      return;
+    }
+  
+    axios.post("http://localhost:5000/api/change-shipper-status", {
+      id: selectedShipper.ShipperID,
+      newStatus: "Inactive",
+      cancelReason: cancelReason,
+      cancelTime: cancelTime 
+    })
       .then(() => {
-        fetchShippers(); // Refresh the list after state change
+        setShowCancelPopup(false);
+        setCancelReason('');
+        setSelectedShipper(null);
+        fetchShippers();
       })
-      .catch(error => console.error("Error changing shipper status:", error));
+      .catch(error => console.error("Error canceling shipper account:", error));
+  };
+
+  const handleCancelPopupClose = () => {
+    setShowCancelPopup(false);
+    setCancelReason('');
+    setSelectedShipper(null);
   };
 
   const handleShipperDetail = () => {
@@ -153,7 +195,7 @@ const ManageShipper = () => {
               <td>{shipper.VehicleType}</td>
               <td>
                 <select value={shipper.Status}
-                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="PendingUpdate">Pending Update</option>
@@ -195,7 +237,7 @@ const ManageShipper = () => {
               <td>{shipper.VehicleType}</td>
               <td>
                 <select value={shipper.Status}
-                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="PendingUpdate">Pending Update</option>
@@ -237,7 +279,7 @@ const ManageShipper = () => {
               <td>{shipper.VehicleType}</td>
               <td>
                 <select value={shipper.Status}
-                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value)}>
+                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="PendingUpdate">Pending Update</option>
@@ -249,6 +291,57 @@ const ManageShipper = () => {
           ))}
         </tbody>
       </table>
+   {/* Cancel Confirmation Popup */}
+   {showCancelPopup && selectedShipper && (
+        <div className="manage-shipper-popup-overlay">
+          <div className="manage-shipper-popup-container">
+            <h3>Xác nhận hủy tài khoản Shipper</h3>
+            <p>Bạn có chắc muốn hủy tài khoản của shipper <strong>{selectedShipper.FullName}</strong>?</p>
+            
+            <div className="manage-shipper-popup-form-group">
+              <label>Lý do hủy:</label>
+              <textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="Nhập lý do hủy tài khoản"
+                required
+                rows={4}
+              />
+            </div>
+            
+            <div className="manage-shipper-popup-form-group">
+            <label>Thời gian khóa tài khoản:</label>
+            <select
+              value={cancelTime}
+              onChange={(e) => setCancelTime(e.target.value)}
+              required
+              className="manage-shipper-popup-select"
+            >
+              <option value="Warning">Cảnh báo</option>
+              <option value="3Days">Khóa 3 ngày</option>
+              <option value="7Days">Khóa 7 ngày</option>
+              <option value="14Days">Khóa 14 ngày</option>
+              <option value="Forever">Khóa vĩnh viễn</option>
+            </select>
+          </div>
+            
+            <div className="manage-shipper-popup-buttons">
+              <button 
+                className="manage-shipper-detail-button manage-shipper-cancel-button"
+                onClick={handleCancelPopupClose}
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                className="manage-shipper-detail-button manage-shipper-confirm-button"
+                onClick={handleConfirmCancel}
+              >
+                Xác nhận hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

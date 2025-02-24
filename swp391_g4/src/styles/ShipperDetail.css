@@ -5,8 +5,11 @@
 }
 
 .shipper-header {
+  position: sticky;
+  top: 0;
   background-image: linear-gradient(to right, #2563eb, #1d4ed8);
   padding: 2rem;
+  
 }
 
 .shipper-header-content {
@@ -90,6 +93,9 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   border-radius: 0.75rem;
   overflow: hidden;
+  position: sticky;
+  top: 100px; /* Điều chỉnh vị trí tùy thuộc vào yêu cầu */
+  z-index: 10;
 }
 
 .shipper-sidebar-header {
@@ -231,6 +237,9 @@
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 1.5rem;
+  position: sticky;
+  top: 100px; /* Điều chỉnh giá trị này tùy theo vị trí bạn muốn */
+  z-index: 10; /* Đảm bảo phần này ở trên các nội dung khác */
 }
 
 @media (min-width: 768px) {
@@ -304,7 +313,7 @@
   background-color: white;
   border-radius: 0.75rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .shipper-tabs {
@@ -313,7 +322,15 @@
 
 .shipper-tabs-header {
   border-bottom: 1px solid #f3f4f6;
+  background-color: white;
+  position: sticky;
+  top: 220px;
+  z-index: 20;
+  padding: 1rem;
+  border-radius: 0.75rem 0.75rem 0 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
 
 .shipper-tabslist {
   display: flex;
@@ -582,7 +599,7 @@
 
 /* Back Button */
 .back-button-container {
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 20px;
   z-index: 10;
