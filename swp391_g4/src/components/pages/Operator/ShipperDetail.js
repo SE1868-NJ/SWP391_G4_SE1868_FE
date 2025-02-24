@@ -24,6 +24,12 @@ const ShipperDetail = () => {
     vehicleInfo: false,
     documents: false
   });
+  const [tabVerificationStatus, setTabVerificationStatus] = useState({
+    personal: false,
+    vehicle: false,
+    documents: false,
+    bank: false
+  });
   const [verifiedFields, setVerifiedFields] = useState({
     personal: {
       fullName: false,
@@ -70,6 +76,35 @@ const ShipperDetail = () => {
       bankInfo: areAllFieldsVerifiedInSection('bank')
     }));
   }, [verifiedFields]);
+  useEffect(() => {
+    setTabVerificationStatus({
+      personal: areAllFieldsVerifiedInSection('personal'),
+      vehicle: areAllFieldsVerifiedInSection('vehicle'),
+      documents: areAllFieldsVerifiedInSection('documents'),
+      bank: areAllFieldsVerifiedInSection('bank')
+    });
+  }, [verifiedFields]);
+  // Component cho tab
+  const VerifiableTabsTrigger = ({ value, icon: Icon, children }) => {
+    const isVerified = tabVerificationStatus[value];
+    
+    return (
+      <TabsTrigger 
+        value={value} 
+        className={`shipper-tab ${isVerified ? 'tab-verified' : ''}`}
+      >
+        <div className="tab-content-wrapper">
+          <div className="tab-icon-text">
+            <Icon className="shipper-tab-icon" />
+            {children}
+          </div>
+          {isVerified && (
+            <CheckCircle2 className="verification-icon" />
+          )}
+        </div>
+      </TabsTrigger>
+    );
+  };
   // Component cho nút xác minh
   const VerifyButton = ({ section, field, label }) => {
     return (
@@ -293,27 +328,23 @@ useEffect(() => {
 
                 {/* Tabs Section */}
                 <Card className="shipper-tabs-card">
-                  <Tabs defaultValue="personal" className="shipper-tabs">
-                    <div className="shipper-tabs-header">
-                      <TabsList className="shipper-tabslist">
-                        <TabsTrigger value="personal" className="shipper-tab">
-                          <User className="shipper-tab-icon" />
-                          Thông Tin Cá Nhân
-                        </TabsTrigger>
-                        <TabsTrigger value="vehicle" className="shipper-tab">
-                          <Truck className="shipper-tab-icon" />
-                          Thông Tin Phương Tiện
-                        </TabsTrigger>
-                        <TabsTrigger value="documents" className="shipper-tab">
-                          <FileCheck className="shipper-tab-icon" />
-                          Tài Liệu
-                        </TabsTrigger>
-                        <TabsTrigger value="bank" className="shipper-tab">
-                          <CircleDollarSign className="shipper-tab-icon" />
-                          Thông Tin Tài Chính
-                        </TabsTrigger>
-                      </TabsList>
-                    </div>
+                <Tabs defaultValue="personal" className="shipper-tabs">
+                  <div className="shipper-tabs-header">
+                    <TabsList className="shipper-tabslist">
+                      <VerifiableTabsTrigger value="personal" icon={User}>
+                        Thông Tin Cá Nhân
+                      </VerifiableTabsTrigger>
+                      <VerifiableTabsTrigger value="vehicle" icon={Truck}>
+                        Thông Tin Phương Tiện
+                      </VerifiableTabsTrigger>
+                      <VerifiableTabsTrigger value="documents" icon={FileCheck}>
+                        Tài Liệu
+                      </VerifiableTabsTrigger>
+                      <VerifiableTabsTrigger value="bank" icon={CircleDollarSign}>
+                        Thông Tin Tài Chính
+                      </VerifiableTabsTrigger>
+                    </TabsList>
+                  </div>
 
                     <div className="shipper-tab-content-container">
                     <TabsContent value="personal" className="tab-content">
