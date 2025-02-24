@@ -11,6 +11,13 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+  width: 100%; /* Đảm bảo chiều rộng trang chiếm toàn bộ màn hình */
+  height: 100%; /* Đảm bảo chiều cao trang chiếm toàn bộ màn hình */
+}
+
+
 .header {
   position: fixed;
   top: 0;
@@ -200,7 +207,7 @@ body {
   width: 100%;
   height: 600px; /* Cố định chiều cao */
   overflow: hidden;
-  margin-top: 100px;
+  margin-top: 80px;
 }
 
 .banner-slider {

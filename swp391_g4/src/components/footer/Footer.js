@@ -56,9 +56,6 @@ export class Footer extends React.Component {
                         <a href="/terms-of-use" className={styles.subLink}>
                           Chính sách sử dụng
                         </a>
-                        <a href="#" className={styles.subLink}>
-                          Hỏi đáp
-                        </a>
                       </nav>
                     </div>
 
