@@ -195,11 +195,16 @@
   background-color: white;
   padding: 30px;
   border-radius: 10px;
-  width: 500px;
-  max-width: 90%;
+  width: 80%; /* Change from fixed width to percentage */
+  max-width: 800px; /* Increase max-width */
+  max-height: 90vh; /* Add max height */
+  overflow-y: auto; /* Add vertical scrolling */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-
+.manage-shipper-popup-container .manage-shipper-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
 .manage-shipper-popup-container h3 {
   color: #2c9d32;
   margin-top: 0;
@@ -210,6 +215,20 @@
 
 .manage-shipper-popup-form-group {
   margin-bottom: 20px;
+  max-height: 60vh; /* Set maximum height */
+  overflow-y: auto; /* Add vertical scrolling */
+}
+@media (max-width: 768px) {
+  .manage-shipper-popup-container {
+    padding: 15px;
+    width: 95%;
+  }
+  
+  .manage-shipper-popup-container table th,
+  .manage-shipper-popup-container table td {
+    padding: 8px 6px;
+    font-size: 0.9rem;
+  }
 }
 
 .manage-shipper-popup-form-group label {
