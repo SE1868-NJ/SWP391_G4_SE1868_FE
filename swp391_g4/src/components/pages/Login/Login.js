@@ -33,7 +33,7 @@ const Login = ({ isPopup = false, onClose }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/login",
+        "http://localhost:5000/api/login",  // Đã sửa cổng thành 5000
         formData,
         {
           headers: {
@@ -44,8 +44,8 @@ const Login = ({ isPopup = false, onClose }) => {
       );
 
       if (response.data.success) {
-        // Lưu token và thông tin shipper
-        localStorage.setItem('token', response.data.token);
+        // Kiểm tra trạng thái trong backend thay vì frontend
+        // Lưu thông tin shipper
         localStorage.setItem('shipperName', response.data.shipper.FullName);
         localStorage.setItem('shipperId', response.data.shipper.ShipperID);
         

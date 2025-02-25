@@ -11,6 +11,13 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+  width: 100%; /* Đảm bảo chiều rộng trang chiếm toàn bộ màn hình */
+  height: 100%; /* Đảm bảo chiều cao trang chiếm toàn bộ màn hình */
+}
+
+
 .header {
   position: fixed;
   top: 0;
