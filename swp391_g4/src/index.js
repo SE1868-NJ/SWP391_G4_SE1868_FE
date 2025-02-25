@@ -44,13 +44,14 @@ root.render(
         }
       />
       <Route
-        path="/shipperaccount"
+        path="/shipper-account"
         element={
           <PrivateRoute>
             <ShipperAccount />
           </PrivateRoute>
         }
       />
+      <Route path='/update-shipper-info' element={<UpdateShipperInfo />}/>
       <Route path="/manage-shipper" element={<ManageShipper />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
