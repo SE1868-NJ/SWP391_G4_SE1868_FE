@@ -33,7 +33,7 @@ const Login = ({ isPopup = false, onClose }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/login",
+        "http://localhost:5000/api/login",  // Đã sửa cổng thành 5000
         formData,
         {
           headers: {
@@ -44,25 +44,18 @@ const Login = ({ isPopup = false, onClose }) => {
       );
 
       if (response.data.success) {
-        const status = response.data.shipper.Status;
-        if (status === "Active") {
-          // Lưu thông tin và chuyển hướng
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("shipperName", response.data.shipper.FullName);
-          localStorage.setItem("shipperId", response.data.shipper.ShipperID);
-
-          // Nếu là popup thì đóng popup
-          if (isPopup && onClose) {
-            onClose();
-          }
-
-          // Chuyển hướng đến trang shipper
-          navigate("/shipper");
-        } else if (status === "PendingRegister") {
-          setError("Tài khoản của bạn đang được duyệt, vui lòng đợi.");
-        } else if (status === "Inactive") {
-          setError("Tài khoản của bạn bị vô hiệu hoá.");
+        // Kiểm tra trạng thái trong backend thay vì frontend
+        // Lưu thông tin shipper
+        localStorage.setItem('shipperName', response.data.shipper.FullName);
+        localStorage.setItem('shipperId', response.data.shipper.ShipperID);
+        
+        // Nếu là popup thì đóng popup
+        if (isPopup && onClose) {
+          onClose();
         }
+        
+        // Chuyển hướng đến trang shipper
+        navigate("/shipper");
       } else {
         setError(response.data.message || "Đăng nhập thất bại.");
       }
@@ -71,7 +64,7 @@ const Login = ({ isPopup = false, onClose }) => {
       if (error.response) {
         setError(
           error.response.data.message ||
-            "Đăng nhập thất bại. Vui lòng thử lại sau."
+          "Đăng nhập thất bại. Vui lòng thử lại sau."
         );
       } else if (error.request) {
         setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
@@ -84,7 +77,7 @@ const Login = ({ isPopup = false, onClose }) => {
   };
 
   return (
-    <div className={`login-container ${isPopup ? "popup-mode" : ""}`}>
+    <div className={`login-container ${isPopup ? 'popup-mode' : ''}`}>
       <h1 className="login-title">Đăng Nhập</h1>
 
       <form className="login-form" onSubmit={handleLogin}>
@@ -108,7 +101,11 @@ const Login = ({ isPopup = false, onClose }) => {
           required
         />
 
-        <button className="login-button" type="submit" disabled={loading}>
+        <button
+          className="login-button"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Đang đăng nhập..." : "Đăng Nhập"}
         </button>
       </form>
