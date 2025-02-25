@@ -36,7 +36,7 @@
 }
 
 .sidebar-item.active {
-  background-color: #007bff;
+  background-color: rgb(36, 174, 110);
   color: white;
 }
 
@@ -86,7 +86,7 @@
 }
 
 .update-button {
-  background-color: #007bff;
+  background-color:rgb(36, 174, 110);
   color: white;
 }
 
@@ -94,10 +94,11 @@
   background-color: #dc3545;
   color: white;
 }
-
 .update-button:hover,
 .cancel-account-button:hover {
   opacity: 0.9;
+  background-color: rgb(0, 216, 46);
+
 }
 .popup-overlay {
   position: fixed;
@@ -240,46 +241,221 @@
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
+/* Popup Overlay */
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  backdrop-filter: blur(3px);
 }
 
-.popup-content {
+/* Popup Content */
+.popup-content.cancel-popup {
   background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
+  padding: 0;
+  border-radius: 12px;
+  max-width: 550px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: popup-appear 0.3s ease-out;
+}
+
+@keyframes popup-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Popup Header */
+.popup-header {
+  background-color: #f8f9fa;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.popup-header h2 {
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  color: #343a40;
+  font-weight: 600;
 }
 
-.popup-content h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: #333;
+.popup-header p {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 0;
 }
 
+/* Reason Container */
+.reason-container {
+  padding: 1.5rem 2rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Reason Options */
+.reason-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.reason-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.reason-option:hover {
+  background-color: #f0f7ff;
+}
+
+.reason-option input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+  accent-color: #007bff;
+  width: 18px;
+  height: 18px;
+}
+
+.reason-option label {
+  font-size: 0.95rem;
+  color: #343a40;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Other Reason Input */
+.other-reason-container {
+  padding: 0 2rem 1.5rem;
+}
+
+.other-reason-input {
+  width: 100%;
+  height: 100px;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  resize: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.other-reason-input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.other-reason-input::placeholder {
+  color: #adb5bd;
+}
+
+/* Popup Actions */
+.popup-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1.5rem 2rem;
+  background-color: #f8f9fa;
+  border-top: 1px solid #eaeaea;
+}
+
+.popup-actions button {
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.popup-actions .cancel-button {
+  background-color: #dc3545;
+  color: white;
+  min-width: 150px;
+}
+
+.popup-actions .cancel-button:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.popup-actions .cancel-button:active {
+  transform: translateY(0);
+}
+
+.popup-actions .cancel-button:disabled {
+  background-color: #e4a2a8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.popup-actions .close-button {
+  background-color: #e9ecef;
+  color: #495057;
+  min-width: 120px;
+}
+
+.popup-actions .close-button:hover {
+  background-color: #dee2e6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(73, 80, 87, 0.1);
+}
+
+.popup-actions .close-button:active {
+  transform: translateY(0);
+}
+/* OK Button after confirmation */
 .ok-button {
   padding: 0.75rem 2rem;
   font-size: 1rem;
   border: none;
-  background-color: #007bff;
+  background-color: #28a745; /* Green color */
   color: white;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
   transition: background-color 0.3s ease;
+  display: block;
+  margin: 1rem auto; /* Center the button */
 }
 
 .ok-button:hover {
-  background-color: #0056b3;
+  background-color: rgb(0, 216, 46); 
+}
+
+.ok-button:active {
+  background-color: #1e7e34; /* Even darker green when clicked */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .reason-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .popup-content.cancel-popup {
+    width: 95%;
+    max-width: 450px;
+  }
 }

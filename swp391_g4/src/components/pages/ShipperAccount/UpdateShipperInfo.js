@@ -8,11 +8,6 @@ import axios from 'axios';
 
 // Constants for validation and configuration
 const VALIDATION_CONFIG = {
-  fullName: {
-    pattern: /^[\p{L}\s]{2,}$/u,
-    maxLength: 100,
-    message: "Họ tên chỉ được chứa chữ cái và khoảng trắng (2-100 ký tự)"
-  },
   phone: {
     pattern: /^(0[0-9]{9})$/,
     maxLength: 15,
@@ -24,14 +19,9 @@ const VALIDATION_CONFIG = {
     message: "Email không hợp lệ"
   },
   licensePlate: {
-    pattern: /^[0-9]{2}[A-Z]-[0-9]{4,5}$/,
+    pattern: /^[0-9]{2}[A-Z][0-9]-[0-9]{4,5}$/,
     maxLength: 15,
-    message: "Biển số xe không hợp lệ (VD: 51F-12345)"
-  },
-  licenseNumber: {
-    pattern: /^[A-Z][0-9]{11}$/,
-    maxLength: 20,
-    message: "Số GPLX không hợp lệ (1 chữ cái và 11 số)"
+    message: "Biển số xe không hợp lệ (VD: 51F1-12345)"
   },
   bankAccount: {
     pattern: /^[0-9]{10,20}$/,
@@ -58,15 +48,6 @@ const VEHICLE_TYPES = [
   "Xe van"
 ];
 
-const FILE_CONFIG = {
-  maxSize: 5 * 1024 * 1024, // 5MB
-  allowedTypes: ['image/jpeg', 'image/png', 'image/jpg'],
-  errorMessages: {
-    type: "Chỉ chấp nhận file JPG, JPEG hoặc PNG",
-    size: "Kích thước file không được vượt quá 5MB"
-  }
-};
-
 // FormInput Component
 const FormInput = ({ label, name, type, value, onChange, onBlur, error, required = false, className = "", placeholder = "", maxLength, ...props }) => (
   <div className="input-wrapper">
@@ -90,37 +71,49 @@ const FormInput = ({ label, name, type, value, onChange, onBlur, error, required
   </div>
 );
 
+// UpdateField Component để hiển thị trường thông tin và nút cập nhật
+const UpdateField = ({ label, value, canUpdate, onUpdate, type = "text" }) => (
+  <div className="field-container">
+    <div className="field-info">
+      <span className="field-label">{label}:</span>
+      <span className="field-value">{value || "Chưa có thông tin"}</span>
+    </div>
+    {canUpdate && (
+      <button 
+        type="button" 
+        className="update-field-btn"
+        onClick={onUpdate}
+      >
+        Cập nhật
+      </button>
+    )}
+  </div>
+);
+
 const UpdateShipperInfo = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    FullName: "",
-    PhoneNumber: "",
-    Email: "",
-    DateOfBirth: "",
-    HouseNumber: "",
-    Ward: "",
-    District: "",
-    City: "",
-    BankName: "",
-    BankAccountNumber: "",
-    VehicleType: "",
-    LicensePlate: "",
-    LicenseNumber: "",
-    RegistrationVehicle: "",
-    ExpiryVehicle: "",
-    LicenseExpiryDate: "",
-    DriverLicenseImage: null,
-    VehicleRegistrationImage: null,
-    ImageShipper: null
-  });
-
+  const [shipperData, setShipperData] = useState({});
+  const [updateData, setUpdateData] = useState({});
   const [errors, setErrors] = useState({});
   const [touchedFields, setTouchedFields] = useState({});
-  const [previewImages, setPreviewImages] = useState({
-    DriverLicenseImage: null,
-    VehicleRegistrationImage: null,
-    ImageShipper: null
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+
+  // State để theo dõi các trường đang được cập nhật
+  const [activeUpdateFields, setActiveUpdateFields] = useState({
+    PhoneNumber: false,
+    Email: false,
+    Ward: false,
+    District: false,
+    City: false,
+    BankName: false,
+    BankAccountNumber: false,
+    VehicleType: false,
+    LicensePlate: false,
+    RegistrationVehicle: false,
+    ExpiryVehicle: false,
+    VehicleRegistrationImage: false,
+    ImageShipper: false
   });
 
   // Fetch current shipper data
@@ -136,24 +129,44 @@ const UpdateShipperInfo = () => {
         const response = await axios.get(`http://localhost:5000/api/shippers/${shipperId}`);
         
         if (response.data.success) {
-          const shipperData = response.data.data;
-          setFormData(prev => ({
-            ...prev,
-            ...shipperData,
-            DateOfBirth: shipperData.DateOfBirth ? new Date(shipperData.DateOfBirth).toISOString().split('T')[0] : '',
-            RegistrationVehicle: shipperData.RegistrationVehicle ? new Date(shipperData.RegistrationVehicle).toISOString().split('T')[0] : '',
-            ExpiryVehicle: shipperData.ExpiryVehicle ? new Date(shipperData.ExpiryVehicle).toISOString().split('T')[0] : '',
-            LicenseExpiryDate: shipperData.LicenseExpiryDate ? new Date(shipperData.LicenseExpiryDate).toISOString().split('T')[0] : ''
-          }));
-
-          // Set preview images
-          setPreviewImages({
-            DriverLicenseImage: shipperData.DriverLicenseImage,
-            VehicleRegistrationImage: shipperData.VehicleRegistrationImage,
-            ImageShipper: shipperData.ImageShipper
+          const data = response.data.data;
+          
+          // Format dates
+          const formatDate = (dateString) => {
+            if (!dateString) return '';
+            return new Date(dateString).toISOString().split('T')[0];
+          };
+          
+          // Chuẩn bị dữ liệu hiển thị
+          const formattedData = {
+            ...data,
+            RegistrationVehicle: formatDate(data.RegistrationVehicle),
+            ExpiryVehicle: formatDate(data.ExpiryVehicle),
+            DateOfBirth: formatDate(data.DateOfBirth),
+            LicenseExpiryDate: formatDate(data.LicenseExpiryDate)
+          };
+          
+          setShipperData(formattedData);
+          
+          // Khởi tạo dữ liệu cập nhật với các giá trị hiện tại
+          setUpdateData({
+            TempPhoneNumber: data.PhoneNumber || '',
+            TempEmail: data.Email || '',
+            TempWard: data.Ward || '',
+            TempDistrict: data.District || '',
+            TempCity: data.City || '',
+            TempBankName: data.BankName || '',
+            TempBankAccountNumber: data.BankAccountNumber || '',
+            TempVehicleType: data.VehicleType || '',
+            TempLicensePlate: data.LicensePlate || '',
+            TempRegistrationVehicle: formatDate(data.RegistrationVehicle),
+            TempExpiryVehicle: formatDate(data.ExpiryVehicle),
+            TempVehicleRegistrationImage: data.VehicleRegistrationImage || '',
+            TempImageShipper: data.ImageShipper || ''
           });
         }
       } catch (error) {
+        console.error("Error fetching shipper data:", error);
         toast.error("Không thể tải thông tin shipper");
       } finally {
         setLoading(false);
@@ -163,44 +176,41 @@ const UpdateShipperInfo = () => {
     fetchShipperData();
   }, [navigate]);
 
+  // Toggle update field
+  const toggleUpdateField = (field) => {
+    setActiveUpdateFields(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
+
   // Validation
   const validateField = (name, value) => {
-    if (!value && name !== 'Email') {
-      return `Vui lòng nhập ${name}`;
+    // Skip validation if field is empty
+    if (!value && name !== 'TempEmail') {
+      return "";
     }
 
     switch (name) {
-      case 'FullName':
-        if (!VALIDATION_CONFIG.fullName.pattern.test(value)) {
-          return VALIDATION_CONFIG.fullName.message;
-        }
-        break;
-
-      case 'PhoneNumber':
+      case 'TempPhoneNumber':
         if (!VALIDATION_CONFIG.phone.pattern.test(value)) {
           return VALIDATION_CONFIG.phone.message;
         }
         break;
 
-      case 'Email':
+      case 'TempEmail':
         if (value && !VALIDATION_CONFIG.email.pattern.test(value)) {
           return VALIDATION_CONFIG.email.message;
         }
         break;
 
-      case 'LicensePlate':
+      case 'TempLicensePlate':
         if (!VALIDATION_CONFIG.licensePlate.pattern.test(value)) {
           return VALIDATION_CONFIG.licensePlate.message;
         }
         break;
 
-      case 'LicenseNumber':
-        if (!VALIDATION_CONFIG.licenseNumber.pattern.test(value)) {
-          return VALIDATION_CONFIG.licenseNumber.message;
-        }
-        break;
-
-      case 'BankAccountNumber':
+      case 'TempBankAccountNumber':
         if (!VALIDATION_CONFIG.bankAccount.pattern.test(value)) {
           return VALIDATION_CONFIG.bankAccount.message;
         }
@@ -216,7 +226,7 @@ const UpdateShipperInfo = () => {
   // Event handlers
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setUpdateData(prev => ({ ...prev, [name]: value }));
 
     if (touchedFields[name]) {
       const error = validateField(name, value);
@@ -231,37 +241,18 @@ const UpdateShipperInfo = () => {
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      const file = files[0];
-      if (!FILE_CONFIG.allowedTypes.includes(file.type)) {
-        toast.error(FILE_CONFIG.errorMessages.type);
-        return;
-      }
-      if (file.size > FILE_CONFIG.maxSize) {
-        toast.error(FILE_CONFIG.errorMessages.size);
-        return;
-      }
-
-      setFormData(prev => ({ ...prev, [name]: file }));
-      setPreviewImages(prev => ({
-        ...prev,
-        [name]: URL.createObjectURL(file)
-      }));
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all fields
+    // Validate all active fields
     const newErrors = {};
-    Object.keys(formData).forEach(field => {
-      if (field !== 'Email' && !formData[field]) {
-        newErrors[field] = `Vui lòng nhập ${field}`;
-      } else {
-        const error = validateField(field, formData[field]);
+    const tempFields = Object.keys(updateData);
+    
+    tempFields.forEach(field => {
+      // Chỉ xác thực các trường được kích hoạt
+      const originalField = field.replace('Temp', '');
+      if (activeUpdateFields[originalField]) {
+        const error = validateField(field, updateData[field]);
         if (error) newErrors[field] = error;
       }
     });
@@ -274,33 +265,42 @@ const UpdateShipperInfo = () => {
 
     try {
       const shipperId = localStorage.getItem('shipperId');
-      const formDataToSend = new FormData();
-
-      Object.keys(formData).forEach(key => {
-        if (formData[key] instanceof File) {
-          formDataToSend.append(key, formData[key]);
-        } else if (formData[key] !== null && formData[key] !== undefined) {
-          formDataToSend.append(key, formData[key]);
+      
+      // Chỉ gửi các trường thực sự được thay đổi
+      const dataToUpdate = {};
+      
+      Object.keys(activeUpdateFields).forEach(field => {
+        if (activeUpdateFields[field]) {
+          const tempField = `Temp${field}`;
+          dataToUpdate[tempField] = updateData[tempField];
         }
       });
+      
+      // Nếu không có trường nào được cập nhật
+      if (Object.keys(dataToUpdate).length === 0) {
+        toast.info("Không có thông tin nào được cập nhật");
+        return;
+      }
 
+      console.log("Sending update to:", `http://localhost:5000/api/shippers/${shipperId}/update`);
+      console.log("Update data:", dataToUpdate);
+      
       const response = await axios.put(
         `http://localhost:5000/api/shippers/${shipperId}/update`,
-        formDataToSend,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+        dataToUpdate
       );
 
       if (response.data.success) {
-        toast.success("Cập nhật thông tin thành công");
-        navigate('/shipper-account');
+        setShowConfirmPopup(true);
       }
     } catch (error) {
+      console.error("Update error:", error);
       toast.error(error.response?.data?.message || "Cập nhật thông tin thất bại");
     }
+  };
+  const handleConfirmPopup = () => {
+    setShowConfirmPopup(false);
+    navigate('/shipper-account');
   };
 
   if (loading) {
@@ -316,307 +316,460 @@ const UpdateShipperInfo = () => {
     <div className="update-shipper-container">
       <Header />
       <main className="update-main">
+      {showConfirmPopup && (
+          <div className="confirm-popup-overlay">
+            <div className="confirm-popup">
+              <div className="confirm-popup-content">
+                <h2>YÊU CẦU CỦA BẠN ĐANG CHỜ XÁC NHẬN</h2>
+                <p>VUI LÒNG ĐỢI!</p>
+                <button 
+                  className="confirm-button"
+                  onClick={handleConfirmPopup}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="update-form-container">
           <form onSubmit={handleSubmit} className="update-form">
-            <h1 className="form-title">Cập Nhật Thông Tin</h1>
+            <h1 className="form-title">Thông Tin Shipper</h1>
 
-            {/* Thông tin cá nhân */}
+            {/* Thông tin cá nhân (chỉ xem) */}
             <section className="form-section">
               <h2>Thông tin cá nhân</h2>
-              <div className="input-grid">
-                <FormInput
-                  label="Họ và tên"
-                  name="FullName"
-                  type="text"
-                  value={formData.FullName}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.FullName}
-                  required
-                  maxLength={100}
+              <div className="info-grid">
+                <UpdateField 
+                  label="Họ và tên" 
+                  value={shipperData.FullName} 
+                  canUpdate={false} 
                 />
-                <FormInput
-                  label="Số điện thoại"
-                  name="PhoneNumber"
-                  type="tel"
-                  value={formData.PhoneNumber}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.PhoneNumber}
-                  required
-                  maxLength={15}
-                />
-                <FormInput
-                  label="Email"
-                  name="Email"
-                  type="email"
-                  value={formData.Email}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.Email}
-                  maxLength={100}
-                />
-                <FormInput
-                  label="Ngày sinh"
-                  name="DateOfBirth"
+                <UpdateField 
+                  label="Ngày sinh" 
+                  value={shipperData.DateOfBirth} 
                   type="date"
-                  value={formData.DateOfBirth}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.DateOfBirth}
-                  required
+                  canUpdate={false} 
                 />
+                <UpdateField 
+                  label="CCCD" 
+                  value={shipperData.CitizenID} 
+                  canUpdate={false} 
+                />
+                <UpdateField 
+                  label="Số GPLX" 
+                  value={shipperData.LicenseNumber} 
+                  canUpdate={false} 
+                />
+                <UpdateField 
+                  label="Ngày hết hạn GPLX" 
+                  value={shipperData.LicenseExpiryDate} 
+                  type="date"
+                  canUpdate={false} 
+                />
+              </div>
+            </section>
+
+            {/* Thông tin liên lạc */}
+            <section className="form-section">
+              <h2>Thông tin liên lạc</h2>
+              <div className="info-grid">
+                <div className="field-row">
+                  <UpdateField 
+                    label="Số điện thoại" 
+                    value={shipperData.PhoneNumber} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('PhoneNumber')} 
+                  />
+                  
+                  {activeUpdateFields.PhoneNumber && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Số điện thoại mới"
+                        name="TempPhoneNumber"
+                        type="tel"
+                        value={updateData.TempPhoneNumber}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempPhoneNumber}
+                        maxLength={15}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Email" 
+                    value={shipperData.Email} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('Email')} 
+                  />
+                  
+                  {activeUpdateFields.Email && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Email mới"
+                        name="TempEmail"
+                        type="email"
+                        value={updateData.TempEmail}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempEmail}
+                        maxLength={100}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
             {/* Địa chỉ */}
             <section className="form-section">
               <h2>Địa chỉ</h2>
-              <div className="input-grid">
-                <FormInput
-                  label="Số nhà, Tên đường"
-                  name="HouseNumber"
-                  type="text"
-                  value={formData.HouseNumber}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.HouseNumber}
-                  required
-                  maxLength={50}
+              <div className="info-grid">
+                <UpdateField 
+                  label="Số nhà, tên đường" 
+                  value={shipperData.HouseNumber} 
+                  canUpdate={false} 
                 />
-                <FormInput
-                  label="Phường/Xã"
-                  name="Ward"
-                  type="text"
-                  value={formData.Ward}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.Ward}
-                  required
-                  maxLength={100}
-                />
-                <FormInput
-                  label="Quận/Huyện"
-                  name="District"
-                  type="text"
-                  value={formData.District}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.District}
-                  required
-                  maxLength={100}
-                />
-                <FormInput
-                  label="Tỉnh/Thành phố"
-                  name="City"
-                  type="text"
-                  value={formData.City}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.City}
-                  required
-                  maxLength={100}
-                />
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Phường/Xã" 
+                    value={shipperData.Ward} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('Ward')} 
+                  />
+                  
+                  {activeUpdateFields.Ward && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Phường/Xã mới"
+                        name="TempWard"
+                        type="text"
+                        value={updateData.TempWard}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempWard}
+                        maxLength={100}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Quận/Huyện" 
+                    value={shipperData.District} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('District')} 
+                  />
+                  
+                  {activeUpdateFields.District && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Quận/Huyện mới"
+                        name="TempDistrict"
+                        type="text"
+                        value={updateData.TempDistrict}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempDistrict}
+                        maxLength={100}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Tỉnh/Thành phố" 
+                    value={shipperData.City} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('City')} 
+                  />
+                  
+                  {activeUpdateFields.City && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Tỉnh/Thành phố mới"
+                        name="TempCity"
+                        type="text"
+                        value={updateData.TempCity}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempCity}
+                        maxLength={100}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
             {/* Thông tin ngân hàng */}
             <section className="form-section">
               <h2>Thông tin ngân hàng</h2>
-              <div className="input-grid">
-                <div className="input-wrapper">
-                  <label htmlFor="BankName">
-                    Ngân hàng <span className="required">*</span>
-                  </label>
-                  <select
-                    id="BankName"
-                    name="BankName"
-                    value={formData.BankName}
-                    onChange={handleInputChange}
-                    onBlur={handleBlur}
-                    className={`form-input ${errors.BankName ? 'error' : ''}`}
-                    required
-                  >
-                    <option value="">Chọn ngân hàng</option>
-                    {BANK_LIST.map(bank => (
-                      <option key={bank} value={bank}>{bank}</option>
-                    ))}
-                  </select>
-                  {errors.BankName && (
-                    <span className="error-message">{errors.BankName}</span>
+              <div className="info-grid">
+                <div className="field-row">
+                  <UpdateField 
+                    label="Ngân hàng" 
+                    value={shipperData.BankName} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('BankName')} 
+                  />
+                  
+                  {activeUpdateFields.BankName && (
+                    <div className="update-input-container">
+                      <div className="input-wrapper">
+                        <label htmlFor="TempBankName">
+                          Ngân hàng mới <span className="required">*</span>
+                        </label>
+                        <select
+                          id="TempBankName"
+                          name="TempBankName"
+                          value={updateData.TempBankName}
+                          onChange={handleInputChange}
+                          onBlur={handleBlur}
+                          className={`form-input ${errors.TempBankName ? 'error' : ''}`}
+                          required
+                        >
+                          <option value="">Chọn ngân hàng</option>
+                          {BANK_LIST.map(bank => (
+                            <option key={bank} value={bank}>{bank}</option>
+                          ))}
+                        </select>
+                        {errors.TempBankName && (
+                          <span className="error-message">{errors.TempBankName}</span>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-                <FormInput
-                  label="Số tài khoản"
-                  name="BankAccountNumber"
-                  type="text"
-                  value={formData.BankAccountNumber}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.BankAccountNumber}
-                  required
-                  maxLength={20}
-                />
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Số tài khoản" 
+                    value={shipperData.BankAccountNumber} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('BankAccountNumber')} 
+                  />
+                  
+                  {activeUpdateFields.BankAccountNumber && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Số tài khoản mới"
+                        name="TempBankAccountNumber"
+                        type="text"
+                        value={updateData.TempBankAccountNumber}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempBankAccountNumber}
+                        maxLength={20}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
             {/* Thông tin phương tiện */}
             <section className="form-section">
               <h2>Thông tin phương tiện</h2>
-              <div className="input-grid">
-                <div className="input-wrapper">
-                  <label htmlFor="VehicleType">
-                    Loại phương tiện <span className="required">*</span>
-                  </label>
-                  <select
-                    id="VehicleType"
-                    name="VehicleType"
-                    value={formData.VehicleType}
-                    onChange={handleInputChange}
-                    onBlur={handleBlur}
-                    className={`form-input ${errors.VehicleType ? 'error' : ''}`}
-                    required
-                  >
-                    <option value="">Chọn loại phương tiện</option>
-                    {VEHICLE_TYPES.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </select>
-                  {errors.VehicleType && (
-                    <span className="error-message">{errors.VehicleType}</span>
+              <div className="info-grid">
+                <div className="field-row">
+                  <UpdateField 
+                    label="Loại phương tiện" 
+                    value={shipperData.VehicleType} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('VehicleType')} 
+                  />
+                  
+                  {activeUpdateFields.VehicleType && (
+                    <div className="update-input-container">
+                      <div className="input-wrapper">
+                        <label htmlFor="TempVehicleType">
+                          Loại phương tiện mới <span className="required">*</span>
+                        </label>
+                        <select
+                          id="TempVehicleType"
+                          name="TempVehicleType"
+                          value={updateData.TempVehicleType}
+                          onChange={handleInputChange}
+                          onBlur={handleBlur}
+                          className={`form-input ${errors.TempVehicleType ? 'error' : ''}`}
+                          required
+                        >
+                          <option value="">Chọn loại phương tiện</option>
+                          {VEHICLE_TYPES.map(type => (
+                            <option key={type} value={type}>{type}</option>
+                          ))}
+                        </select>
+                        {errors.TempVehicleType && (
+                          <span className="error-message">{errors.TempVehicleType}</span>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-                <FormInput
-                  label="Biển số xe"
-                  name="LicensePlate"
-                  type="text"
-                  value={formData.LicensePlate}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.LicensePlate}
-                  required
-                  maxLength={15}
-                />
-                <FormInput
-                  label="Số GPLX"
-                  name="LicenseNumber"
-                  type="text"
-                  value={formData.LicenseNumber}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.LicenseNumber}
-                  required
-                  maxLength={20}
-                />
-                <FormInput
-                  label="Ngày đăng kiểm xe"
-                  name="RegistrationVehicle"
-                  type="date"
-                  value={formData.RegistrationVehicle}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.RegistrationVehicle}
-                  required
-                />
-                <FormInput
-                  label="Ngày hết hạn đăng kiểm"
-                  name="ExpiryVehicle"
-                  type="date"
-                  value={formData.ExpiryVehicle}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.ExpiryVehicle}
-                  required
-                />
-                <FormInput
-                  label="Ngày hết hạn GPLX"
-                  name="LicenseExpiryDate"
-                  type="date"
-                  value={formData.LicenseExpiryDate}
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  error={errors.LicenseExpiryDate}
-                  required
-                />
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Biển số xe" 
+                    value={shipperData.LicensePlate} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('LicensePlate')} 
+                  />
+                  
+                  {activeUpdateFields.LicensePlate && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Biển số xe mới"
+                        name="TempLicensePlate"
+                        type="text"
+                        value={updateData.TempLicensePlate}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempLicensePlate}
+                        maxLength={15}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Ngày đăng kiểm xe" 
+                    value={shipperData.RegistrationVehicle} 
+                    type="date"
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('RegistrationVehicle')} 
+                  />
+                  
+                  {activeUpdateFields.RegistrationVehicle && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Ngày đăng kiểm xe mới"
+                        name="TempRegistrationVehicle"
+                        type="date"
+                        value={updateData.TempRegistrationVehicle}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempRegistrationVehicle}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="Ngày hết hạn đăng kiểm" 
+                    value={shipperData.ExpiryVehicle} 
+                    type="date"
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('ExpiryVehicle')} 
+                  />
+                  
+                  {activeUpdateFields.ExpiryVehicle && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Ngày hết hạn đăng kiểm mới"
+                        name="TempExpiryVehicle"
+                        type="date"
+                        value={updateData.TempExpiryVehicle}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempExpiryVehicle}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
             {/* Giấy tờ */}
             <section className="form-section">
-              <h2>Giấy tờ</h2>
-              <div className="input-grid">
-                <div className="file-input-wrapper">
-                  <label>
-                    Ảnh GPLX {!previewImages.DriverLicenseImage && <span className="required">*</span>}
-                  </label>
-                  <input
-                    type="file"
-                    name="DriverLicenseImage"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    className={errors.DriverLicenseImage ? 'error' : ''}
+              <h2>Giấy tờ (URL ảnh)</h2>
+              <div className="info-grid">
+                <div className="field-row">
+                  <UpdateField 
+                    label="URL ảnh đăng ký xe" 
+                    value={shipperData.VehicleRegistrationImage} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('VehicleRegistrationImage')} 
                   />
-                  {previewImages.DriverLicenseImage && (
-                    <img
-                      src={previewImages.DriverLicenseImage}
-                      alt="GPLX Preview"
-                      className="image-preview"
-                    />
+                  
+                  {activeUpdateFields.VehicleRegistrationImage && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="URL ảnh đăng ký xe mới"
+                        name="TempVehicleRegistrationImage"
+                        type="text"
+                        value={updateData.TempVehicleRegistrationImage}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempVehicleRegistrationImage}
+                        required
+                      />
+                    </div>
                   )}
                 </div>
-
-                <div className="file-input-wrapper">
-                  <label>
-                    Ảnh đăng ký xe {!previewImages.VehicleRegistrationImage && <span className="required">*</span>}
-                  </label>
-                  <input
-                    type="file"
-                    name="VehicleRegistrationImage"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    className={errors.VehicleRegistrationImage ? 'error' : ''}
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="URL ảnh thẻ Shipper" 
+                    value={shipperData.ImageShipper} 
+                    canUpdate={true} 
+                    onUpdate={() => toggleUpdateField('ImageShipper')} 
                   />
-                  {previewImages.VehicleRegistrationImage && (
-                    <img
-                      src={previewImages.VehicleRegistrationImage}
-                      alt="Vehicle Registration Preview"
-                      className="image-preview"
-                    />
+                  
+                  {activeUpdateFields.ImageShipper && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="URL ảnh thẻ Shipper mới"
+                        name="TempImageShipper"
+                        type="text"
+                        value={updateData.TempImageShipper}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempImageShipper}
+                        required
+                      />
+                    </div>
                   )}
                 </div>
-
-                <div className="file-input-wrapper">
-                  <label>
-                    Ảnh thẻ Shipper {!previewImages.ImageShipper && <span className="required">*</span>}
-                  </label>
-                  <input
-                    type="file"
-                    name="ImageShipper"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    className={errors.ImageShipper ? 'error' : ''}
+                
+                <div className="field-row">
+                  <UpdateField 
+                    label="URL ảnh GPLX" 
+                    value={shipperData.DriverLicenseImage} 
+                    canUpdate={false} 
                   />
-                  {previewImages.ImageShipper && (
-                    <img
-                      src={previewImages.ImageShipper}
-                      alt="Shipper Image Preview"
-                      className="image-preview"
-                    />
-                  )}
                 </div>
               </div>
             </section>
 
             <div className="form-actions">
-              <button type="submit" className="submit-button">
-                Cập Nhật
-              </button>
+              {Object.values(activeUpdateFields).some(value => value) && (
+                <button type="submit" className="submit-button">
+                  Gửi Yêu Cầu Cập Nhật
+                </button>
+              )}
               <button 
                 type="button" 
                 className="cancel-button"
                 onClick={() => navigate('/shipper-account')}
               >
-                Hủy
+                Quay Lại
               </button>
             </div>
           </form>
