@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Card, CardContent } from '../buttons/Card';
-import { Button } from '../buttons/Button1';
-import { Checkbox } from '../buttons/CheckBox';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../buttons/Tabs';
-import { Badge } from '../buttons/Badges';
+import { Card, CardContent } from '../../buttons/Card';
+import { Button } from '../../buttons/Button1';
+import { Checkbox } from '../../buttons/CheckBox';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../buttons/Tabs';
+import { Badge } from '../../buttons/Badges';
 import { 
   Truck, User, Phone, Mail, MapPin, CreditCard, 
   FileCheck, AlertCircle, CheckCircle2, Shield, UserCheck,
   Clock, CircleDollarSign, Calendar, Package2
 } from 'lucide-react';
-import '../../styles/ShipperDetail.css';
+import '../../../styles/ShipperDetail.css';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
-
+import moment from 'moment';
 const ShipperDetail = () => {
   // const [activeTab, setActiveTab] = useState('personal');
   const [shippersList, setShippersList] = useState([]);
@@ -273,7 +273,7 @@ useEffect(() => {
                       </div>
                       <div className="shipper-stat-text">
                         <p className="shipper-stat-label">Ngày Đăng Ký</p>
-                        <p className="shipper-stat-value">{selectedShipper.RegistrationDate}</p>
+                        <p className="shipper-stat-value">{moment(selectedShipper.RegistrationDate).format("DD-MM-YYYY")}</p>
                       </div>
                     </div>
                   </Card>
@@ -368,7 +368,7 @@ useEffect(() => {
                 <div className="info-item">
                   <div className="info-content">
                     <p className="info-label">Ngày Sinh</p>
-                    <p className="info-value">{selectedShipper?.DateOfBirth}</p>
+                    <p className="info-value">{moment(selectedShipper.DateOfBirth).format("DD-MM-YYYY")}</p>
                   </div>
                   <VerifyButton section="personal" field="dateOfBirth" label="ngày sinh" />
                 </div>
@@ -422,7 +422,7 @@ useEffect(() => {
                 <div className="info-item">
                   <div className="info-content">
                     <p className="info-label">Ngày Đăng Kiểm</p>
-                    <p className="info-value">{selectedShipper?.RegistrationDate}</p>
+                    <p className="info-value">{moment(selectedShipper.RegistrationVehicle).format("DD-MM-YYYY")}</p>
                   </div>
                   <VerifyButton section="vehicle" field="registrationDate" label="đăng kiểm" />
                 </div>

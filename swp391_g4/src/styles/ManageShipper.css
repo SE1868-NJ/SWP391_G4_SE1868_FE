@@ -10,7 +10,7 @@
 }
 
 /* Tiêu đề */
-h2 {
+.manage-shipper-container h2 {
   font-size: 1.8rem;
   margin: 20px 0;
   color: white;
@@ -18,7 +18,7 @@ h2 {
 }
 
 /* Bảng dữ liệu */
-.shipper-table {
+.manage-shipper-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
@@ -28,29 +28,29 @@ h2 {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.shipper-table th, .shipper-table td {
+.manage-shipper-table th, .manage-shipper-table td {
   border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
 }
 
-.shipper-table th {
+.manage-shipper-table th {
   background-color: #388e3c; /* Xanh lá đậm */
   color: white;
   font-weight: bold;
 }
 
-.shipper-table tr:nth-child(even) {
+.manage-shipper-table tr:nth-child(even) {
   background-color: #f1f8e9; /* Xanh nhạt */
 }
 
-.shipper-table tr:hover {
+.manage-shipper-table tr:hover {
   background-color: #c8e6c9; /* Hover màu xanh nhạt */
   transition: 0.3s;
 }
 
 /* Ô nhập liệu */
-input {
+.manage-shipper-search-bar {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -60,129 +60,7 @@ input {
 }
 
 /* Nút bấm */
-button {
-  border: none;
-  padding: 10px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s ease-in-out;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.approve-btn {
-  background-color: #2e7d32;
-  color: white;
-}
-
-.approve-btn:hover {
-  background-color: #1b5e20;
-}
-
-.reject-btn {
-  background-color: #d32f2f;
-  color: white;
-}
-
-.reject-btn:hover {
-  background-color: #b71c1c;
-}
-
-.edit-btn {
-  background-color: #ffa000;
-  color: white;
-}
-
-.edit-btn:hover {
-  background-color: #ff6f00;
-}
-
-.save-btn {
-  background-color: #00796b;
-  color: white;
-}
-
-.save-btn:hover {
-  background-color: #004d40;
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .shipper-table {
-    font-size: 14px;
-  }
-
-  button {
-    padding: 8px 12px;
-  }
-}
-.search-bar {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  background-color: #f9fbe7; /* Nền vàng nhạt */
-  color: #333;
-  transition: background-color 0.3s ease;
-}
-
-/* Thay đổi màu nền khi hover trên dropdown */
-select:hover {
-  background-color: #e8f5e9; /* Màu nền xanh nhạt khi hover */
-  cursor: pointer;
-}
-
-/* Tạo hiệu ứng cho các tùy chọn trong dropdown */
-select option {
-  padding: 10px;
-  font-size: 14px;
-}
-
-/* Thêm hiệu ứng khi người dùng chọn một tùy chọn */
-select:focus {
-  outline: none;
-  border-color: #388e3c; /* Đổi màu viền khi focus */
-}
-
-/* Cải thiện giao diện cho button */
-.button-container {
-  border: none;
-  padding: 10px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.button-container button:hover {
-  background-color: #c8e6c9;
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .shipper-table {
-    font-size: 14px;
-  }
-
-  button {
-    padding: 8px 12px;
-  }
-}
-/* Định dạng cho nút Duyệt chi tiết */
-.detail-button {
+.manage-shipper-detail-button {
   background-color: #388e3c; /* Xanh lá đậm */
   color: white;
   font-size: 14px;
@@ -198,14 +76,14 @@ select:focus {
 }
 
 /* Khi hover vào nút */
-.detail-button:hover {
+.manage-shipper-detail-button:hover {
   background-color: #2c6e2f; /* Màu xanh đậm hơn khi hover */
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm hơn */
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Khi focus vào nút */
-.detail-button:focus {
+.manage-shipper-detail-button:focus {
   outline: none;
   box-shadow: 0px 0px 0px 3px rgba(36, 234, 46, 0.6); /* Hiệu ứng focus */
 }
