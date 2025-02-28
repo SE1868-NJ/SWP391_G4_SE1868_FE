@@ -237,9 +237,6 @@ const ManageShipper = () => {
                   onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
-                  <option value="PendingUpdate">Pending Update</option>
-                  <option value="PendingCancel">Pending Cancel</option>
-                  <option value="Updated">Updated</option>
                 </select>
               </td>
             </tr>
@@ -279,9 +276,6 @@ const ManageShipper = () => {
                   onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
-                  <option value="PendingUpdate">Pending Update</option>
-                  <option value="PendingCancel">Pending Cancel</option>
-                  <option value="Updated">Updated</option>
                 </select>
               </td>
             </tr>
