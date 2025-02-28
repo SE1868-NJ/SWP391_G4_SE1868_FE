@@ -382,7 +382,7 @@ const ShipperRegister = () => {
                     onChange={handleInputChange}
                     error={errors.City}
                     required
-                    placeholder="TP.HCM"
+                    placeholder="Hà Nội"
                   />
                 </div>
               </div>

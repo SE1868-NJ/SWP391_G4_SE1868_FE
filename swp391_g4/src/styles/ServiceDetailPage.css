@@ -1,0 +1,193 @@
+.service-details-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-details-content {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    flex: 1;
+}
+
+.service-hero {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 60px;
+    align-items: center;
+    padding-top: 80px;
+}
+
+.service-image {
+    width: 500px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.service-hero-content {
+    flex: 1;
+}
+
+.service-hero-content h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+.service-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 60px 0;
+}
+
+.features-section, .benefits-section {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
+
+.features-list, .benefits-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-item, .benefit-item {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.feature-icon, .benefit-icon {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.service-details-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 40px 0;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.price-section, .coverage-section {
+    padding: 20px;
+}
+
+h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.price-range {
+    font-size: 1.8rem;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.coverage-list {
+    list-style: none;
+    padding: 0;
+}
+
+.coverage-list li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.coverage-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #4CAF50;
+}
+
+.cta-section {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.order-button, .contact-button {
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.order-button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.contact-button {
+    background: white;
+    color: #4CAF50;
+    border: 2px solid #4CAF50;
+}
+
+.order-button:hover {
+    background: #45a049;
+}
+
+.contact-button:hover {
+    background: #f1f8f1;
+}
+
+@media (max-width: 768px) {
+    .service-hero {
+        flex-direction: column;
+    }
+
+    .service-image {
+        width: 100%;
+        height: 200px;
+    }
+
+    .service-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-details-footer {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-section {
+        flex-direction: column;
+    }
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: px;
+    z-index: 1000; /* Đảm bảo header luôn ở trên các phần tử khác */
+    width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
+  }
