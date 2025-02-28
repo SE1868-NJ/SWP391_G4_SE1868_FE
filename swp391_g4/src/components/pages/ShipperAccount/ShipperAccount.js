@@ -5,7 +5,7 @@ import '../../../styles/ShipperAccount.css';
 
 // Tạo instance axios với cấu hình mặc định
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'http://localhost:4000/api',
   timeout: 10000, // 10 giây timeout
   headers: {
     'Content-Type': 'application/json'
