@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../header/Header";
@@ -126,7 +127,7 @@ const UpdateShipperInfo = () => {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5000/api/shippers/${shipperId}`);
+        const response = await axios.get(`http://localhost:4000/api/shippers/${shipperId}`);
         
         if (response.data.success) {
           const data = response.data.data;
@@ -282,11 +283,11 @@ const UpdateShipperInfo = () => {
         return;
       }
 
-      console.log("Sending update to:", `http://localhost:5000/api/shippers/${shipperId}/update`);
+      console.log("Sending update to:", `http://localhost:4000/api/shippers/${shipperId}/update`);
       console.log("Update data:", dataToUpdate);
       
       const response = await axios.put(
-        `http://localhost:5000/api/shippers/${shipperId}/update`,
+        `http://localhost:4000/api/shippers/${shipperId}/update`,
         dataToUpdate
       );
 

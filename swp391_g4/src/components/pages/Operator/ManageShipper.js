@@ -22,19 +22,19 @@ const ManageShipper = () => {
 
   const fetchShippers = () => {
     // Fetch data for each category
-    axios.get("http://localhost:5000/api/pending-register-shippers")
+    axios.get("http://localhost:4000/api/pending-register-shippers")
       .then((response) => setPendingRegisterShippers(response.data))
       .catch((error) => console.error("Error fetching pending register shippers:", error));
 
-    axios.get("http://localhost:5000/api/pending-update-shippers")
+    axios.get("http://localhost:4000/api/pending-update-shippers")
       .then((response) => setUpdatingShippers(response.data))
       .catch((error) => console.error("Error fetching updating shippers:", error));
 
-    axios.get("http://localhost:5000/api/pending-cancel-shippers")
+    axios.get("http://localhost:4000/api/pending-cancel-shippers")
       .then((response) => setCancelingShippers(response.data))
       .catch((error) => console.error("Error fetching canceling shippers:", error));
 
-    axios.get("http://localhost:5000/api/active-shippers")
+    axios.get("http://localhost:4000/api/active-shippers")
       .then((response) => setApprovedShippers(response.data))
       .catch((error) => console.error("Error fetching approved shippers:", error));
   };
@@ -47,24 +47,24 @@ const ManageShipper = () => {
       return;
     }
 
-    axios.get(`http://localhost:5000/api/search-pending-shippers?query=${query}`)
+    axios.get(`http://localhost:4000/api/search-pending-shippers?query=${query}`)
       .then((response) => setPendingRegisterShippers(response.data))
       .catch((error) => console.error("Error searching pending register shippers:", error));
 
-    axios.get(`http://localhost:5000/api/search-updating-shippers?query=${query}`)
+    axios.get(`http://localhost:4000/api/search-updating-shippers?query=${query}`)
       .then((response) => setUpdatingShippers(response.data))
       .catch((error) => console.error("Error searching updating shippers:", error));
 
-    axios.get(`http://localhost:5000/api/search-canceling-shippers?query=${query}`)
+    axios.get(`http://localhost:4000/api/search-canceling-shippers?query=${query}`)
       .then((response) => setCancelingShippers(response.data))
       .catch((error) => console.error("Error searching canceling shippers:", error));
 
-    axios.get(`http://localhost:5000/api/search-approved-shippers?query=${query}`)
+    axios.get(`http://localhost:4000/api/search-approved-shippers?query=${query}`)
       .then((response) => setApprovedShippers(response.data))
       .catch((error) => console.error("Error searching approved shippers:", error));
   };
   const fetchShipperUpdateDetails = (id) => {
-    axios.get(`http://localhost:5000/api/shipper-update-details/${id}`)
+    axios.get(`http://localhost:4000/api/shipper-update-details/${id}`)
       .then((response) => {
         setShipperUpdateDetails(response.data);
         setShowUpdatePopup(true);
@@ -88,7 +88,7 @@ const ManageShipper = () => {
     }
     else {
       // Xử lý các trường hợp khác
-      axios.post("http://localhost:5000/api/change-shipper-status", { id, newStatus })
+      axios.post("http://localhost:4000/api/change-shipper-status", { id, newStatus })
         .then(() => {
           fetchShippers(); // Refresh the list after state change
         })
@@ -102,7 +102,7 @@ const ManageShipper = () => {
       return;
     }
   
-    axios.post("http://localhost:5000/api/change-shipper-status", {
+    axios.post("http://localhost:4000/api/change-shipper-status", {
       id: selectedShipper.ShipperID,
       newStatus: "Inactive",
       cancelReason: cancelReason,
@@ -119,7 +119,7 @@ const ManageShipper = () => {
   const handleConfirmUpdate = () => {
     if (!shipperUpdateDetails) return;
     
-    axios.post("http://localhost:5000/api/change-shipper-status", {
+    axios.post("http://localhost:4000/api/change-shipper-status", {
       id: shipperUpdateDetails.ShipperID,
       newStatus: "Active"
     })

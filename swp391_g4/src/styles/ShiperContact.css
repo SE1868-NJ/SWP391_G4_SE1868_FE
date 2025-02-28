@@ -1,0 +1,144 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+.shippercontact-content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 100px);
+  padding: 20px;
+}
+
+.shippercontact-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.shippercontact-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.shippercontact-subtitle {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.shippercontact-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.shippercontact-input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.shippercontact-form-group,
+.shippercontact-form-group textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 18px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.shippercontact-form-group:focus,
+.shippercontact-form-group textarea:focus {
+  border-color: #1dc750;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.shippercontact-error {
+  color: #e63946;
+  font-size: 16px;
+  margin-top: 6px;
+}
+
+.shippercontact-button {
+  background: #159e27;
+  color: #ffffff;
+  border: none;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.shippercontact-button:hover {
+  background: #1a8d4a;
+}
+
+.shippercontact-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 576px) {
+  .shippercontact-content-container {
+    margin-top: 50px;
+  }
+  
+  .shippercontact-card {
+    padding: 25px;
+  }
+  
+  .shippercontact-title {
+    font-size: 24px;
+  }
+}
+
+.shippercontact-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.shippercontact-popup-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+  padding: 30px;
+  z-index: 1100;
+}
+
+.shippercontact-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
