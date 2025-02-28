@@ -7,7 +7,7 @@ import ReactPaginate from 'react-paginate';
 import { format } from 'date-fns';
 import { Input, initMDB } from 'mdb-ui-kit';
 import Header from '../common/header';
-import ProfileShipper from '../common/ProfileShipper';
+import ProfileShipper from '../common/profileShipper';
 import Footer from '../footer/Footer';
 initMDB({ Input });
 
