@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../header/Header";
@@ -80,8 +79,8 @@ const UpdateField = ({ label, value, canUpdate, onUpdate, type = "text" }) => (
       <span className="field-value">{value || "Chưa có thông tin"}</span>
     </div>
     {canUpdate && (
-      <button 
-        type="button" 
+      <button
+        type="button"
         className="update-field-btn"
         onClick={onUpdate}
       >
@@ -122,48 +121,57 @@ const UpdateShipperInfo = () => {
     const fetchShipperData = async () => {
       try {
         const shipperId = localStorage.getItem('shipperId');
-        if (!shipperId) {
-          navigate('/login');
-          return;
-        }
+        const token = localStorage.getItem('token');
 
-        const response = await axios.get(`http://localhost:5000/api/shippers/${shipperId}`);
-        
+        const formatDate = (dateString) => {
+          if (!dateString) return '';
+          const date = new Date(dateString);
+          const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+          return localDate.toISOString().split('T')[0];
+        };
+
+        const getImageUrl = (imagePath) => {
+          if (!imagePath) return '';
+          return imagePath;
+        };
+
+        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
         if (response.data.success) {
           const data = response.data.data;
-          
-          // Format dates
-          const formatDate = (dateString) => {
-            if (!dateString) return '';
-            return new Date(dateString).toISOString().split('T')[0];
-          };
-          
-          // Chuẩn bị dữ liệu hiển thị
+
           const formattedData = {
             ...data,
             RegistrationVehicle: formatDate(data.RegistrationVehicle),
             ExpiryVehicle: formatDate(data.ExpiryVehicle),
             DateOfBirth: formatDate(data.DateOfBirth),
-            LicenseExpiryDate: formatDate(data.LicenseExpiryDate)
+            LicenseExpiryDate: formatDate(data.LicenseExpiryDate),
+
+            VehicleRegistrationImage: getImageUrl(data.VehicleRegistrationImage),
+            ImageShipper: getImageUrl(data.ImageShipper),
+            DriverLicenseImage: getImageUrl(data.DriverLicenseImage)
           };
-          
+
           setShipperData(formattedData);
-          
-          // Khởi tạo dữ liệu cập nhật với các giá trị hiện tại
+
           setUpdateData({
-            TempPhoneNumber: data.PhoneNumber || '',
-            TempEmail: data.Email || '',
-            TempWard: data.Ward || '',
-            TempDistrict: data.District || '',
-            TempCity: data.City || '',
-            TempBankName: data.BankName || '',
-            TempBankAccountNumber: data.BankAccountNumber || '',
-            TempVehicleType: data.VehicleType || '',
-            TempLicensePlate: data.LicensePlate || '',
-            TempRegistrationVehicle: formatDate(data.RegistrationVehicle),
-            TempExpiryVehicle: formatDate(data.ExpiryVehicle),
-            TempVehicleRegistrationImage: data.VehicleRegistrationImage || '',
-            TempImageShipper: data.ImageShipper || ''
+            TempPhoneNumber: formattedData.PhoneNumber || '',
+            TempEmail: formattedData.Email || '',
+            TempWard: formattedData.Ward || '',
+            TempDistrict: formattedData.District || '',
+            TempCity: formattedData.City || '',
+            TempBankName: formattedData.BankName || '',
+            TempBankAccountNumber: formattedData.BankAccountNumber || '',
+            TempVehicleType: formattedData.VehicleType || '',
+            TempLicensePlate: formattedData.LicensePlate || '',
+            TempRegistrationVehicle: formattedData.RegistrationVehicle,
+            TempExpiryVehicle: formattedData.ExpiryVehicle,
+            TempVehicleRegistrationImage: formattedData.VehicleRegistrationImage,
+            TempImageShipper: formattedData.ImageShipper
           });
         }
       } catch (error) {
@@ -248,7 +256,7 @@ const UpdateShipperInfo = () => {
     // Validate all active fields
     const newErrors = {};
     const tempFields = Object.keys(updateData);
-    
+
     tempFields.forEach(field => {
       // Chỉ xác thực các trường được kích hoạt
       const originalField = field.replace('Temp', '');
@@ -266,17 +274,23 @@ const UpdateShipperInfo = () => {
 
     try {
       const shipperId = localStorage.getItem('shipperId');
-      
+      const token = localStorage.getItem('token');
+
+      if (!shipperId || !token) {
+        navigate('/login');
+        return;
+      }
+
       // Chỉ gửi các trường thực sự được thay đổi
       const dataToUpdate = {};
-      
+
       Object.keys(activeUpdateFields).forEach(field => {
         if (activeUpdateFields[field]) {
           const tempField = `Temp${field}`;
           dataToUpdate[tempField] = updateData[tempField];
         }
       });
-      
+
       // Nếu không có trường nào được cập nhật
       if (Object.keys(dataToUpdate).length === 0) {
         toast.info("Không có thông tin nào được cập nhật");
@@ -285,10 +299,15 @@ const UpdateShipperInfo = () => {
 
       console.log("Sending update to:", `http://localhost:5000/api/shippers/${shipperId}/update`);
       console.log("Update data:", dataToUpdate);
-      
+
       const response = await axios.put(
         `http://localhost:5000/api/shippers/${shipperId}/update`,
-        dataToUpdate
+        dataToUpdate,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
       );
 
       if (response.data.success) {
@@ -299,6 +318,7 @@ const UpdateShipperInfo = () => {
       toast.error(error.response?.data?.message || "Cập nhật thông tin thất bại");
     }
   };
+
   const handleConfirmPopup = () => {
     setShowConfirmPopup(false);
     navigate('/shipper-account');
@@ -312,18 +332,19 @@ const UpdateShipperInfo = () => {
       </div>
     );
   }
+  console.log('Shipper Data:', shipperData);
 
   return (
     <div className="update-shipper-container">
       <Header />
       <main className="update-main">
-      {showConfirmPopup && (
+        {showConfirmPopup && (
           <div className="confirm-popup-overlay">
             <div className="confirm-popup">
               <div className="confirm-popup-content">
                 <h2>YÊU CẦU CỦA BẠN ĐANG CHỜ XÁC NHẬN</h2>
                 <p>VUI LÒNG ĐỢI!</p>
-                <button 
+                <button
                   className="confirm-button"
                   onClick={handleConfirmPopup}
                 >
@@ -341,32 +362,32 @@ const UpdateShipperInfo = () => {
             <section className="form-section">
               <h2>Thông tin cá nhân</h2>
               <div className="info-grid">
-                <UpdateField 
-                  label="Họ và tên" 
-                  value={shipperData.FullName} 
-                  canUpdate={false} 
+                <UpdateField
+                  label="Họ và tên"
+                  value={shipperData.FullName}
+                  canUpdate={false}
                 />
-                <UpdateField 
-                  label="Ngày sinh" 
-                  value={shipperData.DateOfBirth} 
+                <UpdateField
+                  label="Ngày sinh"
+                  value={shipperData.DateOfBirth}
                   type="date"
-                  canUpdate={false} 
+                  canUpdate={false}
                 />
-                <UpdateField 
-                  label="CCCD" 
-                  value={shipperData.CitizenID} 
-                  canUpdate={false} 
+                <UpdateField
+                  label="CCCD"
+                  value={shipperData.CitizenID}
+                  canUpdate={false}
                 />
-                <UpdateField 
-                  label="Số GPLX" 
-                  value={shipperData.LicenseNumber} 
-                  canUpdate={false} 
+                <UpdateField
+                  label="Số GPLX"
+                  value={shipperData.LicenseNumber}
+                  canUpdate={false}
                 />
-                <UpdateField 
-                  label="Ngày hết hạn GPLX" 
-                  value={shipperData.LicenseExpiryDate} 
+                <UpdateField
+                  label="Ngày hết hạn GPLX"
+                  value={shipperData.LicenseExpiryDate}
                   type="date"
-                  canUpdate={false} 
+                  canUpdate={false}
                 />
               </div>
             </section>
@@ -376,13 +397,13 @@ const UpdateShipperInfo = () => {
               <h2>Thông tin liên lạc</h2>
               <div className="info-grid">
                 <div className="field-row">
-                  <UpdateField 
-                    label="Số điện thoại" 
-                    value={shipperData.PhoneNumber} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('PhoneNumber')} 
+                  <UpdateField
+                    label="Số điện thoại"
+                    value={shipperData.PhoneNumber}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('PhoneNumber')}
                   />
-                  
+
                   {activeUpdateFields.PhoneNumber && (
                     <div className="update-input-container">
                       <FormInput
@@ -399,15 +420,15 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="Email" 
-                    value={shipperData.Email} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('Email')} 
+                  <UpdateField
+                    label="Email"
+                    value={shipperData.Email}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('Email')}
                   />
-                  
+
                   {activeUpdateFields.Email && (
                     <div className="update-input-container">
                       <FormInput
@@ -430,20 +451,39 @@ const UpdateShipperInfo = () => {
             <section className="form-section">
               <h2>Địa chỉ</h2>
               <div className="info-grid">
-                <UpdateField 
-                  label="Số nhà, tên đường" 
-                  value={shipperData.HouseNumber} 
-                  canUpdate={false} 
-                />
-                
                 <div className="field-row">
-                  <UpdateField 
-                    label="Phường/Xã" 
-                    value={shipperData.Ward} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('Ward')} 
+                  <UpdateField
+                    label="Số nhà, tên đường"
+                    value={shipperData.HouseNumber}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('HouseNumber')}
                   />
-                  
+
+                  {activeUpdateFields.HouseNumber && (
+                    <div className="update-input-container">
+                      <FormInput
+                        label="Số nhà, tên đường mới"
+                        name="TempHouseNumber"
+                        type="text"
+                        value={updateData.TempHouseNumber}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        error={errors.TempHouseNumber}
+                        maxLength={200}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="field-row">
+                  <UpdateField
+                    label="Phường/Xã"
+                    value={shipperData.Ward}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('Ward')}
+                  />
+
                   {activeUpdateFields.Ward && (
                     <div className="update-input-container">
                       <FormInput
@@ -460,15 +500,15 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="Quận/Huyện" 
-                    value={shipperData.District} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('District')} 
+                  <UpdateField
+                    label="Quận/Huyện"
+                    value={shipperData.District}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('District')}
                   />
-                  
+
                   {activeUpdateFields.District && (
                     <div className="update-input-container">
                       <FormInput
@@ -485,15 +525,15 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="Tỉnh/Thành phố" 
-                    value={shipperData.City} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('City')} 
+                  <UpdateField
+                    label="Tỉnh/Thành phố"
+                    value={shipperData.City}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('City')}
                   />
-                  
+
                   {activeUpdateFields.City && (
                     <div className="update-input-container">
                       <FormInput
@@ -518,13 +558,13 @@ const UpdateShipperInfo = () => {
               <h2>Thông tin ngân hàng</h2>
               <div className="info-grid">
                 <div className="field-row">
-                  <UpdateField 
-                    label="Ngân hàng" 
-                    value={shipperData.BankName} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('BankName')} 
+                  <UpdateField
+                    label="Ngân hàng"
+                    value={shipperData.BankName}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('BankName')}
                   />
-                  
+
                   {activeUpdateFields.BankName && (
                     <div className="update-input-container">
                       <div className="input-wrapper">
@@ -552,15 +592,15 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="Số tài khoản" 
-                    value={shipperData.BankAccountNumber} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('BankAccountNumber')} 
+                  <UpdateField
+                    label="Số tài khoản"
+                    value={shipperData.BankAccountNumber}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('BankAccountNumber')}
                   />
-                  
+
                   {activeUpdateFields.BankAccountNumber && (
                     <div className="update-input-container">
                       <FormInput
@@ -585,13 +625,13 @@ const UpdateShipperInfo = () => {
               <h2>Thông tin phương tiện</h2>
               <div className="info-grid">
                 <div className="field-row">
-                  <UpdateField 
-                    label="Loại phương tiện" 
-                    value={shipperData.VehicleType} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('VehicleType')} 
+                  <UpdateField
+                    label="Loại phương tiện"
+                    value={shipperData.VehicleType}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('VehicleType')}
                   />
-                  
+
                   {activeUpdateFields.VehicleType && (
                     <div className="update-input-container">
                       <div className="input-wrapper">
@@ -619,15 +659,15 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="Biển số xe" 
-                    value={shipperData.LicensePlate} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('LicensePlate')} 
+                  <UpdateField
+                    label="Biển số xe"
+                    value={shipperData.LicensePlate}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('LicensePlate')}
                   />
-                  
+
                   {activeUpdateFields.LicensePlate && (
                     <div className="update-input-container">
                       <FormInput
@@ -644,16 +684,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="Ngày đăng kiểm xe" 
-                    value={shipperData.RegistrationVehicle} 
+                  <UpdateField
+                    label="Ngày đăng kiểm xe"
+                    value={shipperData.RegistrationVehicle}
                     type="date"
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('RegistrationVehicle')} 
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('RegistrationVehicle')}
                   />
-                  
+
                   {activeUpdateFields.RegistrationVehicle && (
                     <div className="update-input-container">
                       <FormInput
@@ -669,16 +709,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="Ngày hết hạn đăng kiểm" 
-                    value={shipperData.ExpiryVehicle} 
+                  <UpdateField
+                    label="Ngày hết hạn đăng kiểm"
+                    value={shipperData.ExpiryVehicle}
                     type="date"
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('ExpiryVehicle')} 
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('ExpiryVehicle')}
                   />
-                  
+
                   {activeUpdateFields.ExpiryVehicle && (
                     <div className="update-input-container">
                       <FormInput
@@ -702,13 +742,13 @@ const UpdateShipperInfo = () => {
               <h2>Giấy tờ (URL ảnh)</h2>
               <div className="info-grid">
                 <div className="field-row">
-                  <UpdateField 
-                    label="URL ảnh đăng ký xe" 
-                    value={shipperData.VehicleRegistrationImage} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('VehicleRegistrationImage')} 
+                  <UpdateField
+                    label="URL ảnh đăng ký xe"
+                    value={shipperData.VehicleRegistrationImage}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('VehicleRegistrationImage')}
                   />
-                  
+
                   {activeUpdateFields.VehicleRegistrationImage && (
                     <div className="update-input-container">
                       <FormInput
@@ -724,15 +764,15 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="URL ảnh thẻ Shipper" 
-                    value={shipperData.ImageShipper} 
-                    canUpdate={true} 
-                    onUpdate={() => toggleUpdateField('ImageShipper')} 
+                  <UpdateField
+                    label="URL ảnh thẻ Shipper"
+                    value={shipperData.ImageShipper}
+                    canUpdate={true}
+                    onUpdate={() => toggleUpdateField('ImageShipper')}
                   />
-                  
+
                   {activeUpdateFields.ImageShipper && (
                     <div className="update-input-container">
                       <FormInput
@@ -748,12 +788,12 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="field-row">
-                  <UpdateField 
-                    label="URL ảnh GPLX" 
-                    value={shipperData.DriverLicenseImage} 
-                    canUpdate={false} 
+                  <UpdateField
+                    label="URL ảnh GPLX"
+                    value={shipperData.DriverLicenseImage}
+                    canUpdate={false}
                   />
                 </div>
               </div>
@@ -765,8 +805,8 @@ const UpdateShipperInfo = () => {
                   Gửi Yêu Cầu Cập Nhật
                 </button>
               )}
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="cancel-button"
                 onClick={() => navigate('/shipper-account')}
               >

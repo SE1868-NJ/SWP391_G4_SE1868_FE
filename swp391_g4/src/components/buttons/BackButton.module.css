@@ -1,0 +1,19 @@
+.backButton {
+    background-color: #ff4d4d; /* Màu đỏ */
+    color: white; /* Màu chữ trắng */
+    border: none; /* Không viền */
+    padding: 10px 20px; /* Kích thước padding */
+    border-radius: 5px; /* Bo góc */
+    font-size: 16px; /* Kích thước chữ */
+    cursor: pointer; /* Con trỏ chuột thành pointer */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi màu */
+    margin-top: 10px;
+  }
+  
+  .backButton:hover {
+    background-color: #ff1a1a; /* Màu đỏ đậm khi hover */
+  }
+  
+  .backButton:active {
+    background-color: #cc0000; /* Màu đỏ đậm hơn khi nhấn */
+  }

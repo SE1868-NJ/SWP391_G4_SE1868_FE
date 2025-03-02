@@ -59,6 +59,7 @@ root.render(
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/register" element={<ShipperRegister />} />
+      
 
       {/* ** Trang Shipper** */}
       <Route
@@ -81,6 +82,8 @@ root.render(
         }
       />
       <Route path='/update-shipper-info' element={<UpdateShipperInfo />}/>
+
+      {/* ** Trang Operator** */}
       <Route path="/manage-shipper" element={<ManageShipper />} />
       <Route path="/shipper-detail" element={<ShipperDetail />} />
     </Routes>

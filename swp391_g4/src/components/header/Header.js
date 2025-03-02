@@ -4,14 +4,17 @@ import styles from "./Header.module.css";
 import { NavigationItem } from "./NavigationItem";
 import { Logo } from "./Logo";
 import { AuthButton } from "./AuthButton";
+import { useNavigate } from 'react-router-dom';
 
 export class Header extends React.Component {
   constructor(props) {
     super(props);
+    const token = localStorage.getItem('token');
     this.state = {
-      showLoginButton: props.showLoginButton || false,
-      showDropdownButton: props.showDropdownButton || false, // Thêm state mới
-      isDropdownOpen: false
+      showLoginButton: !token, // Hiển thị nút login nếu không có token
+      showDropdownButton: !!token, // Hiển thị dropdown nếu có token
+      isDropdownOpen: false,
+      shipperName: localStorage.getItem('shipperName') || 'Shipper'
     };
   }
 
@@ -34,10 +37,13 @@ export class Header extends React.Component {
 
   // Handle logout
   handleLogout = () => {
-    // Add logout logic here
-    if (this.props.onLogout) {
-      this.props.onLogout();
-    }
+    // Xóa token và thông tin shipper khỏi localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('shipperId');
+    localStorage.removeItem('shipperName');
+    
+    // Chuyển hướng về trang home thay vì login
+    window.location.href = '/home';
   }
 
   render() {
@@ -68,40 +74,41 @@ export class Header extends React.Component {
             {this.state.showLoginButton ? (
               <div className={styles.authContainer}>
                 <AuthButton onClick={this.props.onLoginClick} />
-                
-                {this.state.showDropdownButton && (
-                  <div className={styles.dropdownWrapper}>
-                    <button 
-                      className={styles.dropdownToggle} 
-                      onClick={this.toggleDropdown}
-                    >
-                      &#9660; {/* Dropdown arrow */}
-                    </button>
-                    
-                    {this.state.isDropdownOpen && (
-                      <div className={styles.dropdownMenu}>
-                        <a href="/shipper-account" className={styles.dropdownItem}>
-                          Tài khoản
-                        </a>
-                        <a href="/history-order" className={styles.dropdownItem}>
-                          Lịch sử đơn hàng
-                        </a>
-                        <a href="/revenue" className={styles.dropdownItem}>
-                          Doanh thu
-                        </a>
-                        <button 
-                          onClick={this.handleLogout} 
-                          className={styles.dropdownItem}
-                        >
-                          Đăng xuất
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             ) : (
-              <div className={styles.authPlaceholder}></div>
+              <div className={styles.authContainer}>
+                <div className={styles.dropdownWrapper}>
+                  <button 
+                    className={styles.dropdownToggle} 
+                    onClick={this.toggleDropdown}
+                  >
+                    {this.state.shipperName} &#9660;
+                  </button>
+                  
+                  {this.state.isDropdownOpen && (
+                    <div className={styles.dropdownMenu}>
+                      <a href="/shipper-account" className={styles.dropdownItem}>
+                        Tài khoản
+                      </a>
+                      <a href="/shipper" className={styles.dropdownItem}>
+                        Đơn hàng
+                      </a>
+                      <a href="/history-order" className={styles.dropdownItem}>
+                        Lịch sử đơn hàng
+                      </a>
+                      <a href="/revenue" className={styles.dropdownItem}>
+                        Doanh thu
+                      </a>
+                      <button 
+                        onClick={this.handleLogout} 
+                        className={styles.dropdownItem}
+                      >
+                        Đăng xuất
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </nav>
@@ -109,4 +116,5 @@ export class Header extends React.Component {
     );
   }
 }
+
 export default Header;
