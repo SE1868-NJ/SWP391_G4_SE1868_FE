@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/ShipperAccount.css";
-import axios from 'axios'; 
+import axios from 'axios';
 
 const formatData = {
   date: (dateString) => {
@@ -51,7 +51,7 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
       <div className="popup-content">
         <h2>Hủy tài khoản</h2>
         <p>Vui lòng cho chúng tôi biết lý do bạn muốn hủy tài khoản:</p>
-        
+
         <div className="reason-options">
           {cancelReasons.map(reason => (
             <div key={reason.id} className="reason-option">
@@ -78,7 +78,7 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
         )}
 
         <div className="popup-actions">
-          <button 
+          <button
             className="cancel-button"
             onClick={handleSubmit}
             disabled={isSubmitting || !isValid}
@@ -103,7 +103,7 @@ const ShipperAccount = () => {
   const [error, setError] = useState(null);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false); 
+  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
 
 
   const navItems = [
@@ -117,35 +117,39 @@ const ShipperAccount = () => {
   useEffect(() => {
     const fetchShipperData = async () => {
       try {
-          const shipperId = localStorage.getItem('shipperId');
-          if (!shipperId) {
-              navigate('/login');
-              return;
+        const shipperId = localStorage.getItem('shipperId');
+        const token = localStorage.getItem('token');
+
+        if (!shipperId || !token) {
+          navigate('/login');
+          return;
+        }
+
+        console.log('Fetching with Token:', token);
+        console.log('Fetching Shipper ID:', shipperId);
+
+        const response = await axios.get(`http://localhost:4000/api/shippers/${shipperId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
-  
-          console.log("Shipper ID lấy từ localStorage:", shipperId);
-  
-          const response = await axios.get(`http://localhost:4000/api/shippers/${shipperId}`, {
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${localStorage.getItem('token')}` // Nếu có dùng JWT
-              }
-          });
-  
-          console.log("Dữ liệu shipper nhận được:", response.data);
-  
-          if (response.data.success) {
-              setShipperData(response.data.data);
-          } else {
-              throw new Error(response.data.message || 'Không thể tải thông tin');
-          }
+        });
+
+        console.log('Full API Response:', response.data);
+
+        if (response.data.success) {
+          setShipperData(response.data.data);
+        } else {
+          throw new Error(response.data.message || 'Không thể tải thông tin');
+        }
       } catch (err) {
-          setError(err.message || 'Đã xảy ra lỗi khi tải thông tin');
-          console.error('Error fetching shipper data:', err);
+        console.error('Detailed Fetch Error:', err.response ? err.response.data : err);
+        setError(err.message || 'Đã xảy ra lỗi khi tải thông tin');
       } finally {
-          setLoading(false);
+        setLoading(false);
       }
-  };
+    };
+
     fetchShipperData();
   }, [navigate]);
 
@@ -161,14 +165,13 @@ const ShipperAccount = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
 
       if (response.data.success) {
-        setShowCancelPopup(false);  // Hide the popup
-        setShowConfirmationMessage(true);  // Show confirmation message
+        setShowCancelPopup(false);
+        setShowConfirmationMessage(true);
       } else {
         throw new Error(response.data.message || 'Không thể hủy tài khoản');
       }
@@ -183,7 +186,7 @@ const ShipperAccount = () => {
   const handleOkClick = () => {
     navigate('/home'); // Redirect to the ShipperAccount page
   };
-  
+
   const InfoItem = ({ label, value }) => (
     <div className="info-item">
       <span className="label">{label}:</span>
@@ -253,15 +256,15 @@ const ShipperAccount = () => {
         <div className="section-content">
           <h2>Giấy tờ</h2>
           <div className="documents-grid">
-            <DocumentItem 
+            <DocumentItem
               title="Giấy phép lái xe"
               image={shipperData.DriverLicenseImage}
             />
-            <DocumentItem 
+            <DocumentItem
               title="Đăng ký xe"
               image={shipperData.VehicleRegistrationImage}
             />
-            <DocumentItem 
+            <DocumentItem
               title="Ảnh thẻ Shipper"
               image={shipperData.ImageShipper}
             />
@@ -276,7 +279,9 @@ const ShipperAccount = () => {
   if (loading) {
     return (
       <div className="shipper-container">
-        <Header />
+        <div className="header">
+          <Header />
+        </div>
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Đang tải thông tin...</p>
@@ -289,7 +294,9 @@ const ShipperAccount = () => {
   if (error) {
     return (
       <div className="shipper-container">
-        <Header />
+        <div className="header">
+          <Header />
+        </div>
         <div className="error-container">
           <p>Lỗi: {error}</p>
           <button onClick={() => window.location.reload()}>Tải lại</button>
@@ -301,7 +308,9 @@ const ShipperAccount = () => {
 
   return (
     <div className="shipper-container">
-      <Header />
+      <div className="header">
+          <Header />
+        </div>
       <main className="shipper-main">
         {/* Show confirmation popup after successful cancellation */}
         {showConfirmationMessage && (
@@ -312,7 +321,7 @@ const ShipperAccount = () => {
             </div>
           </div>
         )}
-  
+
         {/* Display the normal layout if no confirmation message */}
         {!showConfirmationMessage && (
           <div className="shipper-account-layout">
@@ -333,26 +342,26 @@ const ShipperAccount = () => {
           </div>
         )}
       </main>
-      
-  
+
+
       {showCancelPopup && (
-        <CancelAccountPopup 
+        <CancelAccountPopup
           onClose={() => setShowCancelPopup(false)}
           onConfirm={handleCancelAccount}
           isSubmitting={isSubmitting}
         />
       )}
-  
+
       {/* Update and Cancel Account Buttons */}
       {!showConfirmationMessage && (
         <div className="account-actions">
-          <button 
+          <button
             className="update-button"
             onClick={() => navigate('/update-shipper-info')}
           >
             Cập nhật thông tin
           </button>
-          <button 
+          <button
             className="cancel-account-button"
             onClick={() => setShowCancelPopup(true)}
           >
@@ -362,10 +371,10 @@ const ShipperAccount = () => {
       )}
       <Footer />
     </div>
-    
+
   );
-  
-  
+
+
 };
 
 export default ShipperAccount;

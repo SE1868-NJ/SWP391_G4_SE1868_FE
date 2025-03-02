@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // Đảm bảo đã cài đặt jwt-decode
 import "../../../styles/Login.css";
 
 const Login = ({ isPopup = false, onClose }) => {
@@ -11,6 +12,29 @@ const Login = ({ isPopup = false, onClose }) => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Kiểm tra token khi component mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        
+        // Kiểm tra token còn hạn không
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp > currentTime) {
+          // Token còn hạn, chuyển thẳng sang trang shipper
+          navigate("/shipper");
+        }
+      } catch (decodeError) {
+        // Nếu token không hợp lệ, xóa token
+        localStorage.removeItem("token");
+        localStorage.removeItem("shipperId");
+        localStorage.removeItem("shipperName");
+      }
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,13 +48,6 @@ const Login = ({ isPopup = false, onClose }) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
-    if (!formData.email || !formData.password) {
-      setError("Vui lòng nhập email và mật khẩu.");
-      setLoading(false);
-      return;
-    }
-
     try {
       const response = await axios.post(
         "http://localhost:4000/api/login",
@@ -38,46 +55,20 @@ const Login = ({ isPopup = false, onClose }) => {
         {
           headers: {
             "Content-Type": "application/json",
-          },
-          withCredentials: true,
+          }
         }
       );
-
+      
       if (response.data.success) {
-        const status = response.data.shipper.Status;
-        if (status === "Active") {
-          // Lưu thông tin và chuyển hướng
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("shipperName", response.data.shipper.FullName);
-          localStorage.setItem("shipperId", response.data.shipper.ShipperID);
-
-          // Nếu là popup thì đóng popup
-          if (isPopup && onClose) {
-            onClose();
-          }
-
-          // Chuyển hướng đến trang shipper
-          navigate("/shipper");
-        } else if (status === "PendingRegister") {
-          setError("Tài khoản của bạn đang được duyệt, vui lòng đợi.");
-        } else if (status === "Inactive") {
-          setError("Tài khoản của bạn bị vô hiệu hoá.");
-        }
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("shipperId", response.data.shipper.ShipperID);
+        localStorage.setItem("shipperName", response.data.shipper.FullName);
+        navigate("/shipper");
       } else {
-        setError(response.data.message || "Đăng nhập thất bại.");
+        setError(response.data.message || "Đăng nhập thất bại");
       }
     } catch (error) {
-      console.error("Lỗi đăng nhập:", error);
-      if (error.response) {
-        setError(
-          error.response.data.message ||
-            "Đăng nhập thất bại. Vui lòng thử lại sau."
-        );
-      } else if (error.request) {
-        setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
-      } else {
-        setError("Đã xảy ra lỗi. Vui lòng thử lại.");
-      }
+      setError("Đăng nhập thất bại");
     } finally {
       setLoading(false);
     }
@@ -86,7 +77,6 @@ const Login = ({ isPopup = false, onClose }) => {
   return (
     <div className={`login-container ${isPopup ? "popup-mode" : ""}`}>
       <h1 className="login-title">Đăng Nhập</h1>
-
       <form className="login-form" onSubmit={handleLogin}>
         <input
           className="login-input"
@@ -97,7 +87,6 @@ const Login = ({ isPopup = false, onClose }) => {
           onChange={handleChange}
           required
         />
-
         <input
           className="login-input"
           type="password"
@@ -107,14 +96,11 @@ const Login = ({ isPopup = false, onClose }) => {
           onChange={handleChange}
           required
         />
-
         <button className="login-button" type="submit" disabled={loading}>
           {loading ? "Đang đăng nhập..." : "Đăng Nhập"}
         </button>
       </form>
-
       {error && <p className="login-error">{error}</p>}
-
       <div className="login-links">
         <button
           className="login-transparent-button"

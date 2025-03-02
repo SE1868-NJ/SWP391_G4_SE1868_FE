@@ -22,14 +22,15 @@ const CancelShipperAccount = () => {
 
   const handleCancel = async () => {
     const shipperId = localStorage.getItem('shipperId');
+    const token = localStorage.getItem('token');
     
-    if (!shipperId) {
-      setError('Không tìm thấy thông tin tài khoản');
+    if (!shipperId || !token) {
+      setError('Không tìm thấy thông tin tài khoản hoặc chưa đăng nhập');
+      navigate('/login');
       return;
     }
 
     const finalReason = reason === 'Khác' ? otherReason : reason;
-
     if (!finalReason) {
       setError('Vui lòng chọn hoặc nhập lý do hủy tài khoản');
       return;
@@ -37,14 +38,17 @@ const CancelShipperAccount = () => {
 
     try {
       await axios.delete(`http://localhost:4000/api/shippers/${shipperId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
         data: { reason: finalReason }
       });
 
-      // Xóa thông tin đăng nhập
       localStorage.removeItem('shipperId');
       localStorage.removeItem('shipperName');
-
-      // Chuyển hướng về trang chủ
+      localStorage.removeItem('token');
+      
       navigate('/');
       alert('Tài khoản đã được hủy thành công');
     } catch (error) {
@@ -84,16 +88,10 @@ const CancelShipperAccount = () => {
       {error && <p className="error-message">{error}</p>}
 
       <div className="cancel-actions">
-        <button 
-          className="confirm-cancel-button" 
-          onClick={handleCancel}
-        >
+        <button className="confirm-cancel-button" onClick={handleCancel}>
           Xác Nhận Hủy Tài Khoản
         </button>
-        <button 
-          className="back-button" 
-          onClick={() => navigate('/ShipperAccount')}
-        >
+        <button className="back-button" onClick={() => navigate('/ShipperAccount')}>
           Quay Lại
         </button>
       </div>
