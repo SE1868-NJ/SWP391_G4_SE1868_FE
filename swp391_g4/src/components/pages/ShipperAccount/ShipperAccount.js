@@ -117,43 +117,35 @@ const ShipperAccount = () => {
   useEffect(() => {
     const fetchShipperData = async () => {
       try {
-        const shipperId = localStorage.getItem('shipperId');
-        if (!shipperId) {
-          navigate('/login');
-          return;
-        }
-        axios.interceptors.response.use(
-          response => response,
-          error => {
-            console.error('Axios error:', error);
-            if (error.response?.status === 401) {
-              localStorage.removeItem('shipperId');
+          const shipperId = localStorage.getItem('shipperId');
+          if (!shipperId) {
               navigate('/login');
-            }
-            return Promise.reject(error);
+              return;
           }
-        );
-        const response = await axios.get(`http://localhost:5000/api/shippers/${shipperId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            // Thêm token nếu cần
-            'Authorization': `Bearer ${localStorage.getItem('token')}` 
+  
+          console.log("Shipper ID lấy từ localStorage:", shipperId);
+  
+          const response = await axios.get(`http://localhost:5000/api/shippers/${shipperId}`, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${localStorage.getItem('token')}` // Nếu có dùng JWT
+              }
+          });
+  
+          console.log("Dữ liệu shipper nhận được:", response.data);
+  
+          if (response.data.success) {
+              setShipperData(response.data.data);
+          } else {
+              throw new Error(response.data.message || 'Không thể tải thông tin');
           }
-        });
-
-        if (response.data.success) {
-          setShipperData(response.data.data);
-        } else {
-          throw new Error(response.data.message || 'Không thể tải thông tin');
-        }
       } catch (err) {
-        setError(err.message || 'Đã xảy ra lỗi khi tải thông tin');
-        console.error('Error fetching shipper data:', err);
+          setError(err.message || 'Đã xảy ra lỗi khi tải thông tin');
+          console.error('Error fetching shipper data:', err);
       } finally {
-        setLoading(false);
+          setLoading(false);
       }
-    };
-
+  };
     fetchShipperData();
   }, [navigate]);
 

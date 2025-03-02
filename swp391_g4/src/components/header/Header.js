@@ -9,7 +9,9 @@ export class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showLoginButton: props.showLoginButton || false
+      showLoginButton: props.showLoginButton || false,
+      showDropdownButton: props.showDropdownButton || false, // Thêm state mới
+      isDropdownOpen: false
     };
   }
 
@@ -18,12 +20,32 @@ export class Header extends React.Component {
     this.setState({ showLoginButton: isShow });
   }
 
+  // Hàm để thay đổi trạng thái hiển thị nút dropdown
+  showDropdownButton = (isShow) => {
+    this.setState({ showDropdownButton: isShow });
+  }
+
+  // Toggle dropdown menu
+  toggleDropdown = () => {
+    this.setState(prevState => ({
+      isDropdownOpen: !prevState.isDropdownOpen
+    }));
+  }
+
+  // Handle logout
+  handleLogout = () => {
+    // Add logout logic here
+    if (this.props.onLogout) {
+      this.props.onLogout();
+    }
+  }
+
   render() {
     const defaultNavItems = [
       { text: "Trang chủ", path: "/home", isActive: true },
       { text: "Về chúng tôi", path: "/about" },
       { text: "Tin tức", path: "/news" },
-      { text: "Liên hệ", path: "/contact" }
+      { text: "Liên hệ", path: "/shipper-contact" }
     ];
   
     const navItems = this.props.navigationItems || defaultNavItems;
@@ -44,7 +66,40 @@ export class Header extends React.Component {
           </div>
           <div className={styles.authSection}>
             {this.state.showLoginButton ? (
-              <AuthButton onClick={this.props.onLoginClick} />
+              <div className={styles.authContainer}>
+                <AuthButton onClick={this.props.onLoginClick} />
+                
+                {this.state.showDropdownButton && (
+                  <div className={styles.dropdownWrapper}>
+                    <button 
+                      className={styles.dropdownToggle} 
+                      onClick={this.toggleDropdown}
+                    >
+                      &#9660; {/* Dropdown arrow */}
+                    </button>
+                    
+                    {this.state.isDropdownOpen && (
+                      <div className={styles.dropdownMenu}>
+                        <a href="/shipper-account" className={styles.dropdownItem}>
+                          Tài khoản
+                        </a>
+                        <a href="/history-order" className={styles.dropdownItem}>
+                          Lịch sử đơn hàng
+                        </a>
+                        <a href="/revenue" className={styles.dropdownItem}>
+                          Doanh thu
+                        </a>
+                        <button 
+                          onClick={this.handleLogout} 
+                          className={styles.dropdownItem}
+                        >
+                          Đăng xuất
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             ) : (
               <div className={styles.authPlaceholder}></div>
             )}
