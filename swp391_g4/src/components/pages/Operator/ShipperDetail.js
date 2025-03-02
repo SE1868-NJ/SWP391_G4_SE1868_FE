@@ -132,7 +132,7 @@ const ShipperDetail = () => {
 
 // Lấy danh sách shipper đang chờ duyệt
 useEffect(() => {
-  axios.get('http://localhost:5000/api/pending-register-shippers')
+  axios.get('http://localhost:4000/api/pending-register-shippers')
     .then(response => {
       setShippersList(response.data); // Lưu danh sách vào shippersList
     })
@@ -152,7 +152,7 @@ useEffect(() => {
 
   // Lấy chi tiết shipper
   const handleShipperClick = (id) => {
-    axios.get(`http://localhost:5000/api/shippers/${id}`)
+    axios.get(`http://localhost:4000/api/shippers/${id}`)
       .then(response => {
         setSelectedShipper(response.data); // Lưu thông tin chi tiết vào selectedShipper
       })
@@ -162,7 +162,7 @@ useEffect(() => {
   };
   const handleRejectShipper = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/reject-shipper', {
+      const response = await axios.post('http://localhost:4000/api/reject-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   
@@ -184,7 +184,7 @@ useEffect(() => {
   };
   const handleApproveShipper = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/approve-shipper', {
+      const response = await axios.post('http://localhost:4000/api/approve-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   

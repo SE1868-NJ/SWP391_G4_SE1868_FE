@@ -134,6 +134,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -214,7 +215,8 @@
 .form.shipper-menu {
   position: fixed;
   top: 0;
-  right: -250px; /* Ẩn menu bên ngoài */
+  right: -250px;
+  /* Ẩn menu bên ngoài */
   background-color: #333;
   color: white;
   width: 250px;
@@ -225,7 +227,8 @@
   align-items: center;
   padding-top: 20px;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease; /* Hiệu ứng mượt mà khi menu mở */
+  transition: right 0.3s ease;
+  /* Hiệu ứng mượt mà khi menu mở */
 }
 
 /* Khi menu mở */
@@ -267,4 +270,18 @@
 
 .table-orders {
   min-height: 75vh;
+}
+
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.mx-md-5 {
+  padding-top: 100px;
 }

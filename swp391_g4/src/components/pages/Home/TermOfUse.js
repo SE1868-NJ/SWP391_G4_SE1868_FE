@@ -7,6 +7,7 @@ import Login from "../Login/Login";
 const TermsOfUse = () => {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
+
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
   };

@@ -171,7 +171,7 @@
 
 .password-input-container input {
   width: 100%;
-  padding-right: 40px; /* Space for the toggle button */
+  padding-right: 40px;
 }
 
 .password-toggle {
@@ -199,7 +199,6 @@
   color: #007bff;
 }
 
-/* Prevent the eye icon from affecting the input's error state */
 .form-input.error + .password-toggle {
   color: #dc3545;
 }

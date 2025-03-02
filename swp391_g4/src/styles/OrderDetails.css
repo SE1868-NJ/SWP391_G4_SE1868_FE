@@ -1,0 +1,83 @@
+.order-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    /* Add some spacing */
+    background-color: #f8f9fa; /* Light gray background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    min-height: 80vh; /* Ensure sufficient height */
+}
+
+.address-section {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.address-section > div {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    flex: 1;
+    margin: 0 10px; /* Add spacing between address sections */
+}
+
+.order-summary {
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.total-section {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.confirm-button {
+    margin-top: 20px;
+    width: 80%;
+    text-align: center;
+}
+
+.map-section {
+    width: 80%;
+    margin-top: 20px;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    .address-section {
+        flex-direction: column; /* Stack addresses vertically on smaller screens */
+        align-items: center;
+    }
+
+    .address-section > div {
+        margin: 10px 0; /* Adjust margin for vertical stacking */
+    }
+
+    .order-summary, .confirm-button, .map-section {
+        width: 90%; /* Increase width to occupy more space */
+    }
+}
+
+/* Add some styling for better readability */
+h2, h3, h5 {
+    font-weight: bold;
+}
+
+.fs-5, .fs-6, .fs-4 {
+    font-size: 1.2rem; /* Adjust font sizes as needed */
+}
+
+strong {
+    font-weight: 600;
+}
+
+/* Add some spacing between table rows */
+.MuiTableRow-root {
+    margin-bottom: 5px;
+}
+

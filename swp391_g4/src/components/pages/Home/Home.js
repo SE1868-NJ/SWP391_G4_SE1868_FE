@@ -44,7 +44,7 @@ const Home = () => {
     const intervalId = setInterval(() => {
       setDirection("left");
       setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-    }, 5000); // Change banner every 5 seconds
+    }, 4000); // Change banner every 5 seconds
 
     return () => clearInterval(intervalId);
   }, [bannerData.length]);
@@ -123,6 +123,8 @@ const Home = () => {
 
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const navigate = useNavigate();
+
+  
 
   return (
     <div className="home">
