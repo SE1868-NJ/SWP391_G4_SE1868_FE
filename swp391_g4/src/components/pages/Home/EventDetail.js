@@ -1,14 +1,24 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import '../../../styles/EventDetail.css';
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
 
-
 const EventDetail = () => {
   const { eventId } = useParams(); // Lấy ID sự kiện từ URL
   const navigate = useNavigate();
+  
+  // Login Popup State
+const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+const openLoginPopup = () => {
+  setIsLoginPopupOpen(true);
+};
+const closeLoginPopup = () => {
+  setIsLoginPopupOpen(false);
+};
+
 
   // Dữ liệu sự kiện
   const events = {
@@ -42,7 +52,7 @@ const EventDetail = () => {
     4: {
       title: 'Chương trình "1 giờ giao hàng nội khu"',
       description: `
-        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm TP.HCM.
+        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm TP.HCM. 
         Dịch vụ này cam kết giao hàng nhanh chóng, đảm bảo đáp ứng nhu cầu khẩn cấp của khách hàng trong nội khu.
         Dịch vụ này là một phần trong chiến lược phát triển của EcoShipper nhằm không ngừng cải tiến chất lượng và tốc độ giao hàng, tạo ra sự khác biệt so với các đối thủ cạnh tranh.
       `,
@@ -123,13 +133,16 @@ const EventDetail = () => {
   return (
     <div className="eventdetail-container">
       <div className='header'>
-        <Header showLoginButton={true} />
+        < Header
+          showLoginButton={true}
+          onLoginClick={openLoginPopup} />
       </div>
       <div className='event-detail'>
         <button className="back-button" onClick={() => navigate('/news')}>Quay lại</button>
         <h1>{event.title}</h1>
         <img src={event.image} alt={event.title} className="event-image" />
         <p>{event.description}</p>
+
 
         <h2>Bài viết khác</h2>
         <div className="related-articles">
@@ -143,7 +156,18 @@ const EventDetail = () => {
           ))}
         </div>
       </div>
-      <Footer/>
+      {/* Login Popup */}
+      {isLoginPopupOpen && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <button className="popup-close" onClick={closeLoginPopup}>
+              &times;
+            </button>
+            <Login isPopup={true} onClose={closeLoginPopup} />
+          </div>
+        </div>
+      )}
+      <Footer />
     </div>
   );
 };

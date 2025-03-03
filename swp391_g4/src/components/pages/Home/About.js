@@ -6,7 +6,7 @@ import { useState } from "react";
 import Login from "../Login/Login";
 
 const About = () => {
-    
+
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
   const openLoginPopup = () => {
@@ -19,12 +19,12 @@ const About = () => {
 
   return (
     <div className="about">
-      {/* Header */}
-      <Header
-        showLoginButton={true}
-        onLoginClick={openLoginPopup}
-      />
-
+      <div className="header">
+        <Header
+          showLoginButton={true}
+          onLoginClick={openLoginPopup}
+        />
+      </div>
       {/* About Section */}
       <section className="about-section">
         <h2>Tầm nhìn</h2>
@@ -113,9 +113,9 @@ const About = () => {
       )}
 
       {/* Footer */}
-      <Footer 
-        showAccountSection={true} 
-        onLoginClick={openLoginPopup} 
+      <Footer
+        showAccountSection={true}
+        onLoginClick={openLoginPopup}
       />
     </div>
   );

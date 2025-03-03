@@ -6,7 +6,6 @@ import Login from "../Login/Login";
 import { Link } from 'react-router-dom';
 
 const News = () => {
-  // Navigation Items
   const newsNavigationItems = [
     { text: "Trang chủ", path: "/home" },
     { text: "Về chúng tôi", path: "/about" },
@@ -28,11 +27,13 @@ const News = () => {
   return (
     <div className="news">
       {/* Header */}
+      <div className='header'>
       <Header
         navigationItems={newsNavigationItems}
         showLoginButton={true}
         onLoginClick={openLoginPopup}
       />
+      </div>
 
       {/* News Section */}
       <section className="news-section">
@@ -186,7 +187,7 @@ const News = () => {
           <div className="activity-item">
             <Link to="/activities/4">
               <img
-                src="https://biogency.com.vn/wp-content/uploads/2022/06/tinh-trang-o-nhiem-moi-truong-dang-o-muc-bao-dong-tren-khap-toan-cau.jpg"
+                src="https://storage-vnportal.vnpt.vn/btn-ubnd/sitefolders/bqlkcn/2021/hinh-anh.jpg"
                 alt="Chiến dịch dọn dẹp môi trường"
                 className="activity-image"
               />
@@ -201,7 +202,7 @@ const News = () => {
           <div className="activity-item">
             <Link to="/activities/5">
               <img
-                src="https://karaoke.com.vn/wp-content/uploads/2020/02/Hi%E1%BA%BFn-m%C3%A1u.jpg"
+                src="https://nld.mediacdn.vn/291774122806476800/2024/1/21/9023184831263850273863179013568618226515968n-17058283610721740272758-0-0-600-960-crop-1705828953865389710071.jpeg"
                 alt="Chiến dịch hiến máu nhân đạo"
                 className="activity-image"
               />
@@ -216,7 +217,7 @@ const News = () => {
           <div className="activity-item small">
             <Link to="/activities/6">
               <img
-                src="https://media.istockphoto.com/id/1569228589/vi/vec-to/2306-m10-s-st-t%E1%BB%AB-thi%E1%BB%87n-cho-ng%C6%B0%E1%BB%9Di-v%C3%B4-gia-c%C6%B0-phim-ho%E1%BA%A1t-h%C3%ACnh-gi%C3%BAp-%C4%91%E1%BB%A1-nh%C3%A2n-%C4%91%E1%BA%A1o-v%C3%A0-h%E1%BB%97-tr%E1%BB%A3-ng%C6%B0%E1%BB%9Di.jpg?s=612x612&w=0&k=20&c=0ThgrKEp_K1eYOEEW9Mz0A372a45AzgZngE4oUF0eNE="
+                src="https://cafefcdn.com/203337114487263232/2022/12/13/photo-3-16709027446771022222957.jpg"
                 alt="Chương trình hỗ trợ người vô gia cư"
                 className="activity-image"
               />

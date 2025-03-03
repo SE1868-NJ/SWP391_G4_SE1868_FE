@@ -35,25 +35,16 @@ import ForgotPassword from './components/ForgotPassword';  // Import trang Forgo
 const App = () => {
   const navigate = useNavigate();
 
-  const handleLoginClick = () => {
-    navigate('/login'); // Điều hướng sang trang login
-  };
+ const handleLoginClick = () => {
+   navigate('/login'); // Điều hướng sang trang login
+ };
 
-  return (
-    <Router>
-      <div>
-        <h1>Welcome to the Homepage</h1>
-        <Button onClick={handleLoginClick}>Login</Button>
-
-        <Routes>
-          {/* Định nghĩa các routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+ return (
+   <div>
+     <h1>Welcome to the Homepage</h1>
+     <Button onClick={handleLoginClick}>Login</Button>
+   </div>
+ );
 };
 
 export default App;
