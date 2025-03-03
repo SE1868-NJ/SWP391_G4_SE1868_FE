@@ -47,14 +47,14 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
   const isValid = cancelReason && (cancelReason !== 'other' || otherReason.trim());
 
   return (
-    <div className="popup-overlay">
-      <div className="popup-content">
+    <div className="shipperAccount-popup-overlay">
+      <div className="shipperAccount-popup-content">
         <h2>Hủy tài khoản</h2>
         <p>Vui lòng cho chúng tôi biết lý do bạn muốn hủy tài khoản:</p>
         
-        <div className="reason-options">
+        <div className="shipperAccount-reason-options">
           {cancelReasons.map(reason => (
-            <div key={reason.id} className="reason-option">
+            <div key={reason.id} className="shipperAccount-reason-option">
               <input
                 type="radio"
                 id={reason.id}
@@ -73,19 +73,19 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
             placeholder="Vui lòng nhập lý do của bạn..."
             value={otherReason}
             onChange={(e) => setOtherReason(e.target.value)}
-            className="other-reason-input"
+            className="shipperAccount-other-reason-input"
           />
         )}
 
-        <div className="popup-actions">
+        <div className="shipperAccount-popup-actions">
           <button 
-            className="cancel-button"
+            className="shipperAccount-cancel-button"
             onClick={handleSubmit}
             disabled={isSubmitting || !isValid}
           >
             {isSubmitting ? 'Đang xử lý...' : 'Xác nhận hủy'}
           </button>
-          <button className="close-button" onClick={onClose}>
+          <button className="shipperAccount-close-button" onClick={onClose}>
             Đóng
           </button>
         </div>
@@ -104,7 +104,6 @@ const ShipperAccount = () => {
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmationMessage, setShowConfirmationMessage] = useState(false); 
-
 
   const navItems = [
     { id: 'personal-info', label: 'Thông tin cá nhân' },
@@ -136,7 +135,6 @@ const ShipperAccount = () => {
         const response = await axios.get(`http://localhost:5000/api/shippers/${shipperId}`, {
           headers: {
             'Content-Type': 'application/json',
-            // Thêm token nếu cần
             'Authorization': `Bearer ${localStorage.getItem('token')}` 
           }
         });
@@ -169,14 +167,13 @@ const ShipperAccount = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
 
       if (response.data.success) {
-        setShowCancelPopup(false);  // Hide the popup
-        setShowConfirmationMessage(true);  // Show confirmation message
+        setShowCancelPopup(false);
+        setShowConfirmationMessage(true);
       } else {
         throw new Error(response.data.message || 'Không thể hủy tài khoản');
       }
@@ -188,23 +185,24 @@ const ShipperAccount = () => {
       setShowCancelPopup(false);
     }
   };
+
   const handleOkClick = () => {
-    navigate('/home'); // Redirect to the ShipperAccount page
+    navigate('/home');
   };
   
   const InfoItem = ({ label, value }) => (
-    <div className="info-item">
-      <span className="label">{label}:</span>
-      <span className="value">{value || "Chưa cập nhật"}</span>
+    <div className="shipperAccount-info-item">
+      <span className="shipperAccount-label">{label}:</span>
+      <span className="shipperAccount-value">{value || "Chưa cập nhật"}</span>
     </div>
   );
 
   const DocumentItem = ({ title, image }) => {
     if (!image) return null;
     return (
-      <div className="document-item">
+      <div className="shipperAccount-document-item">
         <h3>{title}</h3>
-        <img src={image} alt={title} className="document-image" />
+        <img src={image} alt={title} className="shipperAccount-document-image" />
       </div>
     );
   };
@@ -214,9 +212,9 @@ const ShipperAccount = () => {
 
     const sections = {
       'personal-info': (
-        <div className="section-content">
+        <div className="shipperAccount-section-content">
           <h2>Thông tin cá nhân</h2>
-          <div className="info-grid">
+          <div className="shipperAccount-info-grid">
             <InfoItem label="Họ và tên" value={shipperData.FullName} />
             <InfoItem label="Ngày sinh" value={formatData.date(shipperData.DateOfBirth)} />
             <InfoItem label="Số điện thoại" value={shipperData.PhoneNumber} />
@@ -226,9 +224,9 @@ const ShipperAccount = () => {
         </div>
       ),
       'vehicle-info': (
-        <div className="section-content">
+        <div className="shipperAccount-section-content">
           <h2>Thông tin phương tiện</h2>
-          <div className="info-grid">
+          <div className="shipperAccount-info-grid">
             <InfoItem label="Loại xe" value={shipperData.VehicleType} />
             <InfoItem label="Biển số xe" value={shipperData.LicensePlate} />
             <InfoItem label="Số GPLX" value={shipperData.LicenseNumber} />
@@ -238,9 +236,9 @@ const ShipperAccount = () => {
         </div>
       ),
       'address-info': (
-        <div className="section-content">
+        <div className="shipperAccount-section-content">
           <h2>Địa chỉ</h2>
-          <div className="info-grid">
+          <div className="shipperAccount-info-grid">
             <InfoItem label="Số nhà" value={shipperData.HouseNumber} />
             <InfoItem label="Phường/Xã" value={shipperData.Ward} />
             <InfoItem label="Quận/Huyện" value={shipperData.District} />
@@ -249,18 +247,18 @@ const ShipperAccount = () => {
         </div>
       ),
       'bank-info': (
-        <div className="section-content">
+        <div className="shipperAccount-section-content">
           <h2>Thông tin ngân hàng</h2>
-          <div className="info-grid">
+          <div className="shipperAccount-info-grid">
             <InfoItem label="Tên ngân hàng" value={shipperData.BankName} />
             <InfoItem label="Số tài khoản" value={shipperData.BankAccountNumber} />
           </div>
         </div>
       ),
       'documents': (
-        <div className="section-content">
+        <div className="shipperAccount-section-content">
           <h2>Giấy tờ</h2>
-          <div className="documents-grid">
+          <div className="shipperAccount-documents-grid">
             <DocumentItem 
               title="Giấy phép lái xe"
               image={shipperData.DriverLicenseImage}
@@ -283,10 +281,10 @@ const ShipperAccount = () => {
 
   if (loading) {
     return (
-      <div className="shipper-container">
+      <div className="shipperAccount-container">
         <Header />
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
+        <div className="shipperAccount-loading-container">
+          <div className="shipperAccount-loading-spinner"></div>
           <p>Đang tải thông tin...</p>
         </div>
         <Footer />
@@ -296,9 +294,9 @@ const ShipperAccount = () => {
 
   if (error) {
     return (
-      <div className="shipper-container">
+      <div className="shipperAccount-container">
         <Header />
-        <div className="error-container">
+        <div className="shipperAccount-error-container">
           <p>Lỗi: {error}</p>
           <button onClick={() => window.location.reload()}>Tải lại</button>
         </div>
@@ -308,34 +306,32 @@ const ShipperAccount = () => {
   }
 
   return (
-    <div className="shipper-container">
+    <div className="shipperAccount-container">
       <Header />
-      <main className="shipper-main">
-        {/* Show confirmation popup after successful cancellation */}
+      <main className="shipperAccount-main">
         {showConfirmationMessage && (
-          <div className="popup-overlay">
-            <div className="popup-content">
+          <div className="shipperAccount-popup-overlay">
+            <div className="shipperAccount-popup-content">
               <h2>TÀI KHOẢN CỦA BẠN ĐANG CHỜ XÁC NHẬN. VUI LÒNG ĐỢI.</h2>
-              <button className="ok-button" onClick={handleOkClick}>OK</button>
+              <button className="shipperAccount-ok-button" onClick={handleOkClick}>OK</button>
             </div>
           </div>
         )}
   
-        {/* Display the normal layout if no confirmation message */}
         {!showConfirmationMessage && (
-          <div className="shipper-account-layout">
-            <div className="left-sidebar">
+          <div className="shipperAccount-account-layout">
+            <div className="shipperAccount-left-sidebar">
               {navItems.map(item => (
                 <div
                   key={item.id}
-                  className={`sidebar-item ${selectedSection === item.id ? 'active' : ''}`}
+                  className={`shipperAccount-sidebar-item ${selectedSection === item.id ? 'active' : ''}`}
                   onClick={() => setSelectedSection(item.id)}
                 >
                   {item.label}
                 </div>
               ))}
             </div>
-            <div className="right-content">
+            <div className="shipperAccount-right-content">
               {renderSectionContent()}
             </div>
           </div>
@@ -351,17 +347,16 @@ const ShipperAccount = () => {
         />
       )}
   
-      {/* Update and Cancel Account Buttons */}
       {!showConfirmationMessage && (
-        <div className="account-actions">
+        <div className="shipperAccount-account-actions">
           <button 
-            className="update-button"
+            className="shipperAccount-update-button"
             onClick={() => navigate('/update-shipper-info')}
           >
             Cập nhật thông tin
           </button>
           <button 
-            className="cancel-account-button"
+            className="shipperAccount-cancel-account-button"
             onClick={() => setShowCancelPopup(true)}
           >
             Hủy tài khoản
@@ -370,10 +365,7 @@ const ShipperAccount = () => {
       )}
       <Footer />
     </div>
-    
   );
-  
-  
 };
 
 export default ShipperAccount;
