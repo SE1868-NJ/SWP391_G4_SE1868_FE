@@ -7,8 +7,8 @@ import ReactPaginate from 'react-paginate';
 import { format } from 'date-fns';
 import { Input, initMDB } from 'mdb-ui-kit';
 import Header from '../common/header';
-import ProfileShipper from '../common/profileShipper';
 import Footer from '../footer/Footer';
+import ProfileShipper from '../common/profileShipper';
 initMDB({ Input });
 
 const Shipper = () => {
@@ -24,7 +24,7 @@ const Shipper = () => {
   const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
 
   const FetchOrders = () => {
-    axios.get(`http://localhost:5000/api/getOrdersInProgress?search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
+    axios.get(`http://localhost:5000/api/getOrdersPending?search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
     .then((response) => {
       console.log(response);
 
@@ -113,7 +113,7 @@ const Shipper = () => {
                 <th scope="col">Phone</th>
                 <th scope="col">Email</th>
                 <th scope="col">Address</th>
-                <th scope="col">Estimated Time</th>
+                <th scope="col">Oreder Time</th>
               </tr>
             </thead>
             <tbody  >
@@ -129,7 +129,7 @@ const Shipper = () => {
                   <td className="py-2 align-content-center">{order.PhoneNumber}</td>
                   <td className="py-2 align-content-center">{order.Email}</td>
                   <td className="py-2 align-content-center">{order.DeliveryAddress}</td>
-                  <td className="py-2 align-content-center">{format(new Date(order.EstimatedDeliveryTime), 'MMMM dd, yyyy hh:mm:ss a')}</td>
+                  <td className="py-2 align-content-center">{format(new Date(order.OrderDate), 'MMMM dd, yyyy hh:mm:ss a')}</td>
                 </tr>
               ))}
             </tbody>

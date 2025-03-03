@@ -21,6 +21,9 @@ import PrivacyPolicy from "./components/pages/Home/PrivacyPolicy";
 import TermsOfUse from "./components/pages/Home/TermOfUse";
 import JobDetail from "./components/pages/Home/JobDetail";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
+import MyDeliveryOrder from './components/pages/MyDeliveryOrder';
+import HistoryDeliveryOrder from './components/pages/HistoryDeliveryOrder';
+import Revenue from './components/pages/Revenue';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -61,6 +64,9 @@ root.render(
       <Route path="/terms-of-use" element={<TermsOfUse />} />
       <Route path="/job/:jobId" element={<JobDetail />} />
       <Route path='/shipper-detail' element={<ShipperDetail />} />
+      <Route path="/my-delivery-order" element={<MyDeliveryOrder />} />
+      <Route path="/history-delivery-order" element={<HistoryDeliveryOrder />} />
+      <Route path="/revenue" element={<Revenue />} />
    </Routes>
  </Router>
 );

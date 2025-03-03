@@ -71,7 +71,8 @@ const Header = () => {
                 <ul>
                     <>
                     <li onClick={() => handleMenuClick('/shipperaccount')}>Shipper Account</li>
-                    <li onClick={() => handleMenuClick('/historyorder')}>History Order</li>
+                    <li onClick={() => handleMenuClick('/my-delivery-order')}>My Delivery Order</li>
+                    <li onClick={() => handleMenuClick('/history-delivery-order')}>History Delivery Order</li>
                     <li onClick={() => handleMenuClick('/revenue')}>Revenue</li>
                     <li onClick={handleLogout}>Logout</li>
                     </>
