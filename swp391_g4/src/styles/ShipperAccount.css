@@ -8,6 +8,7 @@
   flex: 1;
   padding: 2rem;
   background-color: #f5f5f5;
+  padding-top: 100px;
 }
 
 .shipperAccount-account-layout {
@@ -22,6 +23,18 @@
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.shipperAccount-sidebar-item.open {
+  background-color: rgb(36, 174, 110);  
+  color: white;  
+}
+.shipperAccount-sub-items {
+  display: none;  
+  flex-direction: column;
+}
+
+.shipperAccount-sidebar-item.open + .shipperAccount-sub-items {
+  display: flex;  
 }
 
 .shipperAccount-sidebar-item {
@@ -469,4 +482,13 @@
     width: 95%;
     max-width: 450px;
   }
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
 }

@@ -4,12 +4,17 @@ import styles from "./Header.module.css";
 import { NavigationItem } from "./NavigationItem";
 import { Logo } from "./Logo";
 import { AuthButton } from "./AuthButton";
+import { useNavigate } from 'react-router-dom';
 
 export class Header extends React.Component {
   constructor(props) {
     super(props);
+    const token = localStorage.getItem('token');
     this.state = {
-      showLoginButton: props.showLoginButton || false
+      showLoginButton: !token, // Hiển thị nút login nếu không có token
+      showDropdownButton: !!token, // Hiển thị dropdown nếu có token
+      isDropdownOpen: false,
+      shipperName: localStorage.getItem('shipperName') || 'Shipper'
     };
   }
 
@@ -18,12 +23,35 @@ export class Header extends React.Component {
     this.setState({ showLoginButton: isShow });
   }
 
+  // Hàm để thay đổi trạng thái hiển thị nút dropdown
+  showDropdownButton = (isShow) => {
+    this.setState({ showDropdownButton: isShow });
+  }
+
+  // Toggle dropdown menu
+  toggleDropdown = () => {
+    this.setState(prevState => ({
+      isDropdownOpen: !prevState.isDropdownOpen
+    }));
+  }
+
+  // Handle logout
+  handleLogout = () => {
+    // Xóa token và thông tin shipper khỏi localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('shipperId');
+    localStorage.removeItem('shipperName');
+    
+    // Chuyển hướng về trang home thay vì login
+    window.location.href = '/home';
+  }
+
   render() {
     const defaultNavItems = [
       { text: "Trang chủ", path: "/home", isActive: true },
       { text: "Về chúng tôi", path: "/about" },
       { text: "Tin tức", path: "/news" },
-      { text: "Liên hệ", path: "/contact" }
+      { text: "Liên hệ", path: "/shipper-contact" }
     ];
   
     const navItems = this.props.navigationItems || defaultNavItems;
@@ -44,9 +72,43 @@ export class Header extends React.Component {
           </div>
           <div className={styles.authSection}>
             {this.state.showLoginButton ? (
-              <AuthButton onClick={this.props.onLoginClick} />
+              <div className={styles.authContainer}>
+                <AuthButton onClick={this.props.onLoginClick} />
+              </div>
             ) : (
-              <div className={styles.authPlaceholder}></div>
+              <div className={styles.authContainer}>
+                <div className={styles.dropdownWrapper}>
+                  <button 
+                    className={styles.dropdownToggle} 
+                    onClick={this.toggleDropdown}
+                  >
+                    {this.state.shipperName} &#9660;
+                  </button>
+                  
+                  {this.state.isDropdownOpen && (
+                    <div className={styles.dropdownMenu}>
+                      <a href="/shipper-account" className={styles.dropdownItem}>
+                        Tài khoản
+                      </a>
+                      <a href="/shipper" className={styles.dropdownItem}>
+                        Đơn hàng
+                      </a>
+                      <a href="/history-order" className={styles.dropdownItem}>
+                        Lịch sử đơn hàng
+                      </a>
+                      <a href="/revenue" className={styles.dropdownItem}>
+                        Doanh thu
+                      </a>
+                      <button 
+                        onClick={this.handleLogout} 
+                        className={styles.dropdownItem}
+                      >
+                        Đăng xuất
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </nav>
@@ -54,4 +116,5 @@ export class Header extends React.Component {
     );
   }
 }
+
 export default Header;

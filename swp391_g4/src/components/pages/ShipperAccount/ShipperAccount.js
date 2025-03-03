@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/ShipperAccount.css";
-import axios from 'axios'; 
+import axios from 'axios';
 
 const formatData = {
   date: (dateString) => {
@@ -103,41 +103,33 @@ const ShipperAccount = () => {
   const [error, setError] = useState(null);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false); 
+  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
+  const [isAccountCollapsed, setIsAccountCollapsed] = useState(false); 
 
-  const navItems = [
-    { id: 'personal-info', label: 'Thông tin cá nhân' },
-    { id: 'vehicle-info', label: 'Thông tin phương tiện' },
-    { id: 'address-info', label: 'Địa chỉ' },
-    { id: 'bank-info', label: 'Thông tin ngân hàng' },
-    { id: 'documents', label: 'Giấy tờ' }
-  ];
+
 
   useEffect(() => {
     const fetchShipperData = async () => {
       try {
         const shipperId = localStorage.getItem('shipperId');
-        if (!shipperId) {
+        const token = localStorage.getItem('token');
+
+        if (!shipperId || !token) {
           navigate('/login');
           return;
         }
-        axios.interceptors.response.use(
-          response => response,
-          error => {
-            console.error('Axios error:', error);
-            if (error.response?.status === 401) {
-              localStorage.removeItem('shipperId');
-              navigate('/login');
-            }
-            return Promise.reject(error);
-          }
-        );
-        const response = await axios.get(`http://localhost:5000/api/shippers/${shipperId}`, {
+
+        console.log('Fetching with Token:', token);
+        console.log('Fetching Shipper ID:', shipperId);
+
+        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}` 
+            'Authorization': `Bearer ${token}`
           }
         });
+
+        console.log('Full API Response:', response.data);
 
         if (response.data.success) {
           setShipperData(response.data.data);
@@ -145,8 +137,8 @@ const ShipperAccount = () => {
           throw new Error(response.data.message || 'Không thể tải thông tin');
         }
       } catch (err) {
+        console.error('Detailed Fetch Error:', err.response ? err.response.data : err);
         setError(err.message || 'Đã xảy ra lỗi khi tải thông tin');
-        console.error('Error fetching shipper data:', err);
       } finally {
         setLoading(false);
       }
@@ -160,7 +152,7 @@ const ShipperAccount = () => {
     try {
       const shipperId = localStorage.getItem('shipperId');
       const response = await axios.put(
-        `http://localhost:5000/api/shippers/${shipperId}/cancel`,
+        `http://localhost:5000/api/shippers-auth/${shipperId}/cancel`,
         {
           reason,
         },
@@ -189,7 +181,7 @@ const ShipperAccount = () => {
   const handleOkClick = () => {
     navigate('/home');
   };
-  
+
   const InfoItem = ({ label, value }) => (
     <div className="shipperAccount-info-item">
       <span className="shipperAccount-label">{label}:</span>
@@ -206,7 +198,17 @@ const ShipperAccount = () => {
       </div>
     );
   };
-
+  const navItems = [
+    { id: 'account', label: 'Tài khoản của tôi', isAccount: true }, 
+    { id: 'personal-info', label: 'Thông tin cá nhân' },
+    { id: 'vehicle-info', label: 'Thông tin phương tiện' },
+    { id: 'address-info', label: 'Địa chỉ' },
+    { id: 'bank-info', label: 'Thông tin ngân hàng' },
+    { id: 'documents', label: 'Giấy tờ' }
+  ];
+  const handleAccountClick = () => {
+    setIsAccountCollapsed(!isAccountCollapsed); 
+  };
   const renderSectionContent = () => {
     if (!shipperData) return null;
 
@@ -263,11 +265,11 @@ const ShipperAccount = () => {
               title="Giấy phép lái xe"
               image={shipperData.DriverLicenseImage}
             />
-            <DocumentItem 
+            <DocumentItem
               title="Đăng ký xe"
               image={shipperData.VehicleRegistrationImage}
             />
-            <DocumentItem 
+            <DocumentItem
               title="Ảnh thẻ Shipper"
               image={shipperData.ImageShipper}
             />
@@ -321,7 +323,26 @@ const ShipperAccount = () => {
         {!showConfirmationMessage && (
           <div className="shipperAccount-account-layout">
             <div className="shipperAccount-left-sidebar">
-              {navItems.map(item => (
+          <div
+            className={`shipperAccount-sidebar-item ${isAccountCollapsed ? 'open' : ''}`}
+            onClick={handleAccountClick}
+          >
+            Tài khoản của tôi
+          </div>
+          <div className={`shipperAccount-sub-items ${isAccountCollapsed ? 'open' : ''}`}>
+              {navItems.slice(1).map(item => (
+                <div
+                  key={item.id}
+                  className={`shipperAccount-sidebar-item ${selectedSection === item.id ? 'active' : ''}`}
+                  onClick={() => setSelectedSection(item.id)}
+                >
+                  {item.label}
+                </div>  
+              ))}
+            </div>
+          {!isAccountCollapsed && (
+            <>
+              {navItems.slice(1).map(item => (
                 <div
                   key={item.id}
                   className={`shipperAccount-sidebar-item ${selectedSection === item.id ? 'active' : ''}`}
@@ -330,17 +351,32 @@ const ShipperAccount = () => {
                   {item.label}
                 </div>
               ))}
+            </>
+          )}
+        </div>
+        <div className="shipperAccount-right-content">
+          {loading ? (
+            <div className="shipperAccount-loading-container">
+              <div className="shipperAccount-loading-spinner"></div>
+              <p>Đang tải thông tin...</p>
             </div>
-            <div className="shipperAccount-right-content">
-              {renderSectionContent()}
+          ) : error ? (
+            <div className="shipperAccount-error-container">
+              <p>Lỗi: {error}</p>
+              <button onClick={() => window.location.reload()}>Tải lại</button>
             </div>
+          ) : (
+            renderSectionContent()
+          )}
+        </div>
+      
           </div>
         )}
       </main>
-      
-  
+
+
       {showCancelPopup && (
-        <CancelAccountPopup 
+        <CancelAccountPopup
           onClose={() => setShowCancelPopup(false)}
           onConfirm={handleCancelAccount}
           isSubmitting={isSubmitting}

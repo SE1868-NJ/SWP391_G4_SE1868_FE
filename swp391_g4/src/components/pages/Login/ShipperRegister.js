@@ -304,7 +304,7 @@ const ShipperRegister = () => {
 
       if (response.data.success) {
         toast.success('Đăng ký thành công! Vui lòng đợi xác nhận.');
-        navigate('/login');
+        navigate('/home');
       }
     } catch (error) {
       console.error('Error details:', error.response?.data);
