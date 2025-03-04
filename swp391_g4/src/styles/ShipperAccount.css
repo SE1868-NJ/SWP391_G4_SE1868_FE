@@ -8,6 +8,7 @@
   flex: 1;
   padding: 2rem;
   background-color: #f5f5f5;
+  padding-top: 100px;
 }
 
 .shipper-account-layout {
@@ -86,7 +87,7 @@
 }
 
 .update-button {
-  background-color:rgb(36, 174, 110);
+  background-color:#4CAF50;
   color: white;
 }
 
@@ -97,8 +98,7 @@
 .update-button:hover,
 .cancel-account-button:hover {
   opacity: 0.9;
-  background-color: rgb(0, 216, 46);
-
+  background-color: #4CAF50;
 }
 .popup-overlay {
   position: fixed;
@@ -441,7 +441,7 @@
 }
 
 .ok-button:hover {
-  background-color: rgb(0, 216, 46); 
+  background-color: #1e7e34; 
 }
 
 .ok-button:active {
@@ -458,4 +458,13 @@
     width: 95%;
     max-width: 450px;
   }
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
 }
