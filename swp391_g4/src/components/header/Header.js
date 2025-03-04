@@ -4,7 +4,6 @@ import styles from "./Header.module.css";
 import { NavigationItem } from "./NavigationItem";
 import { Logo } from "./Logo";
 import { AuthButton } from "./AuthButton";
-import { useNavigate } from 'react-router-dom';
 
 export class Header extends React.Component {
   constructor(props) {
