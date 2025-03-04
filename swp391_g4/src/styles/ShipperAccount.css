@@ -87,7 +87,7 @@
 }
 
 .update-button {
-  background-color:rgb(36, 174, 110);
+  background-color:#4CAF50;
   color: white;
 }
 
@@ -98,8 +98,7 @@
 .update-button:hover,
 .cancel-account-button:hover {
   opacity: 0.9;
-  background-color: rgb(0, 216, 46);
-
+  background-color: #4CAF50;
 }
 .popup-overlay {
   position: fixed;
@@ -442,7 +441,7 @@
 }
 
 .ok-button:hover {
-  background-color: rgb(0, 216, 46); 
+  background-color: #1e7e34; 
 }
 
 .ok-button:active {

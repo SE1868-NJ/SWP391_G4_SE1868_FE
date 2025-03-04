@@ -607,6 +607,7 @@ useEffect(() => {
                       disabled={!allSectionsVerified}
                       className={`shipper-approve-button ${!allSectionsVerified ? 'shipper-button-disabled' : ''}`}
                       onClick={handleApproveShipper}
+                      styles={{ backgroundColor: '#3e8e41', color: 'white' }}
                     >
                       Duyệt Đơn Đăng Ký
                     </Button>

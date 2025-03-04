@@ -81,3 +81,15 @@ strong {
     margin-bottom: 5px;
 }
 
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+  }
+
+  .text-center{
+    margin-top: 100px;
+  }
