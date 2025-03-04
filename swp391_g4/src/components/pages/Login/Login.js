@@ -50,7 +50,7 @@ const Login = ({ isPopup = false, onClose }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/login",
+        "http://localhost:5000/api/login",  // Đã sửa cổng thành 5000
         formData,
         {
           headers: {
@@ -60,22 +60,41 @@ const Login = ({ isPopup = false, onClose }) => {
       );
       
       if (response.data.success) {
+        // Kiểm tra trạng thái trong backend thay vì frontend
+        // Lưu thông tin shipper
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("shipperId", response.data.shipper.ShipperID);
-        localStorage.setItem("shipperName", response.data.shipper.FullName);
+        localStorage.setItem('shipperName', response.data.shipper.FullName);
+        localStorage.setItem('shipperId', response.data.shipper.ShipperID);
+        
+        // Nếu là popup thì đóng popup
+        if (isPopup && onClose) {
+          onClose();
+        }
+        
+        // Chuyển hướng đến trang shipper
         navigate("/shipper");
       } else {
         setError(response.data.message || "Đăng nhập thất bại");
       }
     } catch (error) {
-      setError("Đăng nhập thất bại");
+      console.error("Lỗi đăng nhập:", error);
+      if (error.response) {
+        setError(
+          error.response.data.message ||
+          "Đăng nhập thất bại. Vui lòng thử lại sau."
+        );
+      } else if (error.request) {
+        setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+      } else {
+        setError("Đã xảy ra lỗi. Vui lòng thử lại.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={`login-container ${isPopup ? "popup-mode" : ""}`}>
+    <div className={`login-container ${isPopup ? 'popup-mode' : ''}`}>
       <h1 className="login-title">Đăng Nhập</h1>
       <form className="login-form" onSubmit={handleLogin}>
         <input
@@ -96,7 +115,12 @@ const Login = ({ isPopup = false, onClose }) => {
           onChange={handleChange}
           required
         />
-        <button className="login-button" type="submit" disabled={loading}>
+
+        <button
+          className="login-button"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Đang đăng nhập..." : "Đăng Nhập"}
         </button>
       </form>

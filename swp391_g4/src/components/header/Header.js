@@ -90,6 +90,9 @@ export class Header extends React.Component {
                       <a href="/shipper-account" className={styles.dropdownItem}>
                         Tài khoản
                       </a>
+                      <a href="/shipper" className={styles.dropdownItem}>
+                        Đơn hàng
+                      </a>
                       <a href="/history-order" className={styles.dropdownItem}>
                         Lịch sử đơn hàng
                       </a>

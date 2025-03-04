@@ -44,7 +44,7 @@ const ForgotPassword = () => {
     try {
       // Gửi request
       const response = await axios.post(
-        'http://localhost:4000/api/forgot-password', // Đảm bảo đúng endpoint
+        'http://localhost:5000/api/forgot-password', // Đảm bảo đúng endpoint
         { email },
         { 
           headers: { 'Content-Type': 'application/json' },

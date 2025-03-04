@@ -21,7 +21,7 @@ const OrderDetails = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
           try {
-            const response = await axios.get(`http://localhost:4000/api/getOrderDetails/${id}`);
+            const response = await axios.get(`http://localhost:5000/api/getOrderDetails/${id}`);
             setOrder(response.data.order);
             setShop(response.data.shop);
             setCustomer(response.data.customer);
