@@ -108,6 +108,7 @@ const ShipperAccount = () => {
 
 
 
+
   useEffect(() => {
     const fetchShipperData = async () => {
       try {
@@ -204,7 +205,8 @@ const ShipperAccount = () => {
     { id: 'vehicle-info', label: 'Thông tin phương tiện' },
     { id: 'address-info', label: 'Địa chỉ' },
     { id: 'bank-info', label: 'Thông tin ngân hàng' },
-    { id: 'documents', label: 'Giấy tờ' }
+    { id: 'documents', label: 'Giấy tờ' },
+    { id: 'bonus', label: 'Bonus' }
   ];
   const handleAccountClick = () => {
     setIsAccountCollapsed(!isAccountCollapsed); 
