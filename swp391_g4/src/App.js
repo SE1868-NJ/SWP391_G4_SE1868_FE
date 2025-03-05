@@ -33,7 +33,7 @@ import Register from './components/Register';  // Import trang Register
 import ForgotPassword from './components/ForgotPassword';  // Import trang ForgotPassword
 
 const App = () => {
-  const navigate = useNavigate();
+ const navigate = useNavigate();
 
  const handleLoginClick = () => {
    navigate('/login'); // Điều hướng sang trang login

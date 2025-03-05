@@ -1,158 +1,271 @@
-:root {
-  --primary-color: #4CAF50;
-  --light-mint: #f0fff4;
-  --dark-mint: #3e8e41;
-  --light-gray: #f9f9f9;
-  --med-gray: #ccc;
-  --dark-gray: #333;
-}
 
-/* Định dạng chung */
-.container {
-  width: 90%;
+.manage-shipper-container {
+  width: 95%;
   margin: auto;
-  text-align: center;  
-  font-family: Arial, sans-serif;
+  text-align: center;
+  font-family: "Arial", sans-serif;
+  background-color: rgb(36, 174, 110); /* Nền xanh lá cây */
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.title {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: var(--dark-gray);
+/* Tiêu đề */
+.manage-shipper-container h2 {
+  font-size: 1.8rem;
+  margin: 20px 0;
+  color: white;
+  text-transform: uppercase;
 }
 
-.subtitle {
-  font-size: 1.5rem;
-  margin-top: 20px;  
-  color: #555;
-}
-
-/* Bảng shipper */
-.shipper-table {
+/* Bảng dữ liệu */
+.manage-shipper-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  background: white;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.shipper-table th, .shipper-table td {
+.manage-shipper-table th, .manage-shipper-table td {
   border: 1px solid #ddd;
   padding: 12px;
-  text-align: left;    
+  text-align: left;
 }
 
-.shipper-table th {
-  background-color: var(--primary-color);
+.manage-shipper-table th {
+  background-color: #2c9d32; /* Xanh lá đậm */
   color: white;
+  font-weight: bold;
 }
 
-.shipper-table tr:nth-child(even) {
-  background-color: var(--light-mint);
+.manage-shipper-table tr:nth-child(even) {
+  background-color: #f1f8e9; /* Xanh nhạt */
 }
 
-/* Form nhập shipper */
-.form-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 20px;
-  padding: 20px;
-  background: var(--light-gray);
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+.manage-shipper-table tr:hover {
+  background-color: #c8e6c9; /* Hover màu xanh nhạt */
+  transition: 0.3s;
 }
 
-.form-container .input-group {
-  display: flex;
-  align-items: center;
-  background: white;
-  border: 1px solid var(--med-gray);
-  border-radius: 5px;
-  padding: 8px;
-  width: 280px;
-}
-
-.form-container .input-group svg {
-  margin-right: 10px;
-  color: var(--primary-color);
-  font-size: 18px;
-}
-
-.form-container input, .form-container select {
-  border: none;
+/* Ô nhập liệu */
+.manage-shipper-search-bar {
   width: 100%;
   padding: 8px;
-  font-size: 16px;
-  outline: none;
-}
-
-/* Phần Add New Shipper */
-.add-button {
-  background-color: var(--dark-mint);
-  color: white;
-  padding: 12px 20px;
-  border: none;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  margin-top: 15px;
-}
-
-.add-button:hover {
-  background-color: #218838;
-}
-
-.add-button:active {
-  transform: scale(0.98);
-}
-
-/* Phần Edit Shipper */
-.save-button {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  margin-top: 15px;
-}
-
-.save-button:hover {
-  background-color: var(--dark-mint);
-}
-
-.save-button:active {
-  transform: scale(0.98);
-}
-
-/* Định dạng riêng cho phần chỉnh sửa */
-.form-container.edit-mode {
-  background: var(--light-mint);
-  border: 2px solid var(--primary-color);
-}
-
-/* Định dạng nút Edit */  
-.edit-button {
-  background-color: #ffc107;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.3s;
+  background: #f9fbe7; /* Nền vàng nhạt */
 }
 
-.edit-button:hover {
-  background-color: #e0a800; 
+/* Nút bấm */
+.manage-shipper-detail-button {
+  background-color: #388e3c; /* Xanh lá đậm */
+  color: white;
+  font-size: 14px;
+  padding: 12px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+  margin-top: 20px; /* Đặt cách xa một chút */
 }
 
-.edit-button:active {
-  transform: scale(0.98);
+/* Khi hover vào nút */
+.manage-shipper-detail-button:hover {
+  background-color: #2c6e2f; /* Màu xanh đậm hơn khi hover */
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm hơn */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Khi focus vào nút */
+.manage-shipper-detail-button:focus {
+  outline: none;
+  box-shadow: 0px 0px 0px 3px rgba(36, 234, 46, 0.6); /* Hiệu ứng focus */
+}
+/* Định dạng chung */
+.manage-shipper-container {
+  width: 95%;
+  margin: auto;
+  text-align: center;
+  font-family: "Arial", sans-serif;
+  background-color: rgb(36, 174, 110); /* Nền xanh lá cây */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* Tiêu đề */
+.manage-shipper-container h2 {
+  font-size: 1.8rem;
+  margin: 20px 0;
+  color: white;
+  text-transform: uppercase;
+}
+
+/* Bảng dữ liệu */
+.manage-shipper-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.manage-shipper-table th, .manage-shipper-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.manage-shipper-table th {
+  background-color: #2c9d32; /* Xanh lá đậm */
+  color: white;
+  font-weight: bold;
+}
+
+.manage-shipper-table tr:nth-child(even) {
+  background-color: #f1f8e9; /* Xanh nhạt */
+}
+
+.manage-shipper-table tr:hover {
+  background-color: #c8e6c9; /* Hover màu xanh nhạt */
+  transition: 0.3s;
+}
+
+/* Ô nhập liệu */
+.manage-shipper-search-bar {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background: #f9fbe7; /* Nền vàng nhạt */
+}
+
+/* Nút bấm */
+.manage-shipper-detail-button {
+  background-color: #388e3c; /* Xanh lá đậm */
+  color: white;
+  font-size: 14px;
+  padding: 12px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+  margin-top: 20px; /* Đặt cách xa một chút */
+}
+
+/* Khi hover vào nút */
+.manage-shipper-detail-button:hover {
+  background-color: #2c6e2f; /* Màu xanh đậm hơn khi hover */
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm hơn */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Khi focus vào nút */
+.manage-shipper-detail-button:focus {
+  outline: none;
+  box-shadow: 0px 0px 0px 3px rgba(36, 234, 46, 0.6); /* Hiệu ứng focus */
+}
+
+/* Popup styles với tiền tố manage-shipper */
+.manage-shipper-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.manage-shipper-popup-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 80%; /* Change from fixed width to percentage */
+  max-width: 800px; /* Increase max-width */
+  max-height: 90vh; /* Add max height */
+  overflow-y: auto; /* Add vertical scrolling */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+.manage-shipper-popup-container .manage-shipper-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.manage-shipper-popup-container h3 {
+  color: #2c9d32;
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.manage-shipper-popup-form-group {
+  margin-bottom: 20px;
+  max-height: 60vh; /* Set maximum height */
+  overflow-y: auto; /* Add vertical scrolling */
+}
+@media (max-width: 768px) {
+  .manage-shipper-popup-container {
+    padding: 15px;
+    width: 95%;
+  }
+  
+  .manage-shipper-popup-container table th,
+  .manage-shipper-popup-container table td {
+    padding: 8px 6px;
+    font-size: 0.9rem;
+  }
+}
+
+.manage-shipper-popup-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.manage-shipper-popup-form-group textarea,
+.manage-shipper-popup-form-group input,
+.manage-shipper-popup-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.manage-shipper-popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.manage-shipper-cancel-button {
+  background-color: #f44336 !important;
+}
+
+.manage-shipper-cancel-button:hover {
+  background-color: #d32f2f !important;
+}
+
+.manage-shipper-confirm-button {
+  background-color: #388e3c !important;
+}
+
+.manage-shipper-confirm-button:hover {
+  background-color: #2c6e2f !important;
 }

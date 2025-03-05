@@ -52,7 +52,7 @@ const closeLoginPopup = () => {
     4: {
       title: 'Chương trình "1 giờ giao hàng nội khu"',
       description: `
-        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm TP.HCM. 
+        EcoShipper ra mắt dịch vụ mới "Giao hàng trong 1 giờ" tại các khu vực trung tâm Hà Nội. 
         Dịch vụ này cam kết giao hàng nhanh chóng, đảm bảo đáp ứng nhu cầu khẩn cấp của khách hàng trong nội khu.
         Dịch vụ này là một phần trong chiến lược phát triển của EcoShipper nhằm không ngừng cải tiến chất lượng và tốc độ giao hàng, tạo ra sự khác biệt so với các đối thủ cạnh tranh.
       `,

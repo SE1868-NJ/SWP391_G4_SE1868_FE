@@ -382,7 +382,7 @@
   }
   
   .addressText {
-    flex-grow: 1;
+    /* flex-grow: 1; */
     flex-shrink: 1;
     width: 346px;
     flex-basis: auto;
@@ -504,7 +504,8 @@
   }
   
   .socialContainer {
-    flex: 1; /* Để phần kết nối với EcoShipper chiếm một phần */
+    flex: 1; 
+    /* Để phần kết nối với EcoShipper chiếm một phần */
     display: flex;
     flex-direction: column;
     align-items: flex-start;

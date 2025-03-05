@@ -4,7 +4,6 @@ import Footer from "../../footer/Footer";
 import Header from "../../header/Header";
 import Login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
-import ForgotPassword from "../Login/ForgotPassword";
 
 const Home = () => {
   // Navigation Items
@@ -124,6 +123,8 @@ const Home = () => {
 
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const navigate = useNavigate();
+
+  
 
   return (
     <div className="home">
