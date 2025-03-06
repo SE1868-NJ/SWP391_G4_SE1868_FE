@@ -7,15 +7,17 @@ import { Badge } from '../../buttons/Badges';
 import { 
   Truck, User, Phone, Mail, MapPin, CreditCard, 
   FileCheck, AlertCircle, CheckCircle2, Shield, UserCheck,
-  Clock, CircleDollarSign, Calendar, Package2
+  Clock, CircleDollarSign, Calendar, Package2,
+  IdCard
 } from 'lucide-react';
 import '../../../styles/ShipperDetail.css';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
+import driverLicense from '../../../images/DriverLicense.png';
+import idCard from '../../../images/IDCard.png';
 const ShipperDetail = () => {
-  // const [activeTab, setActiveTab] = useState('personal');
   const [shippersList, setShippersList] = useState([]);
   const [selectedShipper, setSelectedShipper] = useState(null);
   const [verificationStatus, setVerificationStatus] = useState({
@@ -484,7 +486,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">Giấy Phép Lái Xe</p>
                     <img 
-                      src="DriverLicense.png" 
+                      src={driverLicense}
                       alt="Driver License"
                       className="document-image"
                     />
@@ -508,7 +510,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">CMND/CCCD</p>
                     <img 
-                      src="IDCard.png" 
+                      src={idCard}
                       alt="ID Card"
                       className="document-image"
                     />

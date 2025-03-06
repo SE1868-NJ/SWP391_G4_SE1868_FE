@@ -10,24 +10,21 @@ export class Header extends React.Component {
     super(props);
     const token = localStorage.getItem('token');
     this.state = {
-      showLoginButton: !token, // Hiển thị nút login nếu không có token
-      showDropdownButton: !!token, // Hiển thị dropdown nếu có token
+      showLoginButton: !token,
+      showDropdownButton: !!token,
       isDropdownOpen: false,
       shipperName: localStorage.getItem('shipperName') || 'Shipper'
     };
   }
 
-  // Hàm để thay đổi trạng thái hiển thị nút login
   showLoginButton = (isShow) => {
     this.setState({ showLoginButton: isShow });
   }
 
-  // Hàm để thay đổi trạng thái hiển thị nút dropdown
   showDropdownButton = (isShow) => {
     this.setState({ showDropdownButton: isShow });
   }
 
-  // Toggle dropdown menu
   toggleDropdown = () => {
     this.setState(prevState => ({
       isDropdownOpen: !prevState.isDropdownOpen
