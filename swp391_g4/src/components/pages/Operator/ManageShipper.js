@@ -34,7 +34,7 @@ const ManageShipper = () => {
       .then((response) => setCancelingShippers(response.data))
       .catch((error) => console.error("Error fetching canceling shippers:", error));
 
-    axios.get("http://localhost:5000/api/active-shippers")
+    axios.get("http://localhost:5000/api/shippers")
       .then((response) => setApprovedShippers(response.data))
       .catch((error) => console.error("Error fetching approved shippers:", error));
   };

@@ -3,6 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar, Legend
 } from 'recharts';
+import axios from 'axios';
 import '../../../styles/RevenueDashboard.css';
 
 // Utility function
@@ -65,9 +66,9 @@ function Filters({ filters, onChange }) {
           onChange={(e) => onChange('region', e.target.value)}
         >
           <option value="all">Tất cả khu vực</option>
-          <option value="north">Miền Bắc</option>
-          <option value="central">Miền Trung</option>
-          <option value="south">Miền Nam</option>
+          <option value="central">Trung tâm</option>
+          <option value="mid_zone">Quanh Trung Tâm</option>
+          <option value="outer_zone">Rìa Trung Tâm</option>
         </select>
       </div>
       <div className="RevenueDashboard-filter-group">
@@ -170,7 +171,45 @@ function OverviewPanel({ data, revenueByDay }) {
 // Orders Panel Component
 function OrdersPanel({ orders }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [ordersData, setOrdersData] = useState(orders || []);
+  const [totalOrders, setTotalOrders] = useState(orders ? orders.length : 0);
   const itemsPerPage = 10;
+  
+  useEffect(() => {
+    // Cập nhật dữ liệu khi props orders thay đổi
+    if (orders) {
+      setOrdersData(orders);
+      setTotalOrders(orders.length);
+    }
+  }, [orders]);
+
+  // Gọi API mới khi thay đổi trang
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        // Nếu bạn muốn gọi API mới khi thay đổi trang, bỏ comment đoạn code dưới đây
+        /*
+        const response = await axios.get('http://localhost:5000/api/orders', { 
+          params: { 
+            ...filters, 
+            page: currentPage, 
+            limit: itemsPerPage 
+          } 
+        });
+        setOrdersData(response.data);
+        */
+        
+        // Hoặc xử lý phân trang ở client nếu đã có tất cả dữ liệu
+        const indexOfLastItem = currentPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        setOrdersData(orders.slice(indexOfFirstItem, indexOfLastItem));
+      } catch (error) {
+        console.error('Error fetching page data:', error);
+      }
+    };
+
+    fetchPageData();
+  }, [currentPage]);
   
   const handleExport = () => {
     alert('Đang xuất danh sách đơn hàng...');
@@ -190,22 +229,19 @@ function OrdersPanel({ orders }) {
   };
   
   const serviceText = {
-    'standard': 'Tiêu chuẩn',
-    'express': 'Nhanh',
-    'scheduled': 'Hẹn giờ'
+    'Standard': 'Tiêu chuẩn',
+    'Express': 'Nhanh',
+    'Scheduled': 'Hẹn giờ'
   };
   
   const regionText = {
-    'north': 'Miền Bắc',
-    'central': 'Miền Trung',
-    'south': 'Miền Nam'
+    'mid_zone': 'Quanh trung tâm',
+    'central': 'Trung tâm',
+    'outer_zone': 'Rìa trung tâm'
   };
   
   // Pagination calculation
-  const totalPages = Math.ceil(orders.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = orders.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(totalOrders / itemsPerPage);
   
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -233,26 +269,30 @@ function OrdersPanel({ orders }) {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((order) => (
+            {ordersData && ordersData.length > 0 ? ordersData.map((order) => (
               <tr key={order.id}>
                 <td>{order.id}</td>
                 <td>{order.date}</td>
-                <td>{serviceText[order.type]}</td>
-                <td>{regionText[order.region]}</td>
+                <td>{serviceText[order.type] || order.type}</td>
+                <td>{regionText[order.region] || order.region}</td>
                 <td>
-                  <span className={`status ${statusClasses[order.status]}`}>
-                    {statusText[order.status]}
+                  <span className={`status ${statusClasses[order.status] || ''}`}>
+                    {statusText[order.status] || order.status}
                   </span>
                 </td>
                 <td>{formatCurrency(order.revenue)}</td>
               </tr>
-            ))}
+            )) : (
+              <tr>
+                <td colSpan="6" className="text-center">Không có dữ liệu</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
       <div className="RevenueDashboard-paginator">
         <div className="RevenueDashboard-paginator-info">
-          Hiển thị {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, orders.length)} trong số {orders.length} đơn hàng
+          Hiển thị {totalOrders === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, totalOrders)} trong số {totalOrders} đơn hàng
         </div>
         <div className="RevenueDashboard-paginator-controls">
           {pageNumbers.map(number => (
@@ -276,10 +316,13 @@ function RegionRevenuePanel({ revenueByRegion }) {
     alert('Đang xuất báo cáo doanh thu theo khu vực...');
   };
 
+  // Đảm bảo revenueByRegion tồn tại và có đúng format
+  const safeRevenueByRegion = revenueByRegion || { central: 0, mid_zone: 0, outer_zone: 0 };
+
   const data = [
-    { name: 'Miền Bắc', value: revenueByRegion.north },
-    { name: 'Miền Trung', value: revenueByRegion.central },
-    { name: 'Miền Nam', value: revenueByRegion.south }
+    { name: 'Trung tâm', value: Number(safeRevenueByRegion.central) || 0 },
+    { name: 'Quanh trung tâm', value: Number(safeRevenueByRegion.mid_zone) || 0 },
+    { name: 'Rìa trung tâm', value: Number(safeRevenueByRegion.outer_zone) || 0 }
   ];
 
   const COLORS = ['rgba(52, 152, 219, 0.7)', 'rgba(46, 204, 113, 0.7)', 'rgba(155, 89, 182, 0.7)'];
@@ -303,6 +346,7 @@ function RegionRevenuePanel({ revenueByRegion }) {
               outerRadius={100}
               fill="#8884d8"
               dataKey="value"
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -316,17 +360,19 @@ function RegionRevenuePanel({ revenueByRegion }) {
     </div>
   );
 }
-
 // Service Revenue Panel Component
 function ServiceRevenuePanel({ revenueByService }) {
   const handleExport = () => {
     alert('Đang xuất báo cáo doanh thu theo dịch vụ...');
   };
 
+  // Đảm bảo revenueByService tồn tại và có đúng format
+  const safeRevenueByService = revenueByService || { standard: 0, express: 0, scheduled: 0 };
+  
   const data = [
-    { name: 'Giao hàng tiêu chuẩn', value: revenueByService.standard },
-    { name: 'Giao hàng nhanh', value: revenueByService.express },
-    { name: 'Giao hàng hẹn giờ', value: revenueByService.scheduled }
+    { name: 'Giao hàng tiêu chuẩn', value: Number(safeRevenueByService.standard) || 0 },
+    { name: 'Giao hàng nhanh', value: Number(safeRevenueByService.express) || 0 },
+    { name: 'Giao hàng hẹn giờ', value: Number(safeRevenueByService.scheduled) || 0 }
   ];
 
   const COLORS = ['rgba(52, 152, 219, 0.7)', 'rgba(46, 204, 113, 0.7)', 'rgba(155, 89, 182, 0.7)'];
@@ -365,6 +411,7 @@ function ServiceRevenuePanel({ revenueByService }) {
     </div>
   );
 }
+
 
 // Payments Panel Component
 function PaymentsPanel({ payments }) {
@@ -454,8 +501,18 @@ function Footer() {
 
 // Main App Component
 function App() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({
+    totals: { revenue: 0, orders: 0, avgRevenue: 0, profitAfterFees: 0 },
+    revenueByDay: [],
+    revenueByRegion: { central: 0, mid_zone: 0, outer_zone: 0 },
+    revenueByService: { standard: 0, express: 0, scheduled: 0 },
+    orders: [],
+    payments: [],
+    fees: [],
+    alerts: []
+  });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     timePeriod: 'month',
     region: 'all',
@@ -464,10 +521,73 @@ function App() {
   });
 
   useEffect(() => {
-    // In a real app, this would be an API call
-    // fetchData(filters);
-    setData(sampleData);
-    setLoading(false);
+    const fetchAllData = async () => {
+      try {
+        setLoading(true);
+        
+        // Gọi API song song
+        const [
+          overviewRes,
+          revenueByDayRes,
+          revenueByRegionRes,
+          revenueByServiceRes,
+          ordersRes,
+          paymentsRes,
+          feesRes,
+          alertsRes
+        ] = await Promise.all([
+          axios.get('http://localhost:5000/api/revenue-overview', { params: filters }),
+          axios.get('http://localhost:5000/api/revenue-by-day', { params: filters }),
+          axios.get('http://localhost:5000/api/revenue-by-region', { params: filters }),
+          axios.get('http://localhost:5000/api/revenue-by-service', { params: filters }),
+          axios.get('http://localhost:5000/api/orders', { params: { ...filters, page: 1, limit: 10 } }),
+          axios.get('http://localhost:5000/api/payments', { params: { page: 1, limit: 10 } }),
+          axios.get('http://localhost:5000/api/fees'),
+          axios.get('http://localhost:5000/api/alerts')
+        ]);
+
+        // Kiểm tra dữ liệu trước khi đặt trạng thái
+        const overview = overviewRes.data || {};
+        const revenueByDay = revenueByDayRes.data || [];
+        const revenueByRegion = revenueByRegionRes.data || { central: 0, mid_zone: 0, outer_zone: 0 };
+        const revenueByService = revenueByServiceRes.data || { standard: 0, express: 0, scheduled: 0 };
+        const orders = ordersRes.data || [];
+        const payments = paymentsRes.data || [];
+        const fees = feesRes.data || [];
+        const alerts = alertsRes.data || [];
+
+        // Log dữ liệu API để debug
+        console.log('revenueByDay:', revenueByDay);
+        console.log('revenueByRegion:', revenueByRegion);
+        console.log('revenueByService:', revenueByService);
+        
+        // Kết hợp tất cả các phản hồi thành một đối tượng dữ liệu
+        setData({
+          totals: {
+            revenue: overview.totalRevenue || 0,
+            orders: overview.totalOrders || 0,
+            avgRevenue: overview.avgRevenue || 0,
+            profitAfterFees: (overview.totalRevenue || 0) * 0.7 // Lợi nhuận ước tính sau phí
+          },
+          revenueByDay,
+          revenueByRegion,
+          revenueByService,
+          orders,
+          payments,
+          fees,
+          alerts
+        });
+
+        setError(null);
+      } catch (err) {
+        console.error('Lỗi tải dữ liệu doanh thu:', err);
+        setError('Không thể tải dữ liệu. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
   }, [filters]);
 
   const handleFilterChange = (name, value) => {
@@ -485,17 +605,26 @@ function App() {
   };
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">Đang tải dữ liệu...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Thử lại</button>
+      </div>
+    );
   }
 
   return (
     <div className="RevenueDashboard-container">
       <Header onSearch={handleSearch} />
       <Filters filters={filters} onChange={handleFilterChange} />
-      <AlertsContainer alerts={[{ 
-        message: 'Doanh thu đã giảm 18% so với tuần trước. Kiểm tra báo cáo chi tiết để biết thêm thông tin.', 
-        type: 'error' 
-      }]} />
+      {/* Dynamically show alerts from backend if available */}
+      {data.alerts && data.alerts.length > 0 && (
+        <AlertsContainer alerts={data.alerts} />
+      )}
       <OverviewPanel data={data.totals} revenueByDay={data.revenueByDay} />
       <OrdersPanel orders={data.orders} />
       <RegionRevenuePanel revenueByRegion={data.revenueByRegion} />
@@ -507,57 +636,6 @@ function App() {
   );
 }
 
-// Sample data for demonstration - in a real app this would come from the backend
-const sampleData = {
-  revenueByDay: [
-    { date: '01/03/2025', revenue: 2500000 },
-    { date: '02/03/2025', revenue: 3100000 },
-    { date: '03/03/2025', revenue: 2800000 },
-    { date: '04/03/2025', revenue: 3400000 },
-    { date: '05/03/2025', revenue: 3900000 },
-    { date: '06/03/2025', revenue: 2700000 },
-    { date: '07/03/2025', revenue: 2200000 },
-  ],
-  revenueByRegion: {
-    north: 12000000,
-    central: 8500000,
-    south: 15800000
-  },
-  revenueByService: {
-    standard: 18000000,
-    express: 12500000,
-    scheduled: 5800000
-  },
-  orders: [
-    { id: 'ORD-12345', date: '07/03/2025', type: 'standard', region: 'north', status: 'success', revenue: 120000 },
-    { id: 'ORD-12346', date: '07/03/2025', type: 'express', region: 'central', status: 'success', revenue: 180000 },
-    { id: 'ORD-12347', date: '07/03/2025', type: 'standard', region: 'south', status: 'success', revenue: 110000 },
-    { id: 'ORD-12348', date: '07/03/2025', type: 'scheduled', region: 'north', status: 'pending', revenue: 220000 },
-    { id: 'ORD-12349', date: '06/03/2025', type: 'express', region: 'south', status: 'success', revenue: 190000 },
-    { id: 'ORD-12350', date: '06/03/2025', type: 'standard', region: 'central', status: 'error', revenue: 130000 },
-    { id: 'ORD-12351', date: '06/03/2025', type: 'scheduled', region: 'south', status: 'success', revenue: 240000 },
-    { id: 'ORD-12352', date: '05/03/2025', type: 'standard', region: 'north', status: 'success', revenue: 125000 },
-    { id: 'ORD-12353', date: '05/03/2025', type: 'express', region: 'south', status: 'success', revenue: 185000 },
-    { id: 'ORD-12354', date: '05/03/2025', type: 'standard', region: 'central', status: 'pending', revenue: 115000 },
-  ],
-  payments: [
-    { id: 'PMT-1001', date: '01/03/2025', amount: 4200000, method: 'Bank transfer', status: 'completed' },
-    { id: 'PMT-1002', date: '15/02/2025', amount: 3800000, method: 'Bank transfer', status: 'completed' },
-    { id: 'PMT-1003', date: '01/02/2025', amount: 4500000, method: 'Bank transfer', status: 'completed' },
-    { id: 'PMT-1004', date: '15/01/2025', amount: 3950000, method: 'Bank transfer', status: 'completed' },
-  ],
-  fees: [
-    { type: 'Phí vận hành', description: 'Chi phí nhiên liệu, bảo trì xe', amount: 4500000, percentage: 12.5 },
-    { type: 'Phí dịch vụ', description: 'Phí nền tảng', amount: 3600000, percentage: 10 },
-    { type: 'Phí bảo hiểm', description: 'Bảo hiểm hàng hóa', amount: 1800000, percentage: 5 },
-    { type: 'Các khoản thuế', description: 'Thuế thu nhập', amount: 2520000, percentage: 7 },
-  ],
-  totals: {
-    revenue: 36300000,
-    orders: 230,
-    avgRevenue: 157826,
-    profitAfterFees: 23880000
-  }
-};
+
 
 export default App;
