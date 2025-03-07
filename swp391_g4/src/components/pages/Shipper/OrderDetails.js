@@ -27,7 +27,7 @@ const OrderDetails = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/getOrderDetails/${id}`
+          `http://localhost:4000/api/getOrderDetails/${id}`
         );
         setOrder(response.data.order);
         setShop(response.data.shop);

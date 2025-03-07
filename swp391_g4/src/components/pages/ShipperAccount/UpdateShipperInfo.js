@@ -6,6 +6,7 @@ import "../../../styles/UpdateShipperInfo.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
+
 // Constants for validation and configuration
 const VALIDATION_CONFIG = {
   phone: {
@@ -50,9 +51,9 @@ const VEHICLE_TYPES = [
 
 // FormInput Component
 const FormInput = ({ label, name, type, value, onChange, onBlur, error, required = false, className = "", placeholder = "", maxLength, ...props }) => (
-  <div className="input-wrapper">
+  <div className="UpdateShipperInfo-input-wrapper">
     <label htmlFor={name}>
-      {label} {required && <span className="required">*</span>}
+      {label} {required && <span className="UpdateShipperInfo-required">*</span>}
     </label>
     <input
       id={name}
@@ -61,34 +62,34 @@ const FormInput = ({ label, name, type, value, onChange, onBlur, error, required
       value={value || ''}
       onChange={onChange}
       onBlur={onBlur}
-      className={`form-input ${error ? 'error' : ''} ${className}`}
+      className={`UpdateShipperInfo-form-input ${error ? 'error' : ''} ${className}`}
       placeholder={placeholder}
       required={required}
       maxLength={maxLength}
       {...props}
     />
-    {error && <span className="error-message">{error}</span>}
+    {error && <span className="UpdateShipperInfo-error-message">{error}</span>}
   </div>
-);
+ );
 
 // UpdateField Component để hiển thị trường thông tin và nút cập nhật
 const UpdateField = ({ label, value, canUpdate, onUpdate, type = "text" }) => (
-  <div className="field-container">
-    <div className="field-info">
-      <span className="field-label">{label}:</span>
-      <span className="field-value">{value || "Chưa có thông tin"}</span>
+  <div className="UpdateShipperInfo-field-container">
+    <div className="UpdateShipperInfo-field-info">
+      <span className="UpdateShipperInfo-field-label">{label}:</span>
+      <span className="UpdateShipperInfo-field-value">{value || "Chưa có thông tin"}</span>
     </div>
     {canUpdate && (
       <button
         type="button"
-        className="update-field-btn"
+        className="UpdateShipperInfo-update-field-btn"
         onClick={onUpdate}
       >
         Cập nhật
       </button>
     )}
   </div>
-);
+ );
 
 const UpdateShipperInfo = () => {
   const navigate = useNavigate();
@@ -98,6 +99,24 @@ const UpdateShipperInfo = () => {
   const [errors, setErrors] = useState({});
   const [touchedFields, setTouchedFields] = useState({});
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  // Navigation Items
+    const newsNavigationItems = [
+      { text: "Trang chủ", path: "/home" },
+      { text: "Về chúng tôi", path: "/about" },
+      { text: "Tin tức", path: "/news", isActive: true },
+      { text: "Liên hệ", path: "/shipper-contact" },
+    ];
+  
+    // Login Popup State
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  
+    const openLoginPopup = () => {
+      setIsLoginPopupOpen(true);
+    };
+  
+    const closeLoginPopup = () => {
+      setIsLoginPopupOpen(false);
+    };
 
   // State để theo dõi các trường đang được cập nhật
   const [activeUpdateFields, setActiveUpdateFields] = useState({
@@ -135,7 +154,7 @@ const UpdateShipperInfo = () => {
           return imagePath;
         };
 
-        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
+        const response = await axios.get(`http://localhost:4000/api/shippers-auth/${shipperId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -297,11 +316,11 @@ const UpdateShipperInfo = () => {
         return;
       }
 
-      console.log("Sending update to:", `http://localhost:5000/api/shippers/${shipperId}/update`);
+      console.log("Sending update to:", `http://localhost:4000/api/shippers/${shipperId}/update`);
       console.log("Update data:", dataToUpdate);
 
       const response = await axios.put(
-        `http://localhost:5000/api/shippers/${shipperId}/update`,
+        `http://localhost:4000/api/shippers/${shipperId}/update`,
         dataToUpdate,
         {
           headers: {
@@ -326,8 +345,8 @@ const UpdateShipperInfo = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
+      <div className="UpdateShipperInfo-loading-container">
+        <div className="UpdateShipperInfo-loading-spinner"></div>
         <p>Đang tải thông tin...</p>
       </div>
     );
@@ -335,17 +354,23 @@ const UpdateShipperInfo = () => {
   console.log('Shipper Data:', shipperData);
 
   return (
-    <div className="update-shipper-container">
-      <Header />
-      <main className="update-main">
+    <div className="UpdateShipperInfo-container">
+       <div className='header'>
+            <Header
+              navigationItems={newsNavigationItems}
+              showLoginButton={true}
+              onLoginClick={openLoginPopup}
+            />
+            </div>
+      <main className="UpdateShipperInfo-main">
         {showConfirmPopup && (
-          <div className="confirm-popup-overlay">
-            <div className="confirm-popup">
-              <div className="confirm-popup-content">
+          <div className="UpdateShipperInfo-confirm-popup-overlay">
+            <div className="UpdateShipperInfo-confirm-popup">
+              <div className="UpdateShipperInfo-confirm-popup-content">
                 <h2>YÊU CẦU CỦA BẠN ĐANG CHỜ XÁC NHẬN</h2>
                 <p>VUI LÒNG ĐỢI!</p>
                 <button
-                  className="confirm-button"
+                  className="UpdateShipperInfo-confirm-button"
                   onClick={handleConfirmPopup}
                 >
                   OK
@@ -354,14 +379,14 @@ const UpdateShipperInfo = () => {
             </div>
           </div>
         )}
-        <div className="update-form-container">
-          <form onSubmit={handleSubmit} className="update-form">
-            <h1 className="form-title">Thông Tin Shipper</h1>
-
+        <div className="UpdateShipperInfo-form-container">
+          <form onSubmit={handleSubmit} className="UpdateShipperInfo-form">
+            <h1 className="UpdateShipperInfo-form-title">Thông Tin Shipper</h1>
+ 
             {/* Thông tin cá nhân (chỉ xem) */}
-            <section className="form-section">
+            <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin cá nhân</h2>
-              <div className="info-grid">
+              <div className="UpdateShipperInfo-info-grid">
                 <UpdateField
                   label="Họ và tên"
                   value={shipperData.FullName}
@@ -391,21 +416,21 @@ const UpdateShipperInfo = () => {
                 />
               </div>
             </section>
-
+ 
             {/* Thông tin liên lạc */}
-            <section className="form-section">
+            <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin liên lạc</h2>
-              <div className="info-grid">
-                <div className="field-row">
+              <div className="UpdateShipperInfo-info-grid">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Số điện thoại"
                     value={shipperData.PhoneNumber}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('PhoneNumber')}
                   />
-
+ 
                   {activeUpdateFields.PhoneNumber && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Số điện thoại mới"
                         name="TempPhoneNumber"
@@ -420,9 +445,9 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
-                <div className="field-row">
-                  <UpdateField
+ 
+                <div className="UpdateShipperInfo-field-row">
+                <UpdateField
                     label="Email"
                     value={shipperData.Email}
                     canUpdate={true}
@@ -430,7 +455,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.Email && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Email mới"
                         name="TempEmail"
@@ -448,10 +473,10 @@ const UpdateShipperInfo = () => {
             </section>
 
             {/* Địa chỉ */}
-            <section className="form-section">
+            <section className="UpdateShipperInfo-form-section">
               <h2>Địa chỉ</h2>
-              <div className="info-grid">
-                <div className="field-row">
+              <div className="UpdateShipperInfo-info-grid">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Số nhà, tên đường"
                     value={shipperData.HouseNumber}
@@ -460,7 +485,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.HouseNumber && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Số nhà, tên đường mới"
                         name="TempHouseNumber"
@@ -476,7 +501,7 @@ const UpdateShipperInfo = () => {
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Phường/Xã"
                     value={shipperData.Ward}
@@ -485,7 +510,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.Ward && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Phường/Xã mới"
                         name="TempWard"
@@ -501,7 +526,7 @@ const UpdateShipperInfo = () => {
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Quận/Huyện"
                     value={shipperData.District}
@@ -510,7 +535,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.District && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Quận/Huyện mới"
                         name="TempDistrict"
@@ -526,7 +551,7 @@ const UpdateShipperInfo = () => {
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Tỉnh/Thành phố"
                     value={shipperData.City}
@@ -535,7 +560,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.City && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Tỉnh/Thành phố mới"
                         name="TempCity"
@@ -554,10 +579,10 @@ const UpdateShipperInfo = () => {
             </section>
 
             {/* Thông tin ngân hàng */}
-            <section className="form-section">
+            <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin ngân hàng</h2>
-              <div className="info-grid">
-                <div className="field-row">
+              <div className="UpdateShipperInfo-info-grid">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Ngân hàng"
                     value={shipperData.BankName}
@@ -566,10 +591,10 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.BankName && (
-                    <div className="update-input-container">
-                      <div className="input-wrapper">
+                    <div className="UpdateShipperInfo-update-input-container">
+                      <div className="UpdateShipperInfo-input-wrapper">
                         <label htmlFor="TempBankName">
-                          Ngân hàng mới <span className="required">*</span>
+                          Ngân hàng mới <span className="UpdateShipperInfo-required">*</span>
                         </label>
                         <select
                           id="TempBankName"
@@ -577,7 +602,7 @@ const UpdateShipperInfo = () => {
                           value={updateData.TempBankName}
                           onChange={handleInputChange}
                           onBlur={handleBlur}
-                          className={`form-input ${errors.TempBankName ? 'error' : ''}`}
+                          className={`UpdateShipperInfo-form-input ${errors.TempBankName ? 'error' : ''}`}
                           required
                         >
                           <option value="">Chọn ngân hàng</option>
@@ -586,14 +611,13 @@ const UpdateShipperInfo = () => {
                           ))}
                         </select>
                         {errors.TempBankName && (
-                          <span className="error-message">{errors.TempBankName}</span>
+                          <span className="UpdateShipperInfo-error-message">{errors.TempBankName}</span>
                         )}
                       </div>
                     </div>
                   )}
                 </div>
-
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Số tài khoản"
                     value={shipperData.BankAccountNumber}
@@ -602,7 +626,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.BankAccountNumber && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Số tài khoản mới"
                         name="TempBankAccountNumber"
@@ -621,10 +645,10 @@ const UpdateShipperInfo = () => {
             </section>
 
             {/* Thông tin phương tiện */}
-            <section className="form-section">
+            <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin phương tiện</h2>
-              <div className="info-grid">
-                <div className="field-row">
+              <div className="UpdateShipperInfo-info-grid">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Loại phương tiện"
                     value={shipperData.VehicleType}
@@ -633,10 +657,10 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.VehicleType && (
-                    <div className="update-input-container">
-                      <div className="input-wrapper">
+                    <div className="UpdateShipperInfo-update-input-container">
+                      <div className="UpdateShipperInfo-input-wrapper">
                         <label htmlFor="TempVehicleType">
-                          Loại phương tiện mới <span className="required">*</span>
+                          Loại phương tiện mới <span className="UpdateShipperInfo-required">*</span>
                         </label>
                         <select
                           id="TempVehicleType"
@@ -644,7 +668,7 @@ const UpdateShipperInfo = () => {
                           value={updateData.TempVehicleType}
                           onChange={handleInputChange}
                           onBlur={handleBlur}
-                          className={`form-input ${errors.TempVehicleType ? 'error' : ''}`}
+                          className={`UpdateShipperInfo-form-input ${errors.TempVehicleType ? 'error' : ''}`}
                           required
                         >
                           <option value="">Chọn loại phương tiện</option>
@@ -653,14 +677,14 @@ const UpdateShipperInfo = () => {
                           ))}
                         </select>
                         {errors.TempVehicleType && (
-                          <span className="error-message">{errors.TempVehicleType}</span>
+                          <span className="UpdateShipperInfo-error-message">{errors.TempVehicleType}</span>
                         )}
                       </div>
                     </div>
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Biển số xe"
                     value={shipperData.LicensePlate}
@@ -669,7 +693,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.LicensePlate && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Biển số xe mới"
                         name="TempLicensePlate"
@@ -685,7 +709,7 @@ const UpdateShipperInfo = () => {
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Ngày đăng kiểm xe"
                     value={shipperData.RegistrationVehicle}
@@ -695,7 +719,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.RegistrationVehicle && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Ngày đăng kiểm xe mới"
                         name="TempRegistrationVehicle"
@@ -710,7 +734,7 @@ const UpdateShipperInfo = () => {
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Ngày hết hạn đăng kiểm"
                     value={shipperData.ExpiryVehicle}
@@ -720,7 +744,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.ExpiryVehicle && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="Ngày hết hạn đăng kiểm mới"
                         name="TempExpiryVehicle"
@@ -738,10 +762,10 @@ const UpdateShipperInfo = () => {
             </section>
 
             {/* Giấy tờ */}
-            <section className="form-section">
+            <section className="UpdateShipperInfo-form-section">
               <h2>Giấy tờ (URL ảnh)</h2>
-              <div className="info-grid">
-                <div className="field-row">
+              <div className="UpdateShipperInfo-info-grid">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="URL ảnh đăng ký xe"
                     value={shipperData.VehicleRegistrationImage}
@@ -750,7 +774,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.VehicleRegistrationImage && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="URL ảnh đăng ký xe mới"
                         name="TempVehicleRegistrationImage"
@@ -765,7 +789,7 @@ const UpdateShipperInfo = () => {
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="URL ảnh thẻ Shipper"
                     value={shipperData.ImageShipper}
@@ -774,7 +798,7 @@ const UpdateShipperInfo = () => {
                   />
 
                   {activeUpdateFields.ImageShipper && (
-                    <div className="update-input-container">
+                    <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
                         label="URL ảnh thẻ Shipper mới"
                         name="TempImageShipper"
@@ -789,7 +813,7 @@ const UpdateShipperInfo = () => {
                   )}
                 </div>
 
-                <div className="field-row">
+                <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="URL ảnh GPLX"
                     value={shipperData.DriverLicenseImage}
@@ -799,15 +823,15 @@ const UpdateShipperInfo = () => {
               </div>
             </section>
 
-            <div className="form-actions">
+            <div className="UpdateShipperInfo-form-actions">
               {Object.values(activeUpdateFields).some(value => value) && (
-                <button type="submit" className="submit-button">
+                <button type="submit" className="UpdateShipperInfo-submit-button">
                   Gửi Yêu Cầu Cập Nhật
                 </button>
               )}
               <button
                 type="button"
-                className="cancel-button"
+                className="UpdateShipperInfo-cancel-button"
                 onClick={() => navigate('/shipper-account')}
               >
                 Quay Lại
@@ -820,5 +844,6 @@ const UpdateShipperInfo = () => {
     </div>
   );
 };
+
 
 export default UpdateShipperInfo;
