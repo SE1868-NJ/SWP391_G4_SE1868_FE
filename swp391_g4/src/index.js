@@ -12,13 +12,14 @@ import PrivacyPolicy from "./components/pages/Home/PrivacyPolicy";
 import TermsOfUse from "./components/pages/Home/TermOfUse";
 import JobDetail from "./components/pages/Home/JobDetail";
 import ShipperContact from "./components/pages/Home/ShipperContact";
+import EventDetail from "./components/pages/Home/EventDetail";
+import ActivityDetail from "./components/pages/Home/ActivityDetail";
 
 //Trang login
 import Login from "./components/pages/Login/Login";
 import ForgotPassword from "./components/pages/Login/ForgotPassword";
 import ResetPassword from "./components/pages/Login/ResetPassword";
 import ShipperRegister from "./components/pages/Login/ShipperRegister";
-import EventDetail from "./components/pages/Home/EventDetail";
 
 //Trang Operator
 import ManageShipper from "./components/pages/Operator/ManageShipper";
@@ -34,6 +35,13 @@ import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperIn
 //Trang Shipper
 import Shipper from "./components/pages/Shipper/Shipper";
 import OrderDetails from "./components/pages/Shipper/OrderDetails";
+
+
+//Phan bao cao su co
+import ReportIssue from "./components/pages/ReportIssue";
+import AdminReportHandling from "./components/pages/AdminReportHandling";
+import CustomerReportTracking from "./components/pages/CustomerReportTracking";
+
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -51,6 +59,7 @@ root.render(
       <Route path="/eventdetail" element={<EventDetail />} />
       <Route path="/news" element={<News />} />
       <Route path="/news/:eventId" element={<EventDetail />} />
+      <Route path="/activities/:activityId" element={<ActivityDetail />} />
       <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/terms-of-use" element={<TermsOfUse />} />
@@ -62,7 +71,7 @@ root.render(
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/register" element={<ShipperRegister />} />
-      
+
 
       {/* ** Trang Shipper** */}
       <Route
@@ -84,7 +93,7 @@ root.render(
           </PrivateRoute>
         }
       />
-      <Route path='/update-shipper-info' element={<UpdateShipperInfo />}/>
+      <Route path='/update-shipper-info' element={<UpdateShipperInfo />} />
 
       {/* ** Trang Operator** */}
       <Route path="/manage-shipper" element={<ManageShipper />} />
@@ -104,6 +113,11 @@ root.render(
       <Route path='/shipper-detail' element={<ShipperDetail />} />
       <Route path='/revenue-dashboard' element={<RevenueDashboard />} />
       <Route path="/shipper-detail" element={<ShipperDetail />} />
+
+      {/* ** Phan bao cao su co** */}
+      <Route path="/report-issue" element={<ReportIssue />} />
+      <Route path="/admin-report-handling" element={<AdminReportHandling />} />
+      <Route path="/customer-report-tracking" element={<CustomerReportTracking />} />
     </Routes>
   </Router>
 );
