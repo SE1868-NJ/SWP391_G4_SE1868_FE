@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/ManageShipper.css";
 import moment from "moment";
+import BackButton from "../../buttons/BackButton";
 
 const ManageShipper = () => {
   const [pendingRegisterShippers, setPendingRegisterShippers] = useState([]);
@@ -22,21 +23,33 @@ const ManageShipper = () => {
 
   const fetchShippers = () => {
     // Fetch data for each category
-    axios.get("http://localhost:5000/api/pending-register-shippers")
+    axios
+      .get("http://localhost:5000/api/pending-register-shippers")
       .then((response) => setPendingRegisterShippers(response.data))
-      .catch((error) => console.error("Error fetching pending register shippers:", error));
+      .catch((error) =>
+        console.error("Error fetching pending register shippers:", error)
+      );
 
-    axios.get("http://localhost:5000/api/pending-update-shippers")
+    axios
+      .get("http://localhost:5000/api/pending-update-shippers")
       .then((response) => setUpdatingShippers(response.data))
-      .catch((error) => console.error("Error fetching updating shippers:", error));
+      .catch((error) =>
+        console.error("Error fetching updating shippers:", error)
+      );
 
-    axios.get("http://localhost:5000/api/pending-cancel-shippers")
+    axios
+      .get("http://localhost:5000/api/pending-cancel-shippers")
       .then((response) => setCancelingShippers(response.data))
-      .catch((error) => console.error("Error fetching canceling shippers:", error));
+      .catch((error) =>
+        console.error("Error fetching canceling shippers:", error)
+      );
 
     axios.get("http://localhost:5000/api/shippers")
+
       .then((response) => setApprovedShippers(response.data))
-      .catch((error) => console.error("Error fetching approved shippers:", error));
+      .catch((error) =>
+        console.error("Error fetching approved shippers:", error)
+      );
   };
 
   const handleSearch = (query) => {
@@ -47,52 +60,72 @@ const ManageShipper = () => {
       return;
     }
 
-    axios.get(`http://localhost:5000/api/search-pending-shippers?query=${query}`)
+    axios
+      .get(`http://localhost:5000/api/search-pending-shippers?query=${query}`)
       .then((response) => setPendingRegisterShippers(response.data))
-      .catch((error) => console.error("Error searching pending register shippers:", error));
+      .catch((error) =>
+        console.error("Error searching pending register shippers:", error)
+      );
 
-    axios.get(`http://localhost:5000/api/search-updating-shippers?query=${query}`)
+    axios
+      .get(`http://localhost:5000/api/search-updating-shippers?query=${query}`)
       .then((response) => setUpdatingShippers(response.data))
-      .catch((error) => console.error("Error searching updating shippers:", error));
+      .catch((error) =>
+        console.error("Error searching updating shippers:", error)
+      );
 
-    axios.get(`http://localhost:5000/api/search-canceling-shippers?query=${query}`)
+    axios
+      .get(`http://localhost:5000/api/search-canceling-shippers?query=${query}`)
       .then((response) => setCancelingShippers(response.data))
-      .catch((error) => console.error("Error searching canceling shippers:", error));
+      .catch((error) =>
+        console.error("Error searching canceling shippers:", error)
+      );
 
-    axios.get(`http://localhost:5000/api/search-approved-shippers?query=${query}`)
+    axios
+      .get(`http://localhost:5000/api/search-approved-shippers?query=${query}`)
       .then((response) => setApprovedShippers(response.data))
-      .catch((error) => console.error("Error searching approved shippers:", error));
+      .catch((error) =>
+        console.error("Error searching approved shippers:", error)
+      );
   };
   const fetchShipperUpdateDetails = (id) => {
-    axios.get(`http://localhost:5000/api/shipper-update-details/${id}`)
+    axios
+      .get(`http://localhost:5000/api/shipper-update-details/${id}`)
       .then((response) => {
         setShipperUpdateDetails(response.data);
         setShowUpdatePopup(true);
       })
-      .catch((error) => console.error("Error fetching shipper update details:", error));
+      .catch((error) =>
+        console.error("Error fetching shipper update details:", error)
+      );
   };
 
   const handleStateChange = (id, newStatus, currentStatus) => {
     // Nếu chuyển từ PendingCancel sang Inactive
     if (currentStatus === "PendingCancel" && newStatus === "Inactive") {
       // Tìm shipper để hiển thị thông tin trong popup
-      const shipper = cancelingShippers.find(s => s.ShipperID === id);
+      const shipper = cancelingShippers.find((s) => s.ShipperID === id);
       if (shipper) {
         setSelectedShipper(shipper);
         setShowCancelPopup(true);
       }
-    } 
+    }
     // Nếu chuyển từ PendingUpdate sang Active
     else if (currentStatus === "PendingUpdate" && newStatus === "Active") {
       fetchShipperUpdateDetails(id);
-    }
-    else {
+    } else {
       // Xử lý các trường hợp khác
-      axios.post("http://localhost:5000/api/change-shipper-status", { id, newStatus })
+      axios
+        .post("http://localhost:5000/api/change-shipper-status", {
+          id,
+          newStatus,
+        })
         .then(() => {
           fetchShippers(); // Refresh the list after state change
         })
-        .catch(error => console.error("Error changing shipper status:", error));
+        .catch((error) =>
+          console.error("Error changing shipper status:", error)
+        );
     }
   };
 
@@ -101,56 +134,62 @@ const ManageShipper = () => {
       alert("Vui lòng nhập lý do hủy tài khoản");
       return;
     }
-  
-    axios.post("http://localhost:5000/api/change-shipper-status", {
-      id: selectedShipper.ShipperID,
-      newStatus: "Inactive",
-      cancelReason: cancelReason,
-      cancelTime: cancelTime 
-    })
+
+    axios
+      .post("http://localhost:5000/api/change-shipper-status", {
+        id: selectedShipper.ShipperID,
+        newStatus: "Inactive",
+        cancelReason: cancelReason,
+        cancelTime: cancelTime,
+      })
       .then(() => {
         setShowCancelPopup(false);
-        setCancelReason('');
+        setCancelReason("");
         setSelectedShipper(null);
         fetchShippers();
       })
-      .catch(error => console.error("Error canceling shipper account:", error));
+      .catch((error) =>
+        console.error("Error canceling shipper account:", error)
+      );
   };
   const handleConfirmUpdate = () => {
     if (!shipperUpdateDetails) return;
-    
-    axios.post("http://localhost:5000/api/change-shipper-status", {
-      id: shipperUpdateDetails.ShipperID,
-      newStatus: "Active"
-    })
+
+    axios
+      .post("http://localhost:5000/api/change-shipper-status", {
+        id: shipperUpdateDetails.ShipperID,
+        newStatus: "Active",
+      })
       .then(() => {
         setShowUpdatePopup(false);
         setShipperUpdateDetails(null);
         fetchShippers();
       })
-      .catch(error => console.error("Error updating shipper account:", error));
+      .catch((error) =>
+        console.error("Error updating shipper account:", error)
+      );
   };
   const handleUpdatePopupClose = () => {
     setShowUpdatePopup(false);
     setShipperUpdateDetails(null);
   };
-  
+
   const handleCancelPopupClose = () => {
     setShowCancelPopup(false);
-    setCancelReason('');
+    setCancelReason("");
     setSelectedShipper(null);
   };
 
   const handleShipperDetail = () => {
     window.location.href = `/shipper-detail`;
   };
-    // Hàm để highlight thay đổi
-    const highlightChange = (oldValue, newValue) => {
-      if (oldValue !== newValue && newValue) {
-        return { color: '#388e3c', fontWeight: 'bold' };
-      }
-      return {};
-    };
+  // Hàm để highlight thay đổi
+  const highlightChange = (oldValue, newValue) => {
+    if (oldValue !== newValue && newValue) {
+      return { color: "#388e3c", fontWeight: "bold" };
+    }
+    return {};
+  };
   return (
     <div className="manage-shipper-container">
       <h2>Quản lý Shipper</h2>
@@ -196,8 +235,8 @@ const ManageShipper = () => {
           ))}
         </tbody>
       </table>
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <button 
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <button
           className="manage-shipper-detail-button"
           onClick={handleShipperDetail}
         >
@@ -233,8 +272,16 @@ const ManageShipper = () => {
               <td>{shipper.BankName}</td>
               <td>{shipper.VehicleType}</td>
               <td>
-              <select value={shipper.Status}
-                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
+                <select
+                  value={shipper.Status}
+                  onChange={(e) =>
+                    handleStateChange(
+                      shipper.ShipperID,
+                      e.target.value,
+                      shipper.Status
+                    )
+                  }
+                >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
@@ -272,8 +319,16 @@ const ManageShipper = () => {
               <td>{shipper.BankName}</td>
               <td>{shipper.VehicleType}</td>
               <td>
-                <select value={shipper.Status}
-                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
+                <select
+                  value={shipper.Status}
+                  onChange={(e) =>
+                    handleStateChange(
+                      shipper.ShipperID,
+                      e.target.value,
+                      shipper.Status
+                    )
+                  }
+                >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
@@ -311,8 +366,16 @@ const ManageShipper = () => {
               <td>{shipper.BankName}</td>
               <td>{shipper.VehicleType}</td>
               <td>
-                <select value={shipper.Status}
-                  onChange={(e) => handleStateChange(shipper.ShipperID, e.target.value, shipper.Status)}>
+                <select
+                  value={shipper.Status}
+                  onChange={(e) =>
+                    handleStateChange(
+                      shipper.ShipperID,
+                      e.target.value,
+                      shipper.Status
+                    )
+                  }
+                >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="PendingUpdate">Pending Update</option>
@@ -324,13 +387,19 @@ const ManageShipper = () => {
           ))}
         </tbody>
       </table>
-   {/* Cancel Confirmation Popup */}
-   {showCancelPopup && selectedShipper && (
+      <div>
+        <BackButton />
+      </div>
+      {/* Cancel Confirmation Popup */}
+      {showCancelPopup && selectedShipper && (
         <div className="manage-shipper-popup-overlay">
           <div className="manage-shipper-popup-container">
             <h3>Xác nhận hủy tài khoản Shipper</h3>
-            <p>Bạn có chắc muốn hủy tài khoản của shipper <strong>{selectedShipper.FullName}</strong>?</p>
-            
+            <p>
+              Bạn có chắc muốn hủy tài khoản của shipper{" "}
+              <strong>{selectedShipper.FullName}</strong>?
+            </p>
+
             <div className="manage-shipper-popup-form-group">
               <label>Lý do hủy:</label>
               <textarea
@@ -341,31 +410,31 @@ const ManageShipper = () => {
                 rows={4}
               />
             </div>
-            
+
             <div className="manage-shipper-popup-form-group">
-            <label>Thời gian khóa tài khoản:</label>
-            <select
-              value={cancelTime}
-              onChange={(e) => setCancelTime(e.target.value)}
-              required
-              className="manage-shipper-popup-select"
-            >
-              <option value="Warning">Cảnh báo</option>
-              <option value="3Days">Khóa 3 ngày</option>
-              <option value="7Days">Khóa 7 ngày</option>
-              <option value="14Days">Khóa 14 ngày</option>
-              <option value="Forever">Khóa vĩnh viễn</option>
-            </select>
-          </div>
-            
+              <label>Thời gian khóa tài khoản:</label>
+              <select
+                value={cancelTime}
+                onChange={(e) => setCancelTime(e.target.value)}
+                required
+                className="manage-shipper-popup-select"
+              >
+                <option value="Warning">Cảnh báo</option>
+                <option value="3Days">Khóa 3 ngày</option>
+                <option value="7Days">Khóa 7 ngày</option>
+                <option value="14Days">Khóa 14 ngày</option>
+                <option value="Forever">Khóa vĩnh viễn</option>
+              </select>
+            </div>
+
             <div className="manage-shipper-popup-buttons">
-              <button 
+              <button
                 className="manage-shipper-detail-button manage-shipper-cancel-button"
                 onClick={handleCancelPopupClose}
               >
                 Hủy bỏ
               </button>
-              <button 
+              <button
                 className="manage-shipper-detail-button manage-shipper-confirm-button"
                 onClick={handleConfirmCancel}
               >
@@ -375,15 +444,24 @@ const ManageShipper = () => {
           </div>
         </div>
       )}
-    {/* Update Confirmation Popup */}
-    {showUpdatePopup && shipperUpdateDetails && (
+      {/* Update Confirmation Popup */}
+      {showUpdatePopup && shipperUpdateDetails && (
         <div className="manage-shipper-popup-overlay">
-          <div className="manage-shipper-popup-container" style={{ width: '700px', maxWidth: '90%' }}>
+          <div
+            className="manage-shipper-popup-container"
+            style={{ width: "700px", maxWidth: "90%" }}
+          >
             <h3>Xác nhận cập nhật thông tin Shipper</h3>
-            <p>Xem xét các thay đổi thông tin của shipper <strong>{shipperUpdateDetails.FullName}</strong>:</p>
-            
+            <p>
+              Xem xét các thay đổi thông tin của shipper{" "}
+              <strong>{shipperUpdateDetails.FullName}</strong>:
+            </p>
+
             <div className="manage-shipper-popup-form-group">
-              <table className="manage-shipper-table" style={{ marginBottom: '20px' }}>
+              <table
+                className="manage-shipper-table"
+                style={{ marginBottom: "20px" }}
+              >
                 <thead>
                   <tr>
                     <th>Thông tin</th>
@@ -395,106 +473,192 @@ const ManageShipper = () => {
                   <tr>
                     <td>Số điện thoại</td>
                     <td>{shipperUpdateDetails.PhoneNumber}</td>
-                    <td style={highlightChange(shipperUpdateDetails.PhoneNumber, shipperUpdateDetails.TempPhoneNumber)}>
-                      {shipperUpdateDetails.TempPhoneNumber || shipperUpdateDetails.PhoneNumber}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.PhoneNumber,
+                        shipperUpdateDetails.TempPhoneNumber
+                      )}
+                    >
+                      {shipperUpdateDetails.TempPhoneNumber ||
+                        shipperUpdateDetails.PhoneNumber}
                     </td>
                   </tr>
                   <tr>
                     <td>Email</td>
                     <td>{shipperUpdateDetails.Email}</td>
-                    <td style={highlightChange(shipperUpdateDetails.Email, shipperUpdateDetails.TempEmail)}>
-                      {shipperUpdateDetails.TempEmail || shipperUpdateDetails.Email}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.Email,
+                        shipperUpdateDetails.TempEmail
+                      )}
+                    >
+                      {shipperUpdateDetails.TempEmail ||
+                        shipperUpdateDetails.Email}
                     </td>
                   </tr>
                   <tr>
                     <td>Phường/Xã</td>
                     <td>{shipperUpdateDetails.Ward}</td>
-                    <td style={highlightChange(shipperUpdateDetails.Ward, shipperUpdateDetails.TempWard)}>
-                      {shipperUpdateDetails.TempWard || shipperUpdateDetails.Ward}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.Ward,
+                        shipperUpdateDetails.TempWard
+                      )}
+                    >
+                      {shipperUpdateDetails.TempWard ||
+                        shipperUpdateDetails.Ward}
                     </td>
                   </tr>
                   <tr>
                     <td>Quận/Huyện</td>
                     <td>{shipperUpdateDetails.District}</td>
-                    <td style={highlightChange(shipperUpdateDetails.District, shipperUpdateDetails.TempDistrict)}>
-                      {shipperUpdateDetails.TempDistrict || shipperUpdateDetails.District}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.District,
+                        shipperUpdateDetails.TempDistrict
+                      )}
+                    >
+                      {shipperUpdateDetails.TempDistrict ||
+                        shipperUpdateDetails.District}
                     </td>
                   </tr>
                   <tr>
                     <td>Thành phố</td>
                     <td>{shipperUpdateDetails.City}</td>
-                    <td style={highlightChange(shipperUpdateDetails.City, shipperUpdateDetails.TempCity)}>
-                      {shipperUpdateDetails.TempCity || shipperUpdateDetails.City}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.City,
+                        shipperUpdateDetails.TempCity
+                      )}
+                    >
+                      {shipperUpdateDetails.TempCity ||
+                        shipperUpdateDetails.City}
                     </td>
                   </tr>
                   <tr>
                     <td>Ngân hàng</td>
                     <td>{shipperUpdateDetails.BankName}</td>
-                    <td style={highlightChange(shipperUpdateDetails.BankName, shipperUpdateDetails.TempBankName)}>
-                      {shipperUpdateDetails.TempBankName || shipperUpdateDetails.BankName}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.BankName,
+                        shipperUpdateDetails.TempBankName
+                      )}
+                    >
+                      {shipperUpdateDetails.TempBankName ||
+                        shipperUpdateDetails.BankName}
                     </td>
                   </tr>
                   <tr>
                     <td>Số tài khoản ngân hàng</td>
                     <td>{shipperUpdateDetails.BankAccountNumber}</td>
-                    <td style={highlightChange(shipperUpdateDetails.BankAccountNumber, shipperUpdateDetails.TempBankAccountNumber)}>
-                      {shipperUpdateDetails.TempBankAccountNumber || shipperUpdateDetails.BankAccountNumber}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.BankAccountNumber,
+                        shipperUpdateDetails.TempBankAccountNumber
+                      )}
+                    >
+                      {shipperUpdateDetails.TempBankAccountNumber ||
+                        shipperUpdateDetails.BankAccountNumber}
                     </td>
                   </tr>
                   <tr>
                     <td>Loại xe</td>
                     <td>{shipperUpdateDetails.VehicleType}</td>
-                    <td style={highlightChange(shipperUpdateDetails.VehicleType, shipperUpdateDetails.TempVehicleType)}>
-                      {shipperUpdateDetails.TempVehicleType || shipperUpdateDetails.VehicleType}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.VehicleType,
+                        shipperUpdateDetails.TempVehicleType
+                      )}
+                    >
+                      {shipperUpdateDetails.TempVehicleType ||
+                        shipperUpdateDetails.VehicleType}
                     </td>
                   </tr>
                   <tr>
                     <td>Biển số xe</td>
                     <td>{shipperUpdateDetails.LicensePlate}</td>
-                    <td style={highlightChange(shipperUpdateDetails.LicensePlate, shipperUpdateDetails.TempLicensePlate)}>
-                      {shipperUpdateDetails.TempLicensePlate || shipperUpdateDetails.LicensePlate}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.LicensePlate,
+                        shipperUpdateDetails.TempLicensePlate
+                      )}
+                    >
+                      {shipperUpdateDetails.TempLicensePlate ||
+                        shipperUpdateDetails.LicensePlate}
                     </td>
                   </tr>
                   <tr>
                     <td>Ngày đăng kiểm</td>
                     <td>{shipperUpdateDetails.RegistrationVehicle}</td>
-                    <td style={highlightChange(shipperUpdateDetails.RegistrationVehicle, shipperUpdateDetails.TempRegistrationVehicle)}>
-                      {moment(shipperUpdateDetails.TempRegistrationVehicle).format("DD-MM-YYYY") || moment(shipperUpdateDetails.RegistrationVehicle).format("DD-MM-YYYY")}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.RegistrationVehicle,
+                        shipperUpdateDetails.TempRegistrationVehicle
+                      )}
+                    >
+                      {moment(
+                        shipperUpdateDetails.TempRegistrationVehicle
+                      ).format("DD-MM-YYYY") ||
+                        moment(shipperUpdateDetails.RegistrationVehicle).format(
+                          "DD-MM-YYYY"
+                        )}
                     </td>
                   </tr>
                   <tr>
                     <td>Ngày hết hạn </td>
                     <td>{shipperUpdateDetails.ExpirationVehicle}</td>
-                    <td style={highlightChange(shipperUpdateDetails.ExpirationVehicle, shipperUpdateDetails.TempExpirationVehicle)}>
-                      {moment(shipperUpdateDetails.TempExpirationVehicle).format("DD-MM-YYYY") || moment(shipperUpdateDetails.ExpirationVehicle).format("DD-MM-YYYY")}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.ExpirationVehicle,
+                        shipperUpdateDetails.TempExpirationVehicle
+                      )}
+                    >
+                      {moment(
+                        shipperUpdateDetails.TempExpirationVehicle
+                      ).format("DD-MM-YYYY") ||
+                        moment(shipperUpdateDetails.ExpirationVehicle).format(
+                          "DD-MM-YYYY"
+                        )}
                     </td>
                   </tr>
                   <tr>
                     <td>Giấy đăng kiểm xe</td>
                     <td>{shipperUpdateDetails.VehicleRegistrationImage}</td>
-                    <td style={highlightChange(shipperUpdateDetails.VehicleRegistrationImage, shipperUpdateDetails.TempVehicleRegistrationImage)}>
-                      {shipperUpdateDetails.TempVehicleRegistrationImage || shipperUpdateDetails.VehicleRegistrationImage}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.VehicleRegistrationImage,
+                        shipperUpdateDetails.TempVehicleRegistrationImage
+                      )}
+                    >
+                      {shipperUpdateDetails.TempVehicleRegistrationImage ||
+                        shipperUpdateDetails.VehicleRegistrationImage}
                     </td>
                   </tr>
                   <tr>
                     <td>Ảnh thẻ Shipper</td>
                     <td>{shipperUpdateDetails.ImageShipper}</td>
-                    <td style={highlightChange(shipperUpdateDetails.ImageShipper, shipperUpdateDetails.TempImageShipper)}>
-                      {shipperUpdateDetails.TempImageShipper || shipperUpdateDetails.ImageShipper}
+                    <td
+                      style={highlightChange(
+                        shipperUpdateDetails.ImageShipper,
+                        shipperUpdateDetails.TempImageShipper
+                      )}
+                    >
+                      {shipperUpdateDetails.TempImageShipper ||
+                        shipperUpdateDetails.ImageShipper}
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            
+
             <div className="manage-shipper-popup-buttons">
-              <button 
+              <button
                 className="manage-shipper-detail-button manage-shipper-cancel-button"
                 onClick={handleUpdatePopupClose}
               >
                 Hủy bỏ
               </button>
-              <button 
+              <button
                 className="manage-shipper-detail-button manage-shipper-confirm-button"
                 onClick={handleConfirmUpdate}
               >
