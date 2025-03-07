@@ -357,7 +357,7 @@ useEffect(() => {
                     checked={verificationStatus.personalInfo}
                     disabled={!areAllFieldsVerifiedInSection('personal')}
                   />
-                  <span>
+                  <span >
                     {verificationStatus.personalInfo ? 'Đã xác minh tất cả' : 'Cần xác minh tất cả thông tin'}
                   </span>
                 </div>
