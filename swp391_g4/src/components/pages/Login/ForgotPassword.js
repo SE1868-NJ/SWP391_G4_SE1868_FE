@@ -39,7 +39,7 @@ const ForgotPassword = () => {
     try {
       const response = await axios.post(
 
-        'http://localhost:5000/api/forgot-password',
+        'http://localhost:4000/api/forgot-password',
         { email },
         { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
       );

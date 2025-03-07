@@ -21,7 +21,7 @@ const CustomerReportTracking = () => {
 
   const fetchOrderReports = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/customer-order-reports?customerId=${4}`);
+      const response = await axios.get(`http://localhost:4000/api/customer-order-reports?customerId=${4}`);
       setOrderReports(response.data.orderReports);
     } catch (error) {
       console.error("Error fetching order reports:", error);
