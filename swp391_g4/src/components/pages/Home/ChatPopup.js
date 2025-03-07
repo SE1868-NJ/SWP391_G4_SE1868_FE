@@ -5,10 +5,21 @@ import avatarImage from "../../../images/EcoShipper_rbg.png";
 
 const ChatPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      text: "Xin chào, bạn cần gì?",
+      sender: "ai",
+    }
+  ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  
+  // Danh sách các câu hỏi gợi ý
+  const suggestedQuestions = [
+    "EcoShipper là hệ thống như nào?",
+    "Cách để tra cứu thông tin tài khoản shipper trong trang web này?"
+  ];
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -22,11 +33,11 @@ const ChatPopup = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+  const handleSendMessage = async (messageToSend = inputMessage) => {
+    if (!messageToSend.trim()) return;
 
     const userMessage = {
-      text: inputMessage,
+      text: messageToSend,
       sender: "user",
     };
 
@@ -36,7 +47,7 @@ const ChatPopup = () => {
 
     try {
       const response = await axios.post('http://localhost:5000/api/chat', {
-        message: inputMessage,
+        message: messageToSend,
       });
 
       const aiMessage = {
@@ -65,6 +76,12 @@ const ChatPopup = () => {
     }
   };
 
+  // Hàm để xử lý khi người dùng click vào gợi ý câu hỏi
+  const handleSuggestedQuestion = (question) => {
+    // Gửi câu hỏi ngay lập tức
+    handleSendMessage(question);
+  };
+
   return (
     <div className="chat-popup">
       <div className={`chat-container ${isOpen ? "open" : ""}`}>
@@ -78,7 +95,14 @@ const ChatPopup = () => {
         ) : (
           <>
             <div className="chat-header">
-              <h3>EcoShipper AI</h3>
+              <div className="header-left">
+                <img 
+                  src={avatarImage} 
+                  alt="EcoShipper Logo" 
+                  className="header-logo" 
+                />
+                <h3>EcoShipper AI</h3>
+              </div>
               <span 
                 className="toggle-icon" 
                 onClick={toggleChat}
@@ -99,10 +123,22 @@ const ChatPopup = () => {
                 ))}
                 {isLoading && (
                   <div className="message ai loading">
-                    Đang tải...
+                    Chờ một chút nhé...
                   </div>
                 )}
                 <div ref={messagesEndRef} />
+              </div>
+              
+              <div className="suggested-questions">
+                {suggestedQuestions.map((question, index) => (
+                  <button 
+                    key={index}
+                    className="question-button"
+                    onClick={() => handleSuggestedQuestion(question)}
+                  >
+                    {question}
+                  </button>
+                ))}
               </div>
   
               <div className="chat-input">
@@ -115,7 +151,7 @@ const ChatPopup = () => {
                   disabled={isLoading}
                 />
                 <button 
-                  onClick={handleSendMessage} 
+                  onClick={() => handleSendMessage()} 
                   disabled={isLoading || !inputMessage.trim()}
                 >
                   Gửi
