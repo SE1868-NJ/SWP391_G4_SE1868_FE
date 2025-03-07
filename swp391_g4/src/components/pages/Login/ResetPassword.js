@@ -306,9 +306,17 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/reset-password',
-        { email, resetToken, newPassword },
-        { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
+
+        'http://localhost:4000/api/reset-password',
+        { 
+          email, 
+          resetToken,
+          newPassword 
+        },
+        { 
+          headers: { 'Content-Type': 'application/json' },
+          timeout: 10000 
+        }
       );
 
       if (response.data.success) {

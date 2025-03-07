@@ -25,6 +25,9 @@ import ShipperRegister from "./components/pages/Login/ShipperRegister";
 import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
 
+import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
+
+
 //Trang Shipper Account
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
 import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperInfo";
@@ -94,6 +97,21 @@ root.render(
 
       {/* ** Trang Operator** */}
       <Route path="/manage-shipper" element={<ManageShipper />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/shipper-contact" element={<ShipperContact />} />
+      <Route path="/update-personal-info" element={<UpdateShipperInfo />} />
+      <Route path="/eventdetail" element={<EventDetail />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/news" element={<News />} />
+      <Route path="/register" element={<ShipperRegister />} />
+      <Route path="/news/:eventId" element={<EventDetail />} />
+      <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-of-use" element={<TermsOfUse />} />
+      <Route path="/job/:jobId" element={<JobDetail />} />
+      <Route path='/shipper-detail' element={<ShipperDetail />} />
+      <Route path='/revenue-dashboard' element={<RevenueDashboard />} />
       <Route path="/shipper-detail" element={<ShipperDetail />} />
 
       {/* ** Phan bao cao su co** */}
