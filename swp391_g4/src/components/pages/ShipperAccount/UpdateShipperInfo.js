@@ -62,7 +62,7 @@ const UpdateShipperInfo = () => {
       console.log('Sending update request:', formattedShipperInfo);
 
       const response = await axios.put(
-        `http://localhost:4000/api/shippers/${shipperId}`, 
+        `http://localhost:5000/api/shippers/${shipperId}`, 
         formattedShipperInfo,
         {
           headers: {

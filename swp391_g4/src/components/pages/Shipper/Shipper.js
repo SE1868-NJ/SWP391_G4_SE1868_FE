@@ -24,7 +24,7 @@ const Shipper = () => {
   const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
 
   const FetchOrders = () => {
-    axios.get(`http://localhost:4000/api/getOrdersInProgress?search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
+    axios.get(`http://localhost:5000/api/getOrdersInProgress?search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
     .then((response) => {
       console.log(response);
 
@@ -38,7 +38,7 @@ const Shipper = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/api/getShipperById?id=${shipperID}`)
+    axios.get(`http://localhost:5000/api/getShipperById?id=${shipperID}`)
     .then((response) => {
       setShipper(response.data.shipper);
     }) 
@@ -51,7 +51,7 @@ const Shipper = () => {
     };
   
     try {
-      const response = await axios.post('http://localhost:4000/api/changeStatusOrder', postData);
+      const response = await axios.post('http://localhost:5000/api/changeStatusOrder', postData);
       console.log(response);
     } catch (error) {
       console.error("Error changing order status:", error);
