@@ -143,7 +143,7 @@ const ShipperAccount = () => {
         console.log('Fetching with Token:', token);
         console.log('Fetching Shipper ID:', shipperId);
 
-        const response = await axios.get(`http://localhost:4000/api/shippers-auth/${shipperId}`, {
+        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -178,7 +178,7 @@ const ShipperAccount = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:4000/api/shipper/${shipperId}/total-wallet`, {
+      const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/total-wallet`, {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
       });
 
@@ -213,7 +213,7 @@ const ShipperAccount = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:4000/api/shipper/${shipperId}/wallet`, {
+      const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/wallet`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -237,7 +237,7 @@ const ShipperAccount = () => {
     try {
       const shipperId = localStorage.getItem('shipperId');
       const response = await axios.put(
-        `http://localhost:4000/api/shippers-auth/${shipperId}/cancel`,
+        `http://localhost:5000/api/shippers-auth/${shipperId}/cancel`,
         {
           reason,
         },

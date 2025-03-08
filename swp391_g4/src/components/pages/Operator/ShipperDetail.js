@@ -7,15 +7,17 @@ import { Badge } from '../../buttons/Badges';
 import { 
   Truck, User, Phone, Mail, MapPin, CreditCard, 
   FileCheck, AlertCircle, CheckCircle2, Shield, UserCheck,
-  Clock, CircleDollarSign, Calendar, Package2
+  Clock, CircleDollarSign, Calendar, Package2,
+  IdCard
 } from 'lucide-react';
 import '../../../styles/ShipperDetail.css';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
+import driverLicense from '../../../images/DriverLicense.png';
+import idCard from '../../../images/IDCard.png';
 const ShipperDetail = () => {
-  // const [activeTab, setActiveTab] = useState('personal');
   const [shippersList, setShippersList] = useState([]);
   const [selectedShipper, setSelectedShipper] = useState(null);
   const [verificationStatus, setVerificationStatus] = useState({
@@ -132,7 +134,7 @@ const ShipperDetail = () => {
 
 // Lấy danh sách shipper đang chờ duyệt
 useEffect(() => {
-  axios.get('http://localhost:4000/api/pending-register-shippers')
+  axios.get('http://localhost:5000/api/pending-register-shippers')
     .then(response => {
       setShippersList(response.data); // Lưu danh sách vào shippersList
     })
@@ -152,7 +154,7 @@ useEffect(() => {
 
   // Lấy chi tiết shipper
   const handleShipperClick = (id) => {
-    axios.get(`http://localhost:4000/api/shippers/${id}`)
+    axios.get(`http://localhost:5000/api/shippers/${id}`)
       .then(response => {
         setSelectedShipper(response.data); // Lưu thông tin chi tiết vào selectedShipper
       })
@@ -162,7 +164,7 @@ useEffect(() => {
   };
   const handleRejectShipper = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/api/reject-shipper', {
+      const response = await axios.post('http://localhost:5000/api/reject-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   
@@ -184,7 +186,7 @@ useEffect(() => {
   };
   const handleApproveShipper = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/api/approve-shipper', {
+      const response = await axios.post('http://localhost:5000/api/approve-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   
@@ -484,7 +486,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">Giấy Phép Lái Xe</p>
                     <img 
-                      src="DriverLicense.png" 
+                      src={driverLicense}
                       alt="Driver License"
                       className="document-image"
                     />
@@ -508,7 +510,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">CMND/CCCD</p>
                     <img 
-                      src="IDCard.png" 
+                      src={idCard}
                       alt="ID Card"
                       className="document-image"
                     />

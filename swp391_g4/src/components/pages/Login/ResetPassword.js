@@ -53,7 +53,7 @@
 // //     setLoading(true);
 // //     try {
 // //       const response = await axios.post(
-// //         'http://localhost:4000/api/reset-password',
+// //         'http://localhost:5000/api/reset-password',
 // //         {
 // //           email,
 // //           resetToken,
@@ -187,7 +187,7 @@
 //     setLoading(true);
 //     try {
 //       const response = await axios.post(
-//         'http://localhost:4000/api/reset-password',
+//         'http://localhost:5000/api/reset-password',
 //         { email, resetToken, newPassword },
 //         { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
 //       );
@@ -307,7 +307,7 @@ const ResetPassword = () => {
     try {
       const response = await axios.post(
 
-        'http://localhost:4000/api/reset-password',
+        'http://localhost:5000/api/reset-password',
         { 
           email, 
           resetToken,

@@ -154,7 +154,7 @@ const UpdateShipperInfo = () => {
           return imagePath;
         };
 
-        const response = await axios.get(`http://localhost:4000/api/shippers-auth/${shipperId}`, {
+        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -316,11 +316,11 @@ const UpdateShipperInfo = () => {
         return;
       }
 
-      console.log("Sending update to:", `http://localhost:4000/api/shippers/${shipperId}/update`);
+      console.log("Sending update to:", `http://localhost:5000/api/shippers/${shipperId}/update`);
       console.log("Update data:", dataToUpdate);
 
       const response = await axios.put(
-        `http://localhost:4000/api/shippers/${shipperId}/update`,
+        `http://localhost:5000/api/shippers/${shipperId}/update`,
         dataToUpdate,
         {
           headers: {

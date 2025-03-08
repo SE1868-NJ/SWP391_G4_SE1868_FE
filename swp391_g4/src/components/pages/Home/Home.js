@@ -4,6 +4,7 @@ import Footer from "../../footer/Footer";
 import Header from "../../header/Header";
 import Login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
+import ChatPopup from "../Home/ChatPopup";
 
 const Home = () => {
   // Navigation Items
@@ -44,7 +45,7 @@ const Home = () => {
     const intervalId = setInterval(() => {
       setDirection("left");
       setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-    }, 4000); // Change banner every 5 seconds
+    }, 5000); // Change banner every 5 seconds
 
     return () => clearInterval(intervalId);
   }, [bannerData.length]);
@@ -309,7 +310,7 @@ const Home = () => {
           </div>
         </div>
       )}
-
+      <ChatPopup />
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );

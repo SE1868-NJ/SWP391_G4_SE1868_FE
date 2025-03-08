@@ -37,7 +37,7 @@ const CancelShipperAccount = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:4000/api/shippers/${shipperId}`, {
+      await axios.delete(`http://localhost:5000/api/shippers/${shipperId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
