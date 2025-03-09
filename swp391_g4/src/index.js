@@ -24,7 +24,6 @@ import ShipperRegister from "./components/pages/Login/ShipperRegister";
 //Trang Operator
 import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
-
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
 
 
@@ -35,6 +34,9 @@ import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperIn
 //Trang Shipper
 import Shipper from "./components/pages/Shipper/Shipper";
 import OrderDetails from "./components/pages/Shipper/OrderDetails";
+import MyDeliveryOrder from './components/pages/MyDeliveryOrder';
+import HistoryDeliveryOrder from './components/pages/HistoryDeliveryOrder';
+import Revenue from './components/pages/Revenue';
 
 
 //Report
@@ -83,6 +85,9 @@ root.render(
         }
       />
       <Route path="/orderdetail/:id" element={<OrderDetails />} />
+      <Route path="/my-delivery-order" element={<MyDeliveryOrder />} />
+      <Route path="/history-delivery-order" element={<HistoryDeliveryOrder />} />
+      <Route path="/revenue" element={<Revenue />} />
 
       {/* ** Trang ShipperAccount** */}
       <Route
@@ -121,3 +126,4 @@ root.render(
     </Routes>
   </Router>
 );
+

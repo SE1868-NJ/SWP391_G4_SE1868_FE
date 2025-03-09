@@ -89,7 +89,10 @@ export class Header extends React.Component {
                       <a href="/shipper" className={styles.dropdownItem}>
                         Đơn hàng
                       </a>
-                      <a href="/history-order" className={styles.dropdownItem}>
+                      <a href="/my-delivery-order" className={styles.dropdownItem}>
+                        Đơn đang giao
+                      </a>
+                      <a href="/history-delivery-order" className={styles.dropdownItem}>
                         Lịch sử đơn hàng
                       </a>
                       <a href="/revenue" className={styles.dropdownItem}>

@@ -6,9 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPaginate from 'react-paginate';
 import { format } from 'date-fns';
 import { Input, initMDB } from 'mdb-ui-kit';
-import Header from '../../header/Header'
-import ProfileShipper from '../../common/profileShipper';
+import Header from '../../header/Header';
 import Footer from '../../footer/Footer';
+import ProfileShipper from '../../common/profileShipper';
 initMDB({ Input });
 
 const Shipper = () => {
@@ -24,10 +24,9 @@ const Shipper = () => {
   const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
 
   const FetchOrders = () => {
-    axios.get(`http://localhost:4000/api/getOrdersInProgress?search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
+    axios.get(`http://localhost:5000/api/getOrdersPending?search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
     .then((response) => {
       console.log(response);
-
       setTotalOrders(response.data.totalRows);
       setTotalPages(response.data.totalPages);
       setOrders(response.data.orders);
@@ -38,11 +37,15 @@ const Shipper = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/api/getShipperById?id=${shipperID}`)
+    axios.get(`http://localhost:5000/api/shippers/${shipperID}`)
     .then((response) => {
-      setShipper(response.data.shipper);
+      setShipper(response.data);  // Kiểm tra cấu trúc response
     }) 
+    .catch(error => {
+      console.error("Error fetching shipper:", error);
+    });
   }, []);
+
 
   const ChangeOrderStatus = async (orderId, newStatus) => {
     const postData = {
@@ -51,7 +54,7 @@ const Shipper = () => {
     };
   
     try {
-      const response = await axios.post('http://localhost:4000/api/changeStatusOrder', postData);
+      const response = await axios.post('http://localhost:5000/api/changeStatusOrder', postData);
       console.log(response);
     } catch (error) {
       console.error("Error changing order status:", error);
@@ -81,13 +84,18 @@ const Shipper = () => {
   }
   return (
     <div className="form shipper">
-      <Header/>
+      <div className='header'>
+        <Header/>
+      </div>
 
       <main className="mx-md-5">
-        
-
-        <div className="my-3 d-flex justify-content-end ">
-          <ProfileShipper props={shipper} />
+        <div className="my-3 d-flex justify-content-between align-items-center">
+          <img
+            src="https://useless-gold-stingray.myfilebase.com/ipfs/QmTujYCZq9ZGX7tAEbPfY1uZUgp2qRd4Gyc85fbmcuDi6K"
+            alt="Vận Chuyển Tiết Kiệm"
+            className="service-image"
+          />
+          <div className='ProfileShipper'><ProfileShipper props={shipper} /></div>
         </div>
         <h2 className="text-center">Shipping Orders</h2>
         <div className="row">
@@ -113,7 +121,7 @@ const Shipper = () => {
                 <th scope="col">Phone</th>
                 <th scope="col">Email</th>
                 <th scope="col">Address</th>
-                <th scope="col">Estimated Time</th>
+                <th scope="col">Oreder Time</th>
               </tr>
             </thead>
             <tbody  >
@@ -129,7 +137,7 @@ const Shipper = () => {
                   <td className="py-2 align-content-center">{order.PhoneNumber}</td>
                   <td className="py-2 align-content-center">{order.Email}</td>
                   <td className="py-2 align-content-center">{order.DeliveryAddress}</td>
-                  <td className="py-2 align-content-center">{format(new Date(order.EstimatedDeliveryTime), 'MMMM dd, yyyy hh:mm:ss a')}</td>
+                  <td className="py-2 align-content-center">{format(new Date(order.OrderDate), 'MMMM dd, yyyy hh:mm:ss a')}</td>
                 </tr>
               ))}
             </tbody>
