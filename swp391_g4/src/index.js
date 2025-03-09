@@ -37,7 +37,7 @@ import Shipper from "./components/pages/Shipper/Shipper";
 import OrderDetails from "./components/pages/Shipper/OrderDetails";
 
 
-//Phan bao cao su co
+//Report
 import ReportIssue from "./components/pages/ReportIssue";
 import AdminReportHandling from "./components/pages/AdminReportHandling";
 import CustomerReportTracking from "./components/pages/CustomerReportTracking";
