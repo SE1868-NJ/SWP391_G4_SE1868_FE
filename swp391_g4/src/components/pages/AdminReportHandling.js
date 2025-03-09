@@ -58,9 +58,9 @@ const AdminReportHandling = () => {
 
   return (
     <div className="admin-report-page">
-      <header className="full-width-header">
+      <div className="header">
         <Header />
-      </header>
+      </div>
       <div className="report-container-wrapper">
         {/* Tab buttons */}
         <div className="report-tabs">

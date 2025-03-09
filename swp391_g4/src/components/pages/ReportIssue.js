@@ -77,9 +77,9 @@ const ReportIssue = () => {
 
   return (
     <div className="report-page">
-      <header className="full-width-header">
+      <div className="header">
         <Header />
-      </header>
+      </div>
       <div className="report-container-wrapper">
         <div className="report-container">
           <h2>Báo cáo Sự cố</h2>

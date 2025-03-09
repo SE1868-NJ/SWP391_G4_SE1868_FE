@@ -34,9 +34,9 @@ const CustomerReportTracking = () => {
 
   return (
     <div className="report-page">
-      <header className="full-width-header">
+      <div className="header">
         <Header />
-      </header>
+      </div>
       <div className="report-container-wrapper">
         <div className="report-container">
           <h2>Sự cố đơn hàng của tôi</h2>

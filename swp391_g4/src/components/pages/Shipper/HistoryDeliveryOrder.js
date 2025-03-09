@@ -1,9 +1,7 @@
 import ReactPaginate from "react-paginate";
-import Footer from "../footer/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Header from "../header/Header";
 import { format } from "date-fns";
 
 const HistoryDeliveryOrder = () => {
@@ -55,9 +53,6 @@ const HistoryDeliveryOrder = () => {
   
       return (
           <div className="form shipper">
-            <div className="header">
-            <Header/>
-            </div>
             <main className="mx-md-5">
               <h2 className="text-center mt-5">History Delivery Orders</h2>
               <div className="row">
@@ -152,7 +147,6 @@ const HistoryDeliveryOrder = () => {
                 </div>
               }
             </main>
-            <Footer/>
           </div>
         );
 }

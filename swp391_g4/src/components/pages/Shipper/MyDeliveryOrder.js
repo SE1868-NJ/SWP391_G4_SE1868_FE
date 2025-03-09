@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import Header from "../header/Header";
-import ProfileShipper from "../common/profileShipper";
+import ProfileShipper from "../../common/profileShipper";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import ReactPaginate from "react-paginate";
-import Footer from "../footer/Footer";
 
 const MyDeliveryOrder = () => {
   const navigate = useNavigate();
@@ -18,6 +16,7 @@ const MyDeliveryOrder = () => {
   const shipperID = localStorage.getItem("shipperId");
   const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
 
+  
   const FetchOrders = () => {
     axios
       .get(
@@ -52,9 +51,6 @@ const MyDeliveryOrder = () => {
 
   return (
     <div className="form shipper">
-      <div className="header">
-        <Header />
-      </div>
       <main className="mx-md-5">
         <h2 className="text-center mt-5">My Delivery Orders</h2>
         <div className="row">
@@ -163,7 +159,6 @@ const MyDeliveryOrder = () => {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   );
 };
