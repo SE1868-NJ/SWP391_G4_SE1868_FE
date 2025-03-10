@@ -145,14 +145,14 @@ body {
 
 .shipperAccount-wallet-balance p {
   margin: 0;
-  font-size: 1.8rem; /* Tăng kích thước chữ */
-  font-weight: 700; /* Đậm hơn */
-  color: #1a3c34; /* Giữ màu xanh đậm */
+  font-size: 1.8rem; 
+  font-weight: 700; 
+  color: #1a3c34; 
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem; /* Tăng khoảng cách với nút */
-  letter-spacing: 0.5px; /* Thêm khoảng cách chữ cho đẹp */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Thêm shadow nhẹ cho chữ */
+  gap: 0.75rem; 
+  letter-spacing: 0.5px; 
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); 
 }
 .shipperAccount-wallet-balance:hover {
   transform: translateY(-2px); 
@@ -165,7 +165,7 @@ body {
   padding: 0;
   margin-left: 0.5rem;
   font-size: 1.6rem;
-  color: #24ae6e; /* Màu nút đồng bộ với theme */
+  color: #24ae6e; 
   display: inline-block;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -344,12 +344,10 @@ body {
 
 .shipperAccount-wallet-table tfoot .shipperAccount-wallet-grand-total td:first-child {
   text-align: left;
-  /* Căn trái chữ "Tổng cộng" */
 }
 
 .shipperAccount-wallet-table tfoot .shipperAccount-wallet-grand-total td:last-child {
   text-align: center;
-  /* Căn giữa giá trị tổng */
 }
 
 .shipperAccount-wallet-table tr:nth-child(even) {
