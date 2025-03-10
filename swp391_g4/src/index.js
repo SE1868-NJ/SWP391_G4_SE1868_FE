@@ -37,10 +37,7 @@ import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperIn
 
 //Trang Shipper
 import Shipper from "./components/pages/Shipper/Shipper";
-import OrderDetails from "./components/pages/Shipper/OrderDetails";
-import MyDeliveryOrder from "./components/pages/Shipper/MyDeliveryOrder";
-import HistoryDeliveryOrder from "./components/pages/Shipper/HistoryDeliveryOrder";
-import Revenue from "./components/pages/Shipper/Revenue";
+import OrderDetails from "./components/pages/Shipper/OrderDetails"
 import ShipperDashboard from "./components/pages/Shipper/ShipperDashboard";
 
 //Report
