@@ -4,13 +4,14 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from "axios";
 import { useState } from 'react';
 import { useEffect } from 'react';
-function MapBox({ addressData }) {
+function MapBox({ addressData, distance, duration }) {
     const [addressMaker, setAddressMaker] = useState([]);
     const [viewState, setViewState] = useState({
         latitude: 21.02883,
         longitude: 105.49343,
         zoom: 10
     });
+    const mapboxToken = 'pk.eyJ1IjoiaGlldTMwMDkyMyIsImEiOiJjbTc2Z3E5OGowdG9pMmtwcHc1eHkxNGNmIn0.x5yQ1KzUobIw39-ORGEFBg';
 
     useEffect(() => {
         const fetchCoordinates = async () => {
@@ -19,10 +20,11 @@ function MapBox({ addressData }) {
                     if (!address) return null;
                     try {
                         const response = await axios.get(
-                            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=pk.eyJ1IjoiaGlldTMwMDkyMyIsImEiOiJjbTc2Z3E5OGowdG9pMmtwcHc1eHkxNGNmIn0.x5yQ1KzUobIw39-ORGEFBg`
+                            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxToken}`
                         );
 
                         if (response.status === 200 && response.data.features.length > 0) {
+                            console.log(response.data.features[0].center);
                             return {
                                 longitude: response.data.features[0].center[0],
                                 latitude: response.data.features[0].center[1],
@@ -40,17 +42,43 @@ function MapBox({ addressData }) {
 
             // Cập nhật vị trí bản đồ đến tọa độ đầu tiên nếu có dữ liệu
             if (filteredData.length > 0) {
+                const midpoint = getMidpoint(filteredData[0].latitude, filteredData[0].longitude, filteredData[1].latitude, filteredData[1].longitude);
+
                 setViewState({
-                    latitude: filteredData[0].latitude,
-                    longitude: filteredData[0].longitude,
-                    zoom: 12
+                    latitude: midpoint.latitude,
+                    longitude: midpoint.longitude,
+                    zoom: 10    
                 });
+
+                CheckDistance(filteredData[1], filteredData[0]);
             }
+
+
         };
 
         fetchCoordinates();
     }, [addressData]);
 
+
+    function getMidpoint(lat1, lon1, lat2, lon2) {
+        return {
+            latitude: (lat1 + lat2) / 2,
+            longitude: (lon1 + lon2) / 2
+        };
+    }
+    const CheckDistance = (shopPosition, customerPosition) => {
+        axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${shopPosition.longitude},${shopPosition.latitude};${customerPosition.longitude},${customerPosition.latitude}?access_token=${mapboxToken}`)
+            .then(response => {
+            const dist = response.data.routes[0].distance / 1000;
+            const dura = response.data.routes[0].duration;
+
+            distance(dist.toFixed(2));
+            duration((dura/ 3600).toFixed(2));
+            
+
+            console.log(`Distance: ${distance} km, Duration: ${duration} seconds`);
+        });
+    };
     return (
         <Map
             mapboxAccessToken="pk.eyJ1IjoiaGlldTMwMDkyMyIsImEiOiJjbTc2Z3E5OGowdG9pMmtwcHc1eHkxNGNmIn0.x5yQ1KzUobIw39-ORGEFBg"

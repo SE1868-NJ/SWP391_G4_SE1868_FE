@@ -4,8 +4,8 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/ShipperAccount.css";
 import axios from 'axios';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-
+import Qrcode from "../../../images/QRcode.png";
+import { FaEye, FaEyeSlash, FaTimes, FaCheckCircle } from 'react-icons/fa';
 const formatData = {
   date: (dateString) => {
     if (!dateString) return "Chưa cập nhật";
@@ -117,6 +117,16 @@ const ShipperAccount = () => {
   const [filterDate, setFilterDate] = useState('');
   const [weekRange, setWeekRange] = useState('');
   const [isMoneyVisible, setIsMoneyVisible] = useState(false);
+  const [showDepositPopup, setShowDepositPopup] = useState(false);
+  const [depositAmount, setDepositAmount] = useState(0);
+  const [selectedAmount, setSelectedAmount] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
+  const [selectedWithdrawAmount, setSelectedWithdrawAmount] = useState(null);
+  const [showWithdrawConfirmation, setShowWithdrawConfirmation] = useState(false);
+  const [showWithdrawSuccess, setShowWithdrawSuccess] = useState(false);
 
   // Login Popup State
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
@@ -262,7 +272,55 @@ const ShipperAccount = () => {
       setShowCancelPopup(false);
     }
   };
+  const handleWithdraw = async () => {
+    try {
+      const shipperId = localStorage.getItem('shipperId');
+      const token = localStorage.getItem('token');
 
+      if (!shipperId || !token) {
+        navigate('/login');
+        return;
+      }
+
+      // Kiểm tra số dư ví có đủ không
+      if (withdrawAmount > totalWallet) {
+        setError('Số dư trong ví không đủ để thực hiện giao dịch');
+        return;
+      }
+
+      const response = await axios.post(
+        `http://localhost:5000/api/shipper/${shipperId}/withdraw`,
+        { amount: withdrawAmount },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setTotalWallet(response.data.data.newBalance);
+        setShowWithdrawConfirmation(false);
+        setShowWithdrawSuccess(true);
+      } else {
+        throw new Error(response.data.message || 'Không thể rút tiền');
+      }
+    } catch (err) {
+      console.error('Error withdrawing money:', err);
+      setError(err.message || 'Đã xảy ra lỗi khi rút tiền');
+    }
+  };
+  const handleWithdrawSuccessOk = () => {
+    setShowWithdrawSuccess(false);
+    setShowWithdrawPopup(false);
+    setSelectedSection('wallet');
+  };
+  const handlePaymentSuccessOk = () => {
+    setShowPaymentSuccess(false);
+    setShowDepositPopup(false);
+    setSelectedSection('wallet');
+  };
   const handleOkClick = () => {
     navigate('/home');
   };
@@ -295,20 +353,53 @@ const ShipperAccount = () => {
   const handleAccountClick = () => {
     setIsAccountCollapsed(!isAccountCollapsed);
   };
+  const handleCompletePayment = async () => {
+    try {
+      const shipperId = localStorage.getItem('shipperId');
+      const token = localStorage.getItem('token');
+
+      if (!shipperId || !token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.post(
+        `http://localhost:5000/api/shipper/${shipperId}/deposit`,
+        { amount: depositAmount },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setTotalWallet(response.data.data.newBalance);
+        setShowConfirmation(false);
+        setShowPaymentSuccess(true);
+      } else {
+        throw new Error(response.data.message || 'Không thể nạp tiền');
+      }
+    } catch (err) {
+      console.error('Error depositing money:', err);
+      setError(err.message || 'Đã xảy ra lỗi khi nạp tiền');
+    }
+  };
 
   const getWeekRange = (weekString) => {
     if (!weekString) return '';
     const [year, week] = weekString.split('-W');
     const weekNum = parseInt(week, 10);
     const firstDayOfYear = new Date(year, 0, 1);
-    const dayOfWeek = firstDayOfYear.getDay(); 
-    const offset = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek; 
+    const dayOfWeek = firstDayOfYear.getDay();
+    const offset = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
     const firstMonday = new Date(firstDayOfYear);
     firstMonday.setDate(firstDayOfYear.getDate() + offset);
     const startDate = new Date(firstMonday);
-    startDate.setDate(firstMonday.getDate() + (weekNum - 1) * 7); 
+    startDate.setDate(firstMonday.getDate() + (weekNum - 1) * 7);
     const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 6); 
+    endDate.setDate(startDate.getDate() + 6);
     return `${formatData.date(startDate)} - ${formatData.date(endDate)}`;
   };
 
@@ -403,7 +494,6 @@ const ShipperAccount = () => {
                   <th>Tổng đơn hàng</th>
                   <th>Tổng phí giao hàng</th>
                   <th>Tổng tiền tip</th>
-                  <th>Bonus của ngày</th>
                   <th>Tổng theo ngày</th>
                 </tr>
               </thead>
@@ -415,28 +505,22 @@ const ShipperAccount = () => {
                       <td>{day.orderCount}</td>
                       <td>{formatData.currency(day.totalShippingFee)}</td>
                       <td>{formatData.currency(day.totalExtraMoney)}</td>
-                      <td>{formatData.currency(day.bonus)}</td>
                       <td>{formatData.currency(day.dailyTotal)}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">Không có dữ liệu trong tuần này</td>
+                    <td colSpan="5">Không có dữ liệu</td>
                   </tr>
                 )}
               </tbody>
               <tfoot>
                 <tr className="shipperAccount-wallet-total">
                   <td>Tổng</td>
-                  <td>{walletData.reduce((sum, day) => sum + day.orderCount, 0)}</td>
+                  <td>{totals.totalOrderCount}</td>
                   <td>{formatData.currency(totals.totalShippingFee)}</td>
                   <td>{formatData.currency(totals.totalExtraMoney)}</td>
-                  <td>{formatData.currency(totals.totalBonus)}</td>
-                  <td>{formatData.currency(
-                    Number(totals.totalShippingFee) +
-                    Number(totals.totalExtraMoney) +
-                    Number(totals.totalBonus)
-                  )}</td>
+                  <td>{formatData.currency(totals.total)}</td>
                 </tr>
               </tfoot>
             </table>
@@ -452,6 +536,17 @@ const ShipperAccount = () => {
                   {isMoneyVisible ? <FaEye /> : <FaEyeSlash />}
                 </button>
               </p>
+              <div className="shipperAccount-wallet-buttons">
+                <button className="shipperAccount-deposit-button" onClick={() => setShowDepositPopup(true)}>
+                  Nạp Tiền
+                </button>
+                <button
+                  className="shipperAccount-withdraw-button"
+                  onClick={() => setShowWithdrawPopup(true)}
+                >
+                  Rút Tiền
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -562,6 +657,211 @@ const ShipperAccount = () => {
           >
             Hủy tài khoản
           </button>
+        </div>
+      )}
+      {/* Popup nạp tiền - Cập nhật */}
+      {showDepositPopup && (
+        <div className="shipperAccount-popup-overlay">
+          <div className="shipperAccount-popup-content">
+            {/* Thêm button đóng popup */}
+            <button
+              className="shipperAccount-popup-close"
+              onClick={() => setShowDepositPopup(false)}
+              aria-label="Đóng"
+            >
+              <FaTimes />
+            </button>
+
+            {showPaymentSuccess ? (
+              // Thông báo thanh toán thành công
+              <div className="shipperAccount-success-message">
+                <div className="shipperAccount-success-icon">
+                  <FaCheckCircle />
+                </div>
+                <h3>Thanh toán thành công!</h3>
+                <p>Số tiền {formatData.currency(depositAmount)} đã được nạp vào tài khoản của bạn</p>
+                <button
+                  className="shipperAccount-ok-button"
+                  onClick={handlePaymentSuccessOk}
+                >
+                  OK
+                </button>
+              </div>
+            ) : !showConfirmation ? (
+              // Màn hình chọn số tiền
+              <>
+                <h2>Nạp Tiền</h2>
+                <p>Số tiền cần nạp:</p>
+                <div className="shipperAccount-deposit-options">
+                  {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
+                    <button
+                      key={amount}
+                      className={`shipperAccount-deposit-option ${selectedAmount === amount ? 'selected' : ''}`}
+                      onClick={() => {
+                        setSelectedAmount(amount);
+                        setDepositAmount(amount);
+                      }}
+                    >
+                      {formatData.currency(amount)}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  type="number"
+                  placeholder="Nhập số tiền khác"
+                  value={depositAmount}
+                  onChange={(e) => setDepositAmount(Number(e.target.value))}
+                />
+                <div className="shipperAccount-popup-actions">
+                  <button
+                    className="shipperAccount-confirm-deposit-button"
+                    onClick={() => setShowConfirmation(true)}
+                    disabled={!depositAmount}
+                  >
+                    Xác nhận
+                  </button>
+                  <button
+                    className="shipperAccount-close-button"
+                    onClick={() => setShowDepositPopup(false)}
+                  >
+                    Đóng
+                  </button>
+                </div>
+              </>
+            ) : (
+              // Màn hình hiển thị thông tin người thụ hưởng
+              <>
+                <h2>Thông tin chuyển khoản</h2>
+                <div className="shipperAccount-beneficiary-info">
+                  <div className="beneficiary-details">
+                    <p><strong>Số tài khoản:</strong> 1018133987</p>
+                    <p><strong>Ngân hàng:</strong> Vietcombank</p>
+                    <p><strong>Chủ tài khoản:</strong> Trần Hữu Tài</p>
+                    <p><strong>Số tiền:</strong> {formatData.currency(depositAmount)}</p>
+                  </div>
+                  <div className="qr-code-container">
+                    <img src={Qrcode} alt="QR Code" />
+                  </div>
+                </div>
+                <div className="shipperAccount-popup-actions">
+                  <button
+                    className="shipperAccount-complete-payment-button"
+                    onClick={handleCompletePayment}
+                  >
+                    Tôi đã hoàn thành thanh toán
+                  </button>
+                  <button
+                    className="shipperAccount-close-button"
+                    onClick={() => setShowConfirmation(false)}
+                  >
+                    Quay lại
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      {showWithdrawPopup && (
+        <div className="shipperAccount-popup-overlay">
+          <div className="shipperAccount-popup-content">
+            {/* Nút đóng popup */}
+            <button
+              className="shipperAccount-popup-close"
+              onClick={() => setShowWithdrawPopup(false)}
+              aria-label="Đóng"
+            >
+              <FaTimes />
+            </button>
+
+            {showWithdrawSuccess ? (
+              // Thông báo rút tiền thành công
+              <div className="shipperAccount-success-message">
+                <div className="shipperAccount-success-icon">
+                  <FaCheckCircle />
+                </div>
+                <h3>Rút tiền thành công!</h3>
+                <p>Số tiền {formatData.currency(withdrawAmount)} đã được chuyển đến tài khoản của bạn</p>
+                <button
+                  className="shipperAccount-ok-button"
+                  onClick={handleWithdrawSuccessOk}
+                >
+                  OK
+                </button>
+              </div>
+            ) : !showWithdrawConfirmation ? (
+              // Màn hình chọn số tiền rút
+              <>
+                <h2>Rút Tiền</h2>
+                <p>Số tiền cần rút:</p>
+                <div className="shipperAccount-deposit-options">
+                  {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
+                    <button
+                      key={amount}
+                      className={`shipperAccount-deposit-option ${selectedWithdrawAmount === amount ? 'selected' : ''}`}
+                      onClick={() => {
+                        setSelectedWithdrawAmount(amount);
+                        setWithdrawAmount(amount);
+                      }}
+                    >
+                      {formatData.currency(amount)}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  type="number"
+                  placeholder="Nhập số tiền khác"
+                  value={withdrawAmount}
+                  onChange={(e) => setWithdrawAmount(Number(e.target.value))}
+                />
+                <div className="shipperAccount-popup-actions">
+                  <button
+                    className="shipperAccount-confirm-deposit-button"
+                    onClick={() => setShowWithdrawConfirmation(true)}
+                    disabled={!withdrawAmount || withdrawAmount <= 0 || withdrawAmount > totalWallet}
+                  >
+                    Xác nhận
+                  </button>
+                  <button
+                    className="shipperAccount-close-button"
+                    onClick={() => setShowWithdrawPopup(false)}
+                  >
+                    Đóng
+                  </button>
+                </div>
+                {withdrawAmount > totalWallet && (
+                  <p className="shipperAccount-error-message">Số dư trong ví không đủ</p>
+                )}
+              </>
+            ) : (
+              // Màn hình hiển thị thông tin người nhận
+              <>
+                <h2>Thông tin người nhận</h2>
+                <div className="shipperAccount-beneficiary-info withdraw-info">
+                  <div className="beneficiary-details">
+                    <p><strong>Số tài khoản:</strong> {shipperData.BankAccountNumber}</p>
+                    <p><strong>Ngân hàng:</strong> {shipperData.BankName}</p>
+                    <p><strong>Chủ tài khoản:</strong> {shipperData.FullName}</p>
+                    <p><strong>Số tiền cần rút:</strong> {formatData.currency(withdrawAmount)}</p>
+                  </div>
+                </div>
+                <div className="shipperAccount-popup-actions">
+                  <button
+                    className="shipperAccount-complete-payment-button"
+                    onClick={handleWithdraw}
+                  >
+                    Xác nhận
+                  </button>
+                  <button
+                    className="shipperAccount-close-button"
+                    onClick={() => setShowWithdrawConfirmation(false)}
+                  >
+                    Quay lại
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
       <Footer />

@@ -18,7 +18,10 @@ const About = () => {
   return (
     <div className="about">
       <div className="header">
-        <Header showLoginButton={true} onLoginClick={openLoginPopup} />
+        <Header
+          showLoginButton={true}
+          onLoginClick={openLoginPopup}
+        />
       </div>
       {/* About Section */}
       <section className="about-section">
@@ -108,7 +111,10 @@ const About = () => {
       )}
 
       {/* Footer */}
-      <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
+      <Footer
+        showAccountSection={true}
+        onLoginClick={openLoginPopup}
+      />
     </div>
   );
 };

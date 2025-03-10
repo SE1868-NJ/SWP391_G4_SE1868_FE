@@ -4,31 +4,27 @@ import styles from "./Header.module.css";
 import { NavigationItem } from "./NavigationItem";
 import { Logo } from "./Logo";
 import { AuthButton } from "./AuthButton";
-import { useNavigate } from 'react-router-dom';
 
 export class Header extends React.Component {
   constructor(props) {
     super(props);
     const token = localStorage.getItem('token');
     this.state = {
-      showLoginButton: !token, // Hiển thị nút login nếu không có token
-      showDropdownButton: !!token, // Hiển thị dropdown nếu có token
+      showLoginButton: !token,
+      showDropdownButton: !!token,
       isDropdownOpen: false,
       shipperName: localStorage.getItem('shipperName') || 'Shipper'
     };
   }
 
-  // Hàm để thay đổi trạng thái hiển thị nút login
   showLoginButton = (isShow) => {
     this.setState({ showLoginButton: isShow });
   }
 
-  // Hàm để thay đổi trạng thái hiển thị nút dropdown
   showDropdownButton = (isShow) => {
     this.setState({ showDropdownButton: isShow });
   }
 
-  // Toggle dropdown menu
   toggleDropdown = () => {
     this.setState(prevState => ({
       isDropdownOpen: !prevState.isDropdownOpen
@@ -90,13 +86,16 @@ export class Header extends React.Component {
                       <a href="/shipper-account" className={styles.dropdownItem}>
                         Tài khoản
                       </a>
-                      <a href="/shipper" className={styles.dropdownItem}>
+                      <a href="/shipper-dashboard" className={styles.dropdownItem}>
                         Đơn hàng
                       </a>
-                      <a href="/history-order" className={styles.dropdownItem}>
+                      <a href="/dashboard/my-orders" className={styles.dropdownItem}>
+                        Đơn đang giao
+                      </a>
+                      <a href="/dashboard/history" className={styles.dropdownItem}>
                         Lịch sử đơn hàng
                       </a>
-                      <a href="/revenue" className={styles.dropdownItem}>
+                      <a href="/dashboard/revenue" className={styles.dropdownItem}>
                         Doanh thu
                       </a>
                       <button 
@@ -116,5 +115,4 @@ export class Header extends React.Component {
     );
   }
 }
-
 export default Header;

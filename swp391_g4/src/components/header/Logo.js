@@ -1,15 +1,15 @@
-// components/Header/Logo.js
 import React from "react";
 import styles from "./Header.module.css";
+import ecoShipperLogo from "../../images/EcoShipper_rbg.png";
+
 
 export const Logo = () => {
   return (
     <img
       loading="lazy"
-      src="/EcoShipper_rbg.png"
+      src={ecoShipperLogo}
       className={styles.img}
       alt="EcoShipper Logo"
     />
   );
 };
-

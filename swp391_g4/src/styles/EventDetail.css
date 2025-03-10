@@ -1,8 +1,95 @@
+/* EventDetail.css */
+
+.event-detail {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 130px;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  font-weight: bold;
+}
+
+.event-image {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.related-articles {
+  display: flex;
+  overflow-x: scroll;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.related-article-item {
+  width: 300px;
+  text-align: center;
+  flex-shrink: 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.related-article-item:hover {
+  transform: scale(1.05);
+}
+
+.related-article-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.related-article-item h3 {
+  font-size: 1.1em;
+  font-weight: normal;
+  color: #333;
+  margin-top: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.back-button {
+  display: none; /* Ẩn nút quay lại */
+}
+
+
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000; /* Đảm bảo header luôn ở trên các phần tử khác */
-    width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Đảm bảo header luôn ở trên các phần tử khác */
+  width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
+}
