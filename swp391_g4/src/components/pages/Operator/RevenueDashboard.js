@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import axios from 'axios';
 import '../../../styles/RevenueDashboard.css';
-
+import { exportToExcel, exportMultipleSheets, formatDataForExport } from '../Operator/ExportExcel';
 // Utility function
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('vi-VN', { 
@@ -106,7 +106,20 @@ function AlertsContainer({ alerts }) {
 // Overview Panel Component
 function OverviewPanel({ data, revenueByDay }) {
   const handleExport = () => {
-    alert('Đang xuất báo cáo tổng quan doanh thu...');
+    try {
+      // Format the data for export
+      const formattedData = formatDataForExport.overview(data, revenueByDay);
+      
+      // Export multiple sheets in one workbook
+      exportMultipleSheets({
+        'Tổng quan': formattedData.summaryData,
+        'Doanh thu theo ngày': formattedData.revenueData
+      }, 'Tổng_quan_doanh_thu');
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Có lỗi khi xuất báo cáo. Vui lòng thử lại sau.');
+    }
   };
 
   return (
@@ -180,6 +193,7 @@ function OrdersPanel({ filters }) {
   const [ordersData, setOrdersData] = useState([]);
   const [totalOrders, setTotalOrders] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
   const [error, setError] = useState(null);
   const itemsPerPage = 10;
   
@@ -226,8 +240,77 @@ function OrdersPanel({ filters }) {
     fetchOrders();
   }, [currentPage, filters, itemsPerPage]);
   
-  const handleExport = () => {
-    alert('Đang xuất danh sách đơn hàng...');
+  const handleExport = async () => {
+    try {
+      setExportLoading(true);
+      
+      // Fetch all orders for export (without pagination limits)
+      const response = await axios.get('http://localhost:5000/api/orders', { 
+        params: { 
+          ...filters,
+          limit: 1000 // Large enough to get all orders that match the filters
+        } 
+      });
+      
+      let ordersToExport = [];
+      
+      if (response.data && response.data.orders) {
+        ordersToExport = response.data.orders;
+      } else if (Array.isArray(response.data)) {
+        ordersToExport = response.data;
+      }
+      
+      // Format the data for Excel export
+      const statusText = {
+        'success': 'Đã giao',
+        'pending': 'Đang giao',
+        'error': 'Lỗi giao'
+      };
+      
+      const serviceText = {
+        'Standard': 'Tiêu chuẩn',
+        'Express': 'Nhanh',
+        'Scheduled': 'Hẹn giờ'
+      };
+      
+      const regionText = {
+        'mid_zone': 'Quanh trung tâm',
+        'central': 'Trung tâm',
+        'outer_zone': 'Rìa trung tâm'
+      };
+      
+      const formattedData = ordersToExport.map(order => ({
+        'Mã đơn hàng': order.id,
+        'Ngày giao': order.date,
+        'Loại dịch vụ': serviceText[order.type] || order.type,
+        'Khu vực': regionText[order.region] || order.region,
+        'Trạng thái': statusText[order.status] || order.status,
+        'Doanh thu': order.revenue
+      }));
+      
+      // Export to Excel
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+      
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Đơn hàng');
+      
+      // Generate Excel file
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      
+      // Create a date string for the filename
+      const dateStr = new Date().toLocaleDateString('vi-VN').replace(/\//g, '-');
+      
+      // Save file
+      saveAs(blob, `Danh_sách_đơn_hàng_${dateStr}.xlsx`);
+      
+    } catch (error) {
+      console.error('Error exporting orders:', error);
+      alert('Không thể xuất dữ liệu đơn hàng. Vui lòng thử lại sau.');
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   // Status mappings
@@ -317,6 +400,7 @@ function OrdersPanel({ filters }) {
         <div className="RevenueDashboard-panel-title">Chi tiết doanh thu theo đơn hàng</div>
         <div className="RevenueDashboard-panel-actions">
           <button onClick={handleExport}>Xuất danh sách</button>
+          {exportLoading ? 'Đang xuất...' : 'Xuất danh sách'}
         </div>
       </div>
       
@@ -406,7 +490,17 @@ function OrdersPanel({ filters }) {
 // Region Revenue Panel Component
 function RegionRevenuePanel({ revenueByRegion }) {
   const handleExport = () => {
-    alert('Đang xuất báo cáo doanh thu theo khu vực...');
+    try {
+      // Format the data for export
+      const formattedData = formatDataForExport.region(revenueByRegion);
+      
+      // Export to Excel
+      exportToExcel(formattedData, 'Doanh_thu_theo_khu_vực', 'Khu vực');
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Có lỗi khi xuất báo cáo. Vui lòng thử lại sau.');
+    }
   };
 
   // Đảm bảo revenueByRegion tồn tại và có đúng format
@@ -456,7 +550,17 @@ function RegionRevenuePanel({ revenueByRegion }) {
 // Service Revenue Panel Component
 function ServiceRevenuePanel({ revenueByService }) {
   const handleExport = () => {
-    alert('Đang xuất báo cáo doanh thu theo dịch vụ...');
+    try {
+      // Format the data for export
+      const formattedData = formatDataForExport.service(revenueByService);
+      
+      // Export to Excel
+      exportToExcel(formattedData, 'Doanh_thu_theo_dịch_vụ', 'Dịch vụ');
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Có lỗi khi xuất báo cáo. Vui lòng thử lại sau.');
+    }
   };
 
 // Normalize the data to handle case-insensitivity
@@ -534,7 +638,17 @@ console.log('Formatted chart data:', data);
 // Payments Panel Component
 function PaymentsPanel({ payments }) {
   const handleExport = () => {
-    alert('Đang xuất báo cáo lịch sử thanh toán...');
+    try {
+      // Format the data for export
+      const formattedData = formatDataForExport.payments(payments);
+      
+      // Export to Excel
+      exportToExcel(formattedData, 'Lịch_sử_thanh_toán', 'Thanh toán');
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Có lỗi khi xuất báo cáo. Vui lòng thử lại sau.');
+    }
   };
 
   return (
@@ -577,10 +691,26 @@ function PaymentsPanel({ payments }) {
 
 // Fees Panel Component
 function FeesPanel({ fees }) {
+  const handleExport = () => {
+    try {
+      // Format the data for export
+      const formattedData = formatDataForExport.fees(fees);
+      
+      // Export to Excel
+      exportToExcel(formattedData, 'Danh_sách_phí', 'Phí dịch vụ');
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Có lỗi khi xuất báo cáo. Vui lòng thử lại sau.');
+    }
+  };
   return (
     <div className="revenue-dashboard-panel">
       <div className="RevenueDashboard-panel-header">
         <div className="RevenueDashboard-panel-title">Tổng kết các khoản phí</div>
+        <div className="RevenueDashboard-panel-actions">
+          <button onClick={handleExport}>Xuất báo cáo</button>
+        </div>
       </div>
       <div className="RevenueDashboard-table-responsive">
         <table>

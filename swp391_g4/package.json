@@ -23,6 +23,7 @@
     "cra-template": "1.2.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
@@ -43,7 +44,8 @@
     "recharts": "^2.15.1",
     "sweetalert2": "^11.17.2",
     "tailwind-merge": "^3.0.1",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
