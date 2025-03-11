@@ -30,9 +30,7 @@ import ShipperRegister from "./components/pages/Login/ShipperRegister";
 import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
-<<<<<<< HEAD
 import IncidentManagement from "./components/pages/Operator/IncidentManagement";
-=======
 
 //Trang Shipper Account
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
@@ -48,7 +46,6 @@ import ReportIssue from "./components/pages/ReportIssue";
 import AdminReportHandling from "./components/pages/AdminReportHandling";
 import CustomerReportTracking from "./components/pages/CustomerReportTracking";
 
->>>>>>> dev
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/login" />;
