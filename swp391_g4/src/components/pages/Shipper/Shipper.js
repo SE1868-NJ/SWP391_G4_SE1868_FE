@@ -168,7 +168,6 @@ const Shipper = () => {
           </div>
         }
       </main>
-      <Footer/>
     </div>
   );
 };
