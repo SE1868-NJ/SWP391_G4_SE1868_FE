@@ -72,7 +72,7 @@ const Login = ({ isPopup = false, onClose }) => {
         }
         
         // Chuyển hướng đến trang shipper
-        navigate("/shipper");
+        navigate("/dashboard");
       } else {
         setError(response.data.message || "Đăng nhập thất bại");
       }
