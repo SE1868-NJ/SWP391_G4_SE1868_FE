@@ -21,10 +21,8 @@ const Login = ({ isPopup = false, onClose }) => {
       try {
         const decodedToken = jwtDecode(token);
         
-        // Kiểm tra token còn hạn không
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
-          // Token còn hạn, chuyển thẳng sang trang shipper
           navigate("/shipper");
         }
       } catch (decodeError) {
@@ -71,8 +69,7 @@ const Login = ({ isPopup = false, onClose }) => {
           onClose();
         }
         
-        // Chuyển hướng đến trang shipper
-        navigate("/shipper");
+        navigate("/dashboard");
       } else {
         setError(response.data.message || "Đăng nhập thất bại");
       }
