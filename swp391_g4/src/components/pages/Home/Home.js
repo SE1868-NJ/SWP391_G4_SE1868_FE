@@ -4,7 +4,9 @@ import Footer from "../../footer/Footer";
 import Header from "../../header/Header";
 import Login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
-import ChatPopup from "./ChatPopup";
+
+import ChatPopup from "../Home/ChatPopup";
+
 
 const Home = () => {
   // Navigation Items
