@@ -3,8 +3,11 @@ import axios from "axios";
 import "../../../styles/ManageShipper.css";
 import moment from "moment";
 import BackButton from "../../buttons/BackButton";
+import { useNavigate } from "react-router-dom";
+
 
 const ManageShipper = () => {
+  const navigate = useNavigate();
   const [pendingRegisterShippers, setPendingRegisterShippers] = useState([]);
   const [updatingShippers, setUpdatingShippers] = useState([]);
   const [cancelingShippers, setCancelingShippers] = useState([]);
@@ -15,7 +18,8 @@ const ManageShipper = () => {
   const [cancelReason, setCancelReason] = useState("");
   const [cancelTime, setCancelTime] = useState("Forever");
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
-  const [shipperUpdateDetails, setShipperUpdateDetails] = useState(null); // Thông tin chi tiết của shipper đang update
+  const [shipperUpdateDetails, setShipperUpdateDetails] = useState(null);
+
 
   useEffect(() => {
     fetchShippers();
@@ -190,6 +194,14 @@ const ManageShipper = () => {
     }
     return {};
   };
+
+  const handleRevenueDashboard = () => {
+    navigate('/revenue-dashboard');
+  };
+
+  const handleReportHandling = () => {
+    navigate('/admin-report-handling');
+  };
   return (
     <div className="manage-shipper-container">
       <h2>Quản lý Shipper</h2>
@@ -235,12 +247,24 @@ const ManageShipper = () => {
           ))}
         </tbody>
       </table>
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <div style={{ textAlign: "center", marginTop: "20px", display: "flex", justifyContent: "center", gap: "12px" }}>
         <button
           className="manage-shipper-detail-button"
           onClick={handleShipperDetail}
         >
           Duyệt chi tiết
+        </button>
+        <button
+          className="manage-shipper-detail-button"
+          onClick={handleRevenueDashboard}
+        >
+          Doanh thu
+        </button>
+        <button
+          className="manage-shipper-detail-button"
+          onClick={handleReportHandling}
+        >
+          Sự cố
         </button>
       </div>
 

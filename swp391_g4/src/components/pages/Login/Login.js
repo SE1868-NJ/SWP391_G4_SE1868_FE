@@ -25,7 +25,7 @@ const Login = ({ isPopup = false, onClose }) => {
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
           // Token còn hạn, chuyển thẳng sang trang shipper
-          navigate("/shipper");
+          navigate("/dashboard");
         }
       } catch (decodeError) {
         // Nếu token không hợp lệ, xóa token

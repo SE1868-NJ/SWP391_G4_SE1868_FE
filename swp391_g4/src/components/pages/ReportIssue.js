@@ -17,19 +17,12 @@ const ReportIssue = () => {
     description: "",
   });
 
-  // Lấy shipperId từ API khi component mount
+  // Lấy shipperId từ localStorage khi component mount
   useEffect(() => {
-    const fetchShipperId = async () => {
-      try {
-        const response = await axios.get("/api/getShipperId", { withCredentials: true });
-        if (response.data.success) {
-          setShipperId(response.data.shipperId);
-        }
-      } catch (error) {
-        console.error("Lỗi lấy shipperId:", error);
-      }
-    };
-    fetchShipperId();
+    const storedShipperId = localStorage.getItem('shipperId');
+    if (storedShipperId) {
+      setShipperId(storedShipperId);
+    }
   }, []);
 
   useEffect(() => {

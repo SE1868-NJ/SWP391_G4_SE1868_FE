@@ -4,7 +4,7 @@ import Header from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/JobDetail.css";
 import Login from "../Login/Login";
-
+import ChatPopup from "../Home/ChatPopup";
 const JobDetail = () => {
   const { jobId } = useParams();
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
@@ -350,6 +350,7 @@ const JobDetail = () => {
           </div>
         </div>
       )}
+      <ChatPopup />
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );

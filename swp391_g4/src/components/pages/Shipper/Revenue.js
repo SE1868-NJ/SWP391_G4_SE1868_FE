@@ -56,18 +56,18 @@ const Revenue = () => {
       setStatusCounts(newStatusCounts);
 
       const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
+        "Tháng 1",
+        "Tháng 2",
+        "Tháng 3",
+        "Tháng 4",
+        "Tháng 5",
+        "Tháng 6",
+        "Tháng 7",
+        "Tháng 8",
+        "Tháng 9",
+        "Tháng 10",
+        "Tháng 11",
+        "Tháng 12",
       ];
       const shippingFeeByMonth = orders.reduce((acc, order) => {
         if (order.ActualDeliveryTime) {
@@ -126,7 +126,11 @@ const Revenue = () => {
       pieChartInstance.current = new Chart(pieChartRef.current, {
         type: "pie",
         data: {
-          labels: Object.keys(statusCounts),
+          labels: Object.keys(statusCounts).map(status => 
+            status === 'Delivered' ? 'Đã Giao' : 
+            status === 'Cancelled' ? 'Đã Hủy' : 
+            status === 'InProgress' ? 'Đang Tiến Hành' : status
+          ),
           datasets: [
             {
               data: Object.values(statusCounts),
@@ -144,7 +148,7 @@ const Revenue = () => {
           labels,
           datasets: [
             {
-              label: "Shipping Fee (VND)",
+              label: "Phí Vận Chuyển (VND)",
               data,
               backgroundColor: "#0b8ced",
             },
@@ -174,7 +178,7 @@ const Revenue = () => {
 
   return (
     <div>
-      <h1 className="text-center mt-3">Revenue</h1>
+      <h1 className="text-center mt-3">Doanh Thu</h1>
       <div className="container d-block">
         <div
           className="shadow-sm rounded-3 p-4 mb-4 d-flex"
@@ -183,13 +187,13 @@ const Revenue = () => {
         >
           <div className="w-50 text-center">
             <span className="fs-1 font-bold">{orders.length}</span>
-            <h5>Orders</h5>
+            <h5>Đơn Hàng</h5>
           </div>
           <div className="w-50 text-center">
             <span className="fs-1 font-bold">
               {formatCurrency(totalRevenue)}
             </span>
-            <h5>Total Revenue</h5>
+            <h5>Tổng Doanh Thu</h5>
           </div>
         </div>
         <div className="d-flex w-100">
@@ -198,7 +202,7 @@ const Revenue = () => {
             style={{ backgroundColor: "#cdf4e1" }}
           >
             <div className="p-4">
-              <h2 className="text-xl font-bold mb-4">Shipping Fee by Month</h2>
+              <h2 className="text-xl font-bold mb-4">Phí Vận Chuyển Theo Tháng</h2>
               <div style={{ height: "300px" }}>
                 <canvas ref={barChartRef}></canvas>
               </div>
@@ -210,7 +214,7 @@ const Revenue = () => {
             style={{ backgroundColor: "#cdf4e1" }}
           >
             <div className="p-4">
-              <h2 className="text-xl font-bold mb-4">Order Overview</h2>
+              <h2 className="text-xl font-bold mb-4">Tổng Quan Đơn Hàng</h2>
               <div style={{ height: "300px" }}>
                 <canvas ref={pieChartRef}></canvas>
               </div>
