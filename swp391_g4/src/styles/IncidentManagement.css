@@ -1,0 +1,391 @@
+/* IncidentManagement.css */
+:root {
+    --primary-color: #4a6cf7;
+    --success-color: #219653;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --gray-light: #f9fafb;
+    --gray: #e5e7eb;
+    --gray-dark: #9ca3af;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --white: #ffffff;
+    --border-radius: 6px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+  
+  body {
+    background-color: #f5f7fb;
+    color: var(--text-dark);
+  }
+  
+  .incident_management {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Header */
+  .incident_management_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .incident_management_header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+  
+  .incident_management_user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .incident_management_avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+  }
+  
+  /* Tabs */
+  .incident_management_tabs {
+    display: flex;
+    border-bottom: 1px solid var(--gray);
+    margin-bottom: 24px;
+  }
+  
+  .incident_management_tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-light);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  
+  .incident_management_tab.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+  }
+  
+  .incident_management_tab:hover:not(.active) {
+    color: var(--text-dark);
+    background-color: var(--gray-light);
+  }
+  
+  /* Filters */
+  .incident_management_filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .incident_management_search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--white);
+    border: 1px solid var(--gray);
+    border-radius: var(--border-radius);
+    padding: 0 12px;
+    width: 300px;
+  }
+  
+  .incident_management_search-bar input {
+    border: none;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+  }
+  
+  .incident_management_status-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .incident_management_status-filters button {
+    padding: 8px 12px;
+    background-color: var(--white);
+    border: 1px solid var(--gray);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .incident_management_status-filters button.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+  }
+  
+  /* Summary Cards */
+  .incident_management_summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .incident_management_summary-card {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .incident_management_summary-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+  }
+  
+  .incident_management_summary-icon.total {
+    background-color: var(--primary-color);
+  }
+  
+  .incident_management_summary-icon.pending {
+    background-color: var(--warning-color);
+  }
+  
+  .incident_management_summary-icon.resolved {
+    background-color: var(--success-color);
+  }
+  
+  .incident_management_summary-icon.shippers {
+    background-color: #8884d8;
+  }
+  
+  .incident_management_summary-content h3 {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+  
+  .incident_management_summary-content p {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  /* Table */
+  .incident_management_table-container {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+  
+  .incident_management_table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .incident_management_table th {
+    background-color: var(--gray-light);
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 500;
+    color: var(--text-light);
+  }
+  
+  .incident_management_table td {
+    padding: 12px 16px;
+    border-top: 1px solid var(--gray);
+  }
+  
+  .incident_management_status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .incident_management_status-badge.chưa-xử-lý {
+    background-color: #fee2e2;
+    color: var(--danger-color);
+  }
+  
+  .incident_management_status-badge.đang-xử-lý {
+    background-color: #fef3c7;
+    color: var(--warning-color);
+  }
+  
+  .incident_management_status-badge.đã-xử-lý {
+    background-color: #d1fae5;
+    color: var(--success-color);
+  }
+  
+  .incident_management_action-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+  
+  .incident_management_action-btn:hover {
+    opacity: 0.9;
+  }
+  
+  /* Pagination */
+  .incident_management_pagination {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin: 24px 0;
+  }
+  
+  .incident_management_pagination button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--gray);
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .incident_management_pagination button.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+  }
+  
+  /* Stats Container */
+  .incident_management_stats-container {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+  }
+  
+  .incident_management_stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .incident_management_export-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .incident_management_export-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: var(--gray-light);
+    border: 1px solid var(--gray);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .incident_management_export-btn:hover {
+    background-color: var(--gray);
+  }
+  
+  /* Stats Summary */
+  .incident_management_stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .incident_management_stats-card {
+    background-color: var(--gray-light);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .incident_management_stats-card h3 {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 8px;
+  }
+  
+  .incident_management_stats-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+  
+  /* Charts */
+  .incident_management_charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+  }
+  
+  .incident_management_chart-wrapper {
+    background-color: var(--gray-light);
+    border-radius: var(--border-radius);
+    padding: 16px;
+  }
+  
+  .incident_management_chart-wrapper h3 {
+    margin-bottom: 16px;
+    font-size: 1rem;
+    color: var(--text-dark);
+  }
+  
+  .incident_management_chart-inner {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    padding: 16px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .incident_management_filters {
+      flex-direction: column;
+    }
+    
+    .incident_management_search-bar {
+      width: 100%;
+    }
+    
+    .incident_management_status-filters {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    
+    .incident_management_charts-container {
+      grid-template-columns: 1fr;
+    }
+  }

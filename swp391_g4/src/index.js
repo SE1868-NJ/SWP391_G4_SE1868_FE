@@ -22,6 +22,7 @@ import TermsOfUse from "./components/pages/Home/TermOfUse";
 import JobDetail from "./components/pages/Home/JobDetail";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
+import IncidentManagement from "./components/pages/Operator/IncidentManagement";
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <navigate to="/login" />;
@@ -68,6 +69,7 @@ root.render(
       <Route path="/job/:jobId" element={<JobDetail />} />
       <Route path='/shipper-detail' element={<ShipperDetail />} />
       <Route path='/revenue-dashboard' element={<RevenueDashboard />} />
+      <Route path='/incident-management' element={<IncidentManagement />} />
     </Routes>
   </Router>
 );

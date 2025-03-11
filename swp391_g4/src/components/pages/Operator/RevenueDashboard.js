@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, BarChart, Bar, Legend
+  PieChart, Pie, Cell, BarChart, Bar, Legend,Area,AreaChart
 } from 'recharts';
 import axios from 'axios';
 import '../../../styles/RevenueDashboard.css';
@@ -136,80 +136,95 @@ function OverviewPanel({ data, revenueByDay }) {
         </div>
       </div>
       <div className="RevenueDashboard-chart-container">
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            data={revenueByDay}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis 
-              tickFormatter={(value) => formatCurrency(value).replace('₫', '') + ' ₫'}
-            />
-            <Tooltip formatter={(value) => formatCurrency(value)} />
-            <Line 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="#3498db" 
-              activeDot={{ r: 8 }} 
-              name="Doanh thu (VND)" 
-              strokeWidth={2}
-              fill="rgba(52, 152, 219, 0.1)"
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart
+          data={revenueByDay}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis 
+            tickFormatter={(value) => formatCurrency(value).replace('₫', '') + ' ₫'}
+          />
+          <Tooltip formatter={(value) => formatCurrency(value)} />
+          <defs>
+            <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#3498db" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#3498db" stopOpacity={0.1}/>
+            </linearGradient>
+          </defs>
+          <Area
+            type="monotone"
+            dataKey="revenue"
+            stroke="#3498db"
+            strokeWidth={2}
+            fill="url(#colorRevenue)"
+            fillOpacity={1}
+            name="Doanh thu (VND)"
+            activeDot={{ r: 8 }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
       </div>
     </div>
   );
 }
 
-// Orders Panel Component
-function OrdersPanel({ orders }) {
+function OrdersPanel({ filters }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [ordersData, setOrdersData] = useState(orders || []);
-  const [totalOrders, setTotalOrders] = useState(orders ? orders.length : 0);
+  const [ordersData, setOrdersData] = useState([]);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const itemsPerPage = 10;
   
   useEffect(() => {
-    // Cập nhật dữ liệu khi props orders thay đổi
-    if (orders) {
-      setOrdersData(orders);
-      setTotalOrders(orders.length);
-    }
-  }, [orders]);
-
-  // Gọi API mới khi thay đổi trang
-  useEffect(() => {
-    const fetchPageData = async () => {
+    // Function to fetch orders for the current page
+    const fetchOrders = async () => {
       try {
-        // Nếu bạn muốn gọi API mới khi thay đổi trang, bỏ comment đoạn code dưới đây
-        /*
+        setLoading(true);
+        
+        // Đảm bảo gửi thông tin phân trang đến API
         const response = await axios.get('http://localhost:5000/api/orders', { 
           params: { 
-            ...filters, 
-            page: currentPage, 
-            limit: itemsPerPage 
+            ...filters,
+            page: currentPage,
+            limit: itemsPerPage
           } 
         });
-        setOrdersData(response.data);
-        */
         
-        // Hoặc xử lý phân trang ở client nếu đã có tất cả dữ liệu
-        const indexOfLastItem = currentPage * itemsPerPage;
-        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-        setOrdersData(orders.slice(indexOfFirstItem, indexOfLastItem));
+        console.log('Orders API response:', response.data);
+        
+        // API trả về đúng format { orders: [...], totalCount: ... }
+        if (response.data && response.data.orders) {
+          setOrdersData(response.data.orders);
+          setTotalOrders(response.data.totalCount);
+        } else if (Array.isArray(response.data)) {
+          // Trường hợp dự phòng nếu API trả về mảng trực tiếp
+          setOrdersData(response.data);
+          setTotalOrders(response.data.length);
+        } else {
+          setOrdersData([]);
+          setTotalOrders(0);
+        }
+        
+        setError(null);
       } catch (error) {
-        console.error('Error fetching page data:', error);
+        console.error('Error loading order data:', error);
+        setError('Không thể tải dữ liệu đơn hàng. Vui lòng thử lại sau.');
+        setOrdersData([]);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchPageData();
-  }, [currentPage]);
+    fetchOrders();
+  }, [currentPage, filters, itemsPerPage]);
   
   const handleExport = () => {
     alert('Đang xuất danh sách đơn hàng...');
@@ -243,10 +258,58 @@ function OrdersPanel({ orders }) {
   // Pagination calculation
   const totalPages = Math.ceil(totalOrders / itemsPerPage);
   
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+  // Display max 5 pagination buttons
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    
+    if (totalPages <= 5) {
+      // If total pages <= 5, show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // If total pages > 5, show current page and surrounding pages
+      if (currentPage <= 3) {
+        // If near beginning
+        for (let i = 1; i <= 5; i++) {
+          pageNumbers.push(i);
+        }
+      } else if (currentPage >= totalPages - 2) {
+        // If near end
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        // In middle
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+          pageNumbers.push(i);
+        }
+      }
+    }
+    
+    return pageNumbers;
+  };
+  
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Scroll to top of table when changing pages
+    const tableElement = document.querySelector('.RevenueDashboard-table-responsive');
+    if (tableElement) {
+      tableElement.scrollTop = 0;
+    }
+  };
+  
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="RevenueDashboard-panel">
@@ -256,60 +319,90 @@ function OrdersPanel({ orders }) {
           <button onClick={handleExport}>Xuất danh sách</button>
         </div>
       </div>
-      <div className="RevenueDashboard-table-responsive">
-        <table>
-          <thead>
-            <tr>
-              <th>Mã đơn hàng</th>
-              <th>Ngày giao</th>
-              <th>Loại dịch vụ</th>
-              <th>Khu vực</th>
-              <th>Trạng thái</th>
-              <th>Doanh thu</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ordersData && ordersData.length > 0 ? ordersData.map((order) => (
-              <tr key={order.id}>
-                <td>{order.id}</td>
-                <td>{order.date}</td>
-                <td>{serviceText[order.type] || order.type}</td>
-                <td>{regionText[order.region] || order.region}</td>
-                <td>
-                  <span className={`status ${statusClasses[order.status] || ''}`}>
-                    {statusText[order.status] || order.status}
-                  </span>
-                </td>
-                <td>{formatCurrency(order.revenue)}</td>
-              </tr>
-            )) : (
-              <tr>
-                <td colSpan="6" className="text-center">Không có dữ liệu</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <div className="RevenueDashboard-paginator">
-        <div className="RevenueDashboard-paginator-info">
-          Hiển thị {totalOrders === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, totalOrders)} trong số {totalOrders} đơn hàng
-        </div>
-        <div className="RevenueDashboard-paginator-controls">
-          {pageNumbers.map(number => (
-            <button 
-              key={number}
-              className={currentPage === number ? 'active' : ''}
-              onClick={() => setCurrentPage(number)}
-            >
-              {number}
-            </button>
-          ))}
-        </div>
-      </div>
+      
+      {loading ? (
+        <div className="text-center p-4">Đang tải dữ liệu...</div>
+      ) : error ? (
+        <div className="text-center p-4 text-red-500">{error}</div>
+      ) : (
+        <>
+          <div className="RevenueDashboard-table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mã đơn hàng</th>
+                  <th>Ngày giao</th>
+                  <th>Loại dịch vụ</th>
+                  <th>Khu vực</th>
+                  <th>Trạng thái</th>
+                  <th>Doanh thu</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ordersData && ordersData.length > 0 ? ordersData.map((order) => (
+                  <tr key={order.id}>
+                    <td>{order.id}</td>
+                    <td>{order.date}</td>
+                    <td>{serviceText[order.type] || order.type}</td>
+                    <td>{regionText[order.region] || order.region}</td>
+                    <td>
+                      <span className={`status ${statusClasses[order.status] || ''}`}>
+                        {statusText[order.status] || order.status}
+                      </span>
+                    </td>
+                    <td>{formatCurrency(order.revenue)}</td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan="6" className="text-center">Không có dữ liệu</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          
+          {totalOrders > 0 && (
+            <div className="RevenueDashboard-paginator">
+              <div className="RevenueDashboard-paginator-info">
+                Hiển thị {totalOrders === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}-{Math.min(currentPage * itemsPerPage, totalOrders)} trong số {totalOrders} đơn hàng
+              </div>
+              <div className="RevenueDashboard-paginator-controls">
+                {/* Previous Page Button */}
+                <button 
+                  onClick={handlePrevPage} 
+                  disabled={currentPage === 1}
+                  className={currentPage === 1 ? 'disabled' : ''}
+                >
+                  &laquo;
+                </button>
+                
+                {/* Page Numbers */}
+                {getPageNumbers().map(number => (
+                  <button 
+                    key={number}
+                    className={currentPage === number ? 'active' : ''}
+                    onClick={() => handlePageChange(number)}
+                  >
+                    {number}
+                  </button>
+                ))}
+                
+                {/* Next Page Button */}
+                <button 
+                  onClick={handleNextPage} 
+                  disabled={currentPage === totalPages}
+                  className={currentPage === totalPages ? 'disabled' : ''}
+                >
+                  &raquo;
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
-
 // Region Revenue Panel Component
 function RegionRevenuePanel({ revenueByRegion }) {
   const handleExport = () => {
@@ -366,14 +459,39 @@ function ServiceRevenuePanel({ revenueByService }) {
     alert('Đang xuất báo cáo doanh thu theo dịch vụ...');
   };
 
-  // Đảm bảo revenueByService tồn tại và có đúng format
-  const safeRevenueByService = revenueByService || { standard: 0, express: 0, scheduled: 0 };
+// Normalize the data to handle case-insensitivity
+const normalizeRevenueData = (data) => {
+  // Create a default structure with all zeroes
+  const normalized = { standard: 0, express: 0, scheduled: 0 };
   
-  const data = [
-    { name: 'Giao hàng tiêu chuẩn', value: Number(safeRevenueByService.standard) || 0 },
-    { name: 'Giao hàng nhanh', value: Number(safeRevenueByService.express) || 0 },
-    { name: 'Giao hàng hẹn giờ', value: Number(safeRevenueByService.scheduled) || 0 }
-  ];
+  // If no data is provided, return the defaults
+  if (!data) return normalized;
+  
+  // Go through all keys in the data object and normalize them
+  Object.keys(data).forEach(key => {
+    const lowerKey = key.toLowerCase();
+    // Only process keys that match our expected service types (case insensitive)
+    if (['standard', 'express', 'scheduled'].includes(lowerKey)) {
+      // Convert string values to numbers and add to the appropriate key
+      normalized[lowerKey] += Number(data[key]) || 0;
+    }
+  });
+  
+  return normalized;
+};
+
+// Normalize the data
+const normalizedData = normalizeRevenueData(revenueByService);
+
+const data = [
+  { name: 'Giao hàng tiêu chuẩn', value: normalizedData.standard },
+  { name: 'Giao hàng nhanh', value: normalizedData.express },
+  { name: 'Giao hàng hẹn giờ', value: normalizedData.scheduled }
+];
+
+// Log the normalized data for debugging
+console.log('Normalized service revenue data:', normalizedData);
+console.log('Formatted chart data:', data);
 
   const COLORS = ['rgba(52, 152, 219, 0.7)', 'rgba(46, 204, 113, 0.7)', 'rgba(155, 89, 182, 0.7)'];
 
@@ -506,7 +624,6 @@ function App() {
     revenueByDay: [],
     revenueByRegion: { central: 0, mid_zone: 0, outer_zone: 0 },
     revenueByService: { standard: 0, express: 0, scheduled: 0 },
-    orders: [],
     payments: [],
     fees: [],
     alerts: []
@@ -531,7 +648,6 @@ function App() {
           revenueByDayRes,
           revenueByRegionRes,
           revenueByServiceRes,
-          ordersRes,
           paymentsRes,
           feesRes,
           alertsRes
@@ -540,7 +656,6 @@ function App() {
           axios.get('http://localhost:5000/api/revenue-by-day', { params: filters }),
           axios.get('http://localhost:5000/api/revenue-by-region', { params: filters }),
           axios.get('http://localhost:5000/api/revenue-by-service', { params: filters }),
-          axios.get('http://localhost:5000/api/orders', { params: { ...filters, page: 1, limit: 10 } }),
           axios.get('http://localhost:5000/api/payments', { params: { page: 1, limit: 10 } }),
           axios.get('http://localhost:5000/api/fees'),
           axios.get('http://localhost:5000/api/alerts')
@@ -551,7 +666,7 @@ function App() {
         const revenueByDay = revenueByDayRes.data || [];
         const revenueByRegion = revenueByRegionRes.data || { central: 0, mid_zone: 0, outer_zone: 0 };
         const revenueByService = revenueByServiceRes.data || { standard: 0, express: 0, scheduled: 0 };
-        const orders = ordersRes.data || [];
+
         const payments = paymentsRes.data || [];
         const fees = feesRes.data || [];
         const alerts = alertsRes.data || [];
@@ -572,7 +687,6 @@ function App() {
           revenueByDay,
           revenueByRegion,
           revenueByService,
-          orders,
           payments,
           fees,
           alerts
@@ -626,7 +740,7 @@ function App() {
         <AlertsContainer alerts={data.alerts} />
       )}
       <OverviewPanel data={data.totals} revenueByDay={data.revenueByDay} />
-      <OrdersPanel orders={data.orders} />
+      <OrdersPanel filters={filters} /> 
       <RegionRevenuePanel revenueByRegion={data.revenueByRegion} />
       <ServiceRevenuePanel revenueByService={data.revenueByService} />
       <PaymentsPanel payments={data.payments} />
