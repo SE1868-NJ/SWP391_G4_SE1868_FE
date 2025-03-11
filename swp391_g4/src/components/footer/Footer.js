@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import styles from "./Footer.module.css";
+import footerBackgroundImage from "../../images/FrameFooter.png";
+import ecoShipperLogo from "../../images/EcoShipper_rbg.png";
 
 export class Footer extends React.Component {
   constructor(props) {
@@ -28,12 +30,12 @@ export class Footer extends React.Component {
       <footer className={styles.footer}>
         <div
           className={styles.background}
-          style={{ backgroundImage: "url('/FrameFooter.png')" }}
+          style={{ backgroundImage: `url(${footerBackgroundImage})` }}
         >
           <div className={styles.logoContainer}>
             <img
               loading="lazy"
-              src="/EcoShipper_rbg.png"
+              src={ecoShipperLogo}
               className={styles.logo}
               alt="Company logo"
             />
@@ -55,9 +57,6 @@ export class Footer extends React.Component {
                         </a>
                         <a href="/terms-of-use" className={styles.subLink}>
                           Chính sách sử dụng
-                        </a>
-                        <a href="#" className={styles.subLink}>
-                          Hỏi đáp
                         </a>
                       </nav>
                     </div>
@@ -87,13 +86,13 @@ export class Footer extends React.Component {
                       <nav className={styles.linkList}>
                         <h3 className={styles.linkHeader}>Tin tức</h3>
                         <a href="/news" className={styles.link}>
-                          Sự kiện
+                          Sự kiện và tin tức
                         </a>
-                        <a href="#" className={styles.subLink}>
+                        <a href="/news" className={styles.subLink}>
                           Hoạt động xã hội
                         </a>
-                        <a href="#" className={styles.subLink}>
-                          Dành cho Nhà bán
+                        <a href="/manage-shipper" className={styles.subLink}>
+                          Admin
                         </a>
                       </nav>
                     </div>

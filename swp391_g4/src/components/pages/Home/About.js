@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../../styles/About.css";
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
-import { useState } from "react";
 import Login from "../Login/Login";
 
 const About = () => {
-
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
   const openLoginPopup = () => {

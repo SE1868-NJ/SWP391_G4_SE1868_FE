@@ -1,0 +1,438 @@
+/* AdminReportHandling.css */
+
+.admin-report-page {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+  
+  .report-container-wrapper {
+    max-width: 100%;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  
+  .report-container {
+    margin-bottom: 40px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .report-container h2 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+    font-size: 22px;
+    border-bottom: 2px solid #81c784;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+  
+  .table-wrapper {
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+  }
+  
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px; /* Giảm kích thước chữ để vừa với màn hình */
+    table-layout: auto; /* Cho phép trình duyệt điều chỉnh kích thước cột tự động */
+  }
+  
+  .report-table th {
+    background-color: #43a047;
+    color: white;
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 10px; /* Giảm padding để tiết kiệm không gian */
+  }
+  
+  .report-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+    max-width: 150px; /* Giới hạn chiều rộng tối đa */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Hiển thị "..." khi nội dung quá dài */
+  }
+  
+  /* Hiển thị tooltip khi hover vào nội dung bị cắt */
+  .report-table td:hover {
+    position: relative;
+  }
+  
+  .report-table td:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 1;
+    background: #f8f9f8;
+    border: 1px solid #81c784;
+    padding: 5px;
+    max-width: 300px;
+    border-radius: 4px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+    white-space: normal;
+    display: none; /* Chỉ hiển thị khi có title attribute */
+  }
+  
+  .report-table td[title]:hover::after {
+    display: block;
+  }
+  
+  .report-table tbody tr:nth-child(even) {
+    background-color: #f1f8e9;
+  }
+  
+  .report-table tbody tr:hover {
+    background-color: #e8f5e9;
+  }
+  
+  /* Cột trạng thái và nút */
+  .report-table td select {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #81c784;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 12px;
+  }
+  
+  .report-table td button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    width: 100%;
+    font-size: 12px;
+  }
+  
+  .report-table td button:hover {
+    background-color: #2e7d32;
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    color: #757575;
+    font-style: italic;
+  }
+  
+  /* Điều chỉnh chiều rộng cột */
+  .report-table th:nth-child(1), 
+  .report-table td:nth-child(1),
+  .report-table th:nth-child(2), 
+  .report-table td:nth-child(2) {
+    width: 5%; /* Mã sự cố và Mã đơn hàng */
+  }
+  
+  .report-table th:nth-child(3), 
+  .report-table td:nth-child(3) {
+    width: 12%; /* Mã shipper - Tên shipper */
+  }
+  
+  .report-table th:nth-child(4), 
+  .report-table td:nth-child(4) {
+    width: 8%; /* Loại sự cố */
+  }
+  
+  .report-table th:nth-child(5), 
+  .report-table td:nth-child(5) {
+    width: 15%; /* Mô tả */
+  }
+  
+  .report-table th:nth-child(6), 
+  .report-table td:nth-child(6),
+  .report-table th:nth-child(7), 
+  .report-table td:nth-child(7) {
+    width: 10%; /* Ngày báo cáo và Ngày xử lý */
+  }
+  
+  .report-table th:nth-child(8), 
+  .report-table td:nth-child(8) {
+    width: 10%; /* Trạng thái */
+  }
+  
+  .report-table th:nth-child(9), 
+  .report-table td:nth-child(9) {
+    width: 10%; /* Liên hệ shipper */
+  }
+  
+  .report-table th:nth-child(10), 
+  .report-table td:nth-child(10) {
+    width: 8%; /* Hành động */
+  }
+  
+  /* Status colors */
+  .report-table select option[value="Pending"] {
+    background-color: #ffd54f;
+  }
+  
+  .report-table select option[value="In Progress"] {
+    background-color: #90caf9;
+  }
+  
+  .report-table select option[value="Resolved"] {
+    background-color: #a5d6a7;
+  }
+  
+  .report-table select option[value="Rejected"] {
+    background-color: #ef9a9a;
+  }
+  
+  /* Responsive layout - điều chỉnh chiều cao của hàng khi cần */
+  @media screen and (max-width: 1600px) {
+    .report-table {
+      font-size: 12px;
+    }
+    
+    .report-table th,
+    .report-table td {
+      padding: 6px 8px;
+    }
+    
+    .report-container h2 {
+      font-size: 20px;
+    }
+  }
+  
+  /* Cho phép văn bản dài trong cột mô tả xuống dòng */
+  .report-table td:nth-child(5) {
+    white-space: normal;
+    word-break: break-word;
+  }
+  
+  /* Làm cho ngày hiển thị gọn hơn */
+  .report-table td:nth-child(6),
+  .report-table td:nth-child(7) {
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  
+
+  /* Cải thiện hiển thị cho cột trạng thái */
+.report-table td select {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #81c784;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 12px;
+    min-width: 100px; /* Đảm bảo chiều rộng tối thiểu */
+    text-overflow: unset; /* Không cắt văn bản */
+    white-space: nowrap; /* Giữ nguyên văn bản trên một dòng */
+  }
+  
+  /* Điều chỉnh chiều rộng cột trạng thái */
+  .report-table th:nth-child(8), 
+  .report-table td:nth-child(8) {
+    width: 12%; /* Tăng chiều rộng cho cột trạng thái */
+    min-width: 120px; /* Đảm bảo chiều rộng tối thiểu */
+  }
+  
+  /* Đảm bảo văn bản trong option không bị cắt */
+  .report-table select option {
+    white-space: normal; /* Cho phép xuống dòng nếu cần */
+    padding: 4px;
+  }
+
+
+  /* Xử lý đặc biệt cho cột mô tả */
+.report-table td:nth-child(5) {
+    white-space: normal; /* Cho phép xuống dòng */
+    word-break: break-word; /* Ngắt từ khi cần thiết */
+    min-width: 150px; /* Chiều rộng tối thiểu */
+    max-width: 200px; /* Chiều rộng tối đa */
+    line-height: 1.4; /* Tăng khoảng cách dòng để dễ đọc */
+    height: auto; /* Cho phép chiều cao tự động điều chỉnh */
+  }
+  
+  /* Cho phép văn bản dài xuống nhiều dòng */
+  .report-table tr {
+    height: auto; /* Tự động điều chỉnh chiều cao hàng */
+  }
+  
+  /* Thêm padding cho cột mô tả để cải thiện khả năng đọc */
+  .report-table td:nth-child(5) {
+    padding: 10px 12px;
+    vertical-align: top; /* Căn văn bản từ phía trên */
+  }
+
+
+
+  /* AdminReportHandling.css */
+
+/* Điều chỉnh container chứa báo cáo để có chiều rộng tối đa */
+.report-container-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%; /* Đảm bảo container chiếm hết không gian chiều rộng */
+  }
+  
+  .report-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Đảm bảo container chiếm hết chiều rộng của màn hình */
+    min-width: 1200px; /* Đặt chiều rộng tối thiểu */
+    margin: 0 auto; /* Căn giữa container */
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+    width: 100%; /* Đảm bảo bảng chiếm hết chiều rộng */
+  }
+  
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    table-layout: auto; /* Điều chỉnh chiều rộng của bảng theo nội dung */
+  }
+  
+  /* Các cột trong bảng */
+  .report-table th, .report-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+  }
+  
+  /* Các phần khác giữ nguyên như trước */
+  .report-table th {
+    background-color: #2f8f4f;
+    color: white;
+  }
+  
+  .report-table td {
+    color: #555;
+  }
+  
+  .report-table select {
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .report-table button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .report-table button:hover {
+    background-color: #45a049;
+  }
+  
+  footer {
+    background-color: #2f8f4f;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Tab styling */
+.report-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 20px;
+  }
+  
+  .tab-button {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 2px solid #2e7d32;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 250px;
+  }
+  
+  .tab-button:hover {
+    background-color: #c8e6c9;
+  }
+  
+  .tab-button.active {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  /* Ẩn/hiện container dựa trên tab đang active */
+  .report-container.hidden {
+    display: none;
+  }
+  
+  .report-container.active {
+    display: block;
+    animation: fadeIn 0.5s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Thêm một chút không gian giữa các nút và container */
+  .report-container {
+    margin-top: 30px;
+  }
+  
+  /* Đảm bảo h2 không bị ẩn khỏi tab active */
+  .report-container.active h2 {
+    display: block;
+  }
+
+
+
+  /* Chuẩn hóa font chữ cho tất cả các ô trong bảng */
+.report-table td {
+    font-family: Arial, sans-serif !important;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+  }
+  
+  /* Đảm bảo tất cả các cột ngày tháng có cùng font */
+  .report-table td:nth-child(6),
+  .report-table td:nth-child(7) {
+    font-family: Arial, sans-serif !important;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    text-align: center;
+  }
+  
+  /* Loại bỏ bất kỳ thuộc tính định dạng đặc biệt nào có thể gây ra sự khác biệt */
+  .report-table td:nth-child(6) *,
+  .report-table td:nth-child(7) * {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    font-style: inherit !important;
+  }
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Đảm bảo header luôn ở trên các phần tử khác */
+    width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
+  }
