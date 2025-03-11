@@ -29,18 +29,21 @@ const HistoryDeliveryOrder = () => {
         console.log(error);
       });
     };
+
     useEffect( ()  => {
       FetchOrders();
-    }, [currentPage]);
+    }, [status, currentPage]);
     
     const handlePageClick = (event) => {
       setCurrentPage(+event.selected + 1);
     };
     
     const handleStatusChange = (event) => {
-        console.log(event.target.value);
-        setStatus(event.target.value);
-      };
+        const selectedStatus = event.target.value;
+        console.log(selectedStatus);
+        setStatus(selectedStatus);
+        setCurrentPage(1); // Reset to first page when changing status
+    };
   
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);

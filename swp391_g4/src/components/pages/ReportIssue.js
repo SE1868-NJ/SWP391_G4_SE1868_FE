@@ -69,18 +69,18 @@ const ReportIssue = () => {
   };
 
   return (
-    <div className="report-page">
-      <div className="header">
+    <div className="report-issue-page">
+      <div className="report-issue-header">
         <Header />
       </div>
-      <div className="report-container-wrapper">
-        <div className="report-container">
+      <div className="report-issue-container-wrapper">
+        <div className="report-issue-container">
           <h2>Báo cáo Sự cố</h2>
           <p><strong>ID Shipper:</strong> {shipperId || "Không có ID"}</p>
-          {isSubmitted && <p className="success-msg">Báo cáo đã được gửi!</p>}
+          {isSubmitted && <p className="report-issue-success-msg">Báo cáo đã được gửi!</p>}
 
           {!reportType ? (
-            <div className="report-type-selection">
+            <div className="report-issue-type-selection">
               <label>Chọn loại báo cáo:</label>
               <select value={reportType} onChange={handleReportTypeChange} required>
                 <option value="">Chọn loại báo cáo</option>
@@ -89,7 +89,7 @@ const ReportIssue = () => {
               </select>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="report-form">
+            <form onSubmit={handleSubmit} className="report-issue-form">
               {reportType === "order" && (
                 <>
                   <label>Mã đơn hàng:</label>
@@ -140,10 +140,10 @@ const ReportIssue = () => {
                 placeholder="Mô tả sự cố..."
               ></textarea>
 
-              <button type="submit" className="submit-btn">Gửi báo cáo</button>
+              <button type="submit" className="report-issue-submit-btn">Gửi báo cáo</button>
               <button
                 type="button"
-                className="back-btn"
+                className="report-issue-back-btn"
                 onClick={() => setReportType("")}
               >
                 Quay lại
