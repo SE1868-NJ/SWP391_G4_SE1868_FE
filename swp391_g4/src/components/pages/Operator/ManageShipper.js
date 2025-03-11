@@ -44,12 +44,8 @@ const ManageShipper = () => {
         console.error("Error fetching canceling shippers:", error)
       );
 
-<<<<<<< HEAD
-    axios.get("http://localhost:4000/api/shippers")
-=======
-    axios
-      .get("http://localhost:5000/api/shippers")
->>>>>>> 587fb9c6b5730e797d7ca957ce402de3578c9f89
+
+    axios.get("http://localhost:5000/api/shippers")
       .then((response) => setApprovedShippers(response.data))
       .catch((error) =>
         console.error("Error fetching approved shippers:", error)
@@ -288,9 +284,6 @@ const ManageShipper = () => {
                 >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
-                  <option value="PendingUpdate">Pending Update</option>
-                  <option value="PendingCancel">Pending Cancel</option>
-                  <option value="Updated">Updated</option>
                 </select>
               </td>
             </tr>
@@ -338,9 +331,6 @@ const ManageShipper = () => {
                 >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
-                  <option value="PendingUpdate">Pending Update</option>
-                  <option value="PendingCancel">Pending Cancel</option>
-                  <option value="Updated">Updated</option>
                 </select>
               </td>
             </tr>

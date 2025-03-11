@@ -1,0 +1,346 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.RevenueDashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.RevenueDashboard-header {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.RevenueDashboard-logo h1 {
+  color: #2c3e50;
+  font-size: 24px;
+}
+
+.RevenueDashboard-search-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.RevenueDashboard-search-bar input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.RevenueDashboard-search-bar button {
+  padding: 8px 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.RevenueDashboard-search-bar button:hover {
+  background-color: #2980b9;
+}
+
+.RevenueDashboard-filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+.RevenueDashboard-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.RevenueDashboard-filter-group label {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.RevenueDashboard-filter-group select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 150px;
+  background-color: #fff;
+}
+
+.RevenueDashboard-filter-group select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+#alerts-container {
+  margin-bottom: 20px;
+}
+
+.alert {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  color: #b91c1c;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.alert-error {
+  background-color: #fee2e2;
+  border-left-color: #ef4444;
+  color: #b91c1c;
+}
+
+.alert-warning {
+  background-color: #fef7e6;
+  border-left-color: #d97706;
+  color: #92400e;
+}
+
+.alert-success {
+  background-color: #e3fcef;
+  border-left-color: #0d9f6e;
+  color: #065f46;
+}
+
+.RevenueDashboard-panel {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.RevenueDashboard-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.RevenueDashboard-panel-title {
+  font-size: 18px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.RevenueDashboard-panel-actions button {
+  padding: 6px 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.RevenueDashboard-panel-actions button:hover {
+  background-color: #2980b9;
+}
+
+.RevenueDashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.RevenueDashboard-stat-card {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.RevenueDashboard-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.RevenueDashboard-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.RevenueDashboard-stat-label {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.RevenueDashboard-chart-container {
+  height: 300px;
+  position: relative;
+  margin-top: 15px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-success {
+  background-color: #e3fcef;
+  color: #0d9f6e;
+}
+
+.status-warning {
+  background-color: #fef7e6;
+  color: #d97706;
+}
+
+.status-error {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.RevenueDashboard-paginator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.RevenueDashboard-paginator-info {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.RevenueDashboard-paginator-controls {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.RevenueDashboard-paginator-controls button {
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.RevenueDashboard-paginator-controls button:hover {
+  background-color: #f8f9fa;
+}
+
+.RevenueDashboard-paginator-controls button.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+footer {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 20px;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+footer a {
+  color: #3498db;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 20px;
+  color: #3498db;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .RevenueDashboard-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .RevenueDashboard-search-bar {
+    width: 100%;
+  }
+  
+  .RevenueDashboard-search-bar input {
+    flex: 1;
+  }
+  
+  .RevenueDashboard-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .RevenueDashboard-paginator {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

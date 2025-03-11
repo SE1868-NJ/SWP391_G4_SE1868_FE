@@ -1,18 +1,20 @@
-/* UpdateShipperInfo.css */
-
-.update-shipper-container {
+.UpdateShipperInfo-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.update-main {
+.UpdateShipperInfo-main {
   flex: 1;
   padding: 30px 20px;
   background-color: #f8f9fa;
+  margin-top: 80px;
 }
 
-.update-form-container {
+.UpdateShipperInfo-form-container {
   max-width: 1000px;
   margin: 0 auto;
   background-color: white;
@@ -21,40 +23,40 @@
   padding: 30px;
 }
 
-.form-title {
+.UpdateShipperInfo-form-title {
   text-align: center;
   color: #333;
   font-size: 24px;
   margin-bottom: 10px;
 }
 
-.form-info {
+.UpdateShipperInfo-form-info {
   text-align: center;
   color: #666;
   margin-bottom: 30px;
   font-size: 14px;
 }
 
-.form-section {
+.UpdateShipperInfo-form-section {
   margin-bottom: 30px;
   border-bottom: 1px solid #eee;
   padding-bottom: 20px;
 }
 
-.form-section h2 {
+.UpdateShipperInfo-form-section h2 {
   font-size: 18px;
   margin-bottom: 20px;
   color: #444;
   font-weight: 600;
 }
 
-.info-grid {
+.UpdateShipperInfo-info-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
 }
 
-.field-row {
+.UpdateShipperInfo-field-row {
   padding: 15px;
   border: 1px solid #eee;
   border-radius: 8px;
@@ -62,35 +64,35 @@
   transition: background-color 0.3s ease;
 }
 
-.field-row:hover {
+.UpdateShipperInfo-field-row:hover {
   background-color: #f0f7ff;
 }
 
-.field-container {
+.UpdateShipperInfo-field-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.field-info {
+.UpdateShipperInfo-field-info {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.field-label {
+.UpdateShipperInfo-field-label {
   font-weight: 600;
   color: #555;
   font-size: 14px;
 }
 
-.field-value {
+.UpdateShipperInfo-field-value {
   color: #333;
   font-size: 16px;
   word-break: break-word;
 }
 
-.update-field-btn {
+.UpdateShipperInfo-update-field-btn {
   background-color: rgb(36, 174, 110);
   color: white;
   border: none;
@@ -101,21 +103,21 @@
   font-size: 14px;
 }
 
-.update-field-btn:hover {
+.UpdateShipperInfo-update-field-btn:hover {
   background-color: rgb(0, 216, 46);
 }
 
-.update-input-container {
+.UpdateShipperInfo-update-input-container {
   margin-top: 15px;
   padding-top: 15px;
   border-top: 1px dashed #ccc;
 }
 
-.input-wrapper {
+.UpdateShipperInfo-input-wrapper {
   margin-bottom: 15px;
 }
 
-.input-wrapper label {
+.UpdateShipperInfo-input-wrapper label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
@@ -123,7 +125,7 @@
   font-size: 14px;
 }
 
-.form-input {
+.UpdateShipperInfo-form-input {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ddd;
@@ -132,41 +134,41 @@
   transition: border-color 0.3s;
 }
 
-.form-input:focus {
+.UpdateShipperInfo-form-input:focus {
   border-color: #4a90e2;
   outline: none;
 }
 
-.form-input.error {
+.UpdateShipperInfo-form-input.error {
   border-color: #e74c3c;
 }
 
-.form-input.readonly {
+.UpdateShipperInfo-form-input.readonly {
   background-color: #f5f5f5;
   color: #777;
   cursor: not-allowed;
 }
 
-.error-message {
+.UpdateShipperInfo-error-message {
   color: #e74c3c;
   font-size: 12px;
   margin-top: 5px;
   display: block;
 }
 
-.required {
+.UpdateShipperInfo-required {
   color: #e74c3c;
   margin-left: 2px;
 }
 
-.form-actions {
+.UpdateShipperInfo-form-actions {
   display: flex;
   justify-content: center;
   gap: 15px;
   margin-top: 30px;
 }
 
-.submit-button {
+.UpdateShipperInfo-submit-button {
   background-color: #2ecc71;
   color: white;
   border: none;
@@ -177,11 +179,11 @@
   transition: background-color 0.3s;
 }
 
-.submit-button:hover {
+.UpdateShipperInfo-submit-button:hover {
   background-color: #27ae60;
 }
 
-.cancel-button {
+.UpdateShipperInfo-cancel-button {
   background-color: #e74c3c;
   color: white;
   border: none;
@@ -192,11 +194,11 @@
   transition: background-color 0.3s;
 }
 
-.cancel-button:hover {
+.UpdateShipperInfo-cancel-button:hover {
   background-color: #c0392b;
 }
 
-.loading-container {
+.UpdateShipperInfo-loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -204,7 +206,7 @@
   height: 100vh;
 }
 
-.loading-spinner {
+.UpdateShipperInfo-loading-spinner {
   border: 5px solid #f3f3f3;
   border-top: 5px solid #3498db;
   border-radius: 50%;
@@ -219,28 +221,25 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Responsive adjustments */
 @media (min-width: 768px) {
-  .info-grid {
+  .UpdateShipperInfo-info-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 767px) {
-  .field-container {
+  .UpdateShipperInfo-field-container {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
   
-  .update-field-btn {
+  .UpdateShipperInfo-update-field-btn {
     align-self: flex-end;
   }
 }
-/* Thêm vào file UpdateShipperInfo.css */
 
-/* Popup styles */
-.confirm-popup-overlay {
+.UpdateShipperInfo-confirm-popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -253,7 +252,7 @@
   z-index: 1000;
 }
 
-.confirm-popup {
+.UpdateShipperInfo-confirm-popup {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -275,19 +274,19 @@
   }
 }
 
-.confirm-popup-content h2 {
+.UpdateShipperInfo-confirm-popup-content h2 {
   color: #333;
   margin-bottom: 15px;
   font-size: 22px;
 }
 
-.confirm-popup-content p {
+.UpdateShipperInfo-confirm-popup-content p {
   color: #666;
   margin-bottom: 25px;
   font-size: 18px;
 }
 
-.confirm-button {
+.UpdateShipperInfo-confirm-button {
   background-color: rgb(36, 174, 110);
   color: white;
   border: none;
@@ -299,6 +298,16 @@
   transition: background-color 0.3s;
 }
 
-.confirm-button:hover {
+.UpdateShipperInfo-confirm-button:hover {
   background-color: rgb(0, 216, 46);
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  /* Đảm bảo header luôn ở trên các phần tử khác */
+  width: 100%;
+  /* Đảm bảo header chiếm toàn bộ chiều rộng */
 }

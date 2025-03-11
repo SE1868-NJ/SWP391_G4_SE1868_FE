@@ -1,7 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from './components/buttons/Button';
-
+import {  useNavigate } from 'react-router-dom';
+import Button from './components/buttons/Button'; 
 
 const App = () => {
  const navigate = useNavigate();
@@ -17,6 +16,5 @@ const App = () => {
    </div>
  );
 };
-
 
 export default App;
