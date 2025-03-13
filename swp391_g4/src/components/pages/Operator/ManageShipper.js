@@ -264,7 +264,7 @@ const ManageShipper = () => {
           className="manage-shipper-detail-button"
           onClick={handleReportHandling}
         >
-          Sự cố
+          Báo cáo sự cố
         </button>
       </div>
 
