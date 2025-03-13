@@ -3,6 +3,7 @@ import "../../../styles/About.css";
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
+import ChatPopup from "./ChatPopup";
 
 const About = () => {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
@@ -18,10 +19,7 @@ const About = () => {
   return (
     <div className="about">
       <div className="header">
-        <Header
-          showLoginButton={true}
-          onLoginClick={openLoginPopup}
-        />
+        <Header showLoginButton={true} onLoginClick={openLoginPopup} />
       </div>
       {/* About Section */}
       <section className="about-section">
@@ -110,11 +108,8 @@ const About = () => {
         </div>
       )}
 
-      {/* Footer */}
-      <Footer
-        showAccountSection={true}
-        onLoginClick={openLoginPopup}
-      />
+      <ChatPopup />
+      <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );
 };

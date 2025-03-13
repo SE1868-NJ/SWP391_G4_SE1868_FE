@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../../header/Header';
 import Footer from '../../footer/Footer';
+import ChatPopup from "../Home/ChatPopup";
 
-// Import các component con
 import Shipper from '../Shipper/Shipper';
 import MyDeliveryOrder from '../Shipper/MyDeliveryOrder';
 import HistoryDeliveryOrder from '../Shipper/HistoryDeliveryOrder';
@@ -99,32 +99,32 @@ const ShipperDashboard = () => {
               className={`tab-button ${activePage === 'pendingOrders' ? 'active' : ''}`}
               onClick={() => handlePageChange('pendingOrders')}
             >
-              Pending Orders
+              Đơn Hàng Đang Chờ
             </button>
             <button 
               className={`tab-button ${activePage === 'myDeliveryOrders' ? 'active' : ''}`}
               onClick={() => handlePageChange('myDeliveryOrders')}
             >
-              My Delivery Orders
+              Đơn Hàng Của Tôi
             </button>
             <button 
               className={`tab-button ${activePage === 'historyDeliveryOrders' ? 'active' : ''}`}
               onClick={() => handlePageChange('historyDeliveryOrders')}
             >
-              History Delivery Orders
+              Lịch Sử Đơn Hàng
             </button>
             <button 
               className={`tab-button ${activePage === 'revenue' ? 'active' : ''}`}
               onClick={() => handlePageChange('revenue')}
             >
-              Revenue
+              Doanh Thu
             </button>
           </div>
           
           {renderContent()}
         </div>
       </div>
-      
+      <ChatPopup />
       <Footer />
     </div>
   );

@@ -23,7 +23,7 @@ const Login = ({ isPopup = false, onClose }) => {
         
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
-          navigate("/shipper");
+          navigate("/dashboard");
         }
       } catch (decodeError) {
         // Nếu token không hợp lệ, xóa token
@@ -69,6 +69,7 @@ const Login = ({ isPopup = false, onClose }) => {
           onClose();
         }
         
+        // Chuyển hướng đến trang shipper
         navigate("/dashboard");
       } else {
         setError(response.data.message || "Đăng nhập thất bại");

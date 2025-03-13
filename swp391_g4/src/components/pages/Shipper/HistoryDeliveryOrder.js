@@ -29,18 +29,21 @@ const HistoryDeliveryOrder = () => {
         console.log(error);
       });
     };
+
     useEffect( ()  => {
       FetchOrders();
-    }, [currentPage]);
+    }, [status, currentPage]);
     
     const handlePageClick = (event) => {
       setCurrentPage(+event.selected + 1);
     };
     
     const handleStatusChange = (event) => {
-        console.log(event.target.value);
-        setStatus(event.target.value);
-      };
+        const selectedStatus = event.target.value;
+        console.log(selectedStatus);
+        setStatus(selectedStatus);
+        setCurrentPage(1); // Reset to first page when changing status
+    };
   
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);
@@ -54,27 +57,27 @@ const HistoryDeliveryOrder = () => {
       return (
           <div className="form shipper">
             <main className="mx-md-5">
-              <h2 className="text-center mt-5">History Delivery Orders</h2>
+              <h2 className="text-center mt-5">Lịch Sử Đơn Hàng Đã Giao</h2>
               <div className="row">
                 <div className='col-6 align-content-end'>
-                  <h5>Total Orders: {totalOrders}</h5> 
+                  <h5>Tổng Số Đơn Hàng: {totalOrders}</h5> 
                 </div>
                 <div className='col-6' >
                   <div className='d-flex justify-content-end my-2'>
                     <div className=" w-25 me-3">
                         <select className="form-select" 
-                                aria-label="Order Status Select" 
+                                aria-label="Chọn Trạng Thái Đơn Hàng" 
                                 value={status}  
                                 onChange={handleStatusChange}>
-                            <option value="All" selected>All</option>
-                            <option value="Delivered">Delivered</option>
-                            <option value="Cancelled">Cancelled</option>
+                            <option value="All">Tất Cả</option>
+                            <option value="Delivered">Đã Giao</option>
+                            <option value="Cancelled">Đã Hủy</option>
                         </select>
                     </div>
                     <div className="d-flex w-50">
-                      <input type="search" className="form-control rounded" placeholder="Name, phone or email"
-                            aria-label="Search" aria-describedby="search-addon" onChange={handleSearchChange} />
-                      <button type="button" className="btn btn-outline-primary" onClick={handleSearch} >search</button>
+                      <input type="search" className="form-control rounded" placeholder="Tên, điện thoại hoặc email"
+                            aria-label="Tìm Kiếm" aria-describedby="search-addon" onChange={handleSearchChange} />
+                      <button type="button" className="btn btn-outline-primary" onClick={handleSearch} >Tìm Kiếm</button>
                     </div>
                   </div>
                 </div>
@@ -83,20 +86,20 @@ const HistoryDeliveryOrder = () => {
                 <table className="table table-hover" >
                   <thead className='table-light'>
                     <tr>
-                      <th scope="col">Order ID</th>
-                      <th scope="col">Customer Name</th>
-                      <th scope="col">Phone</th>
-                      <th scope="col">Address</th>
-                      <th scope="col">Order Date</th>
-                      <th scope="col">Estimated Time</th>
-                      <th scope="col">Actual Delivery Time</th>
-                      <th scope="col">Status</th>
+                      <th scope="col">Mã Đơn Hàng</th>
+                      <th scope="col">Tên Khách Hàng</th>
+                      <th scope="col">Số Điện Thoại</th>
+                      <th scope="col">Địa Chỉ</th>
+                      <th scope="col">Ngày Đặt Hàng</th>
+                      <th scope="col">Thời Gian Dự Kiến</th>
+                      <th scope="col">Thời Gian Giao Thực Tế</th>
+                      <th scope="col">Trạng Thái</th>
                     </tr>
                   </thead>
                   <tbody  >
                     {orders.length === 0 && (
                       <tr>
-                        <td colSpan="9">No orders found</td>
+                        <td colSpan="9">Không Tìm Thấy Đơn Hàng</td>
                       </tr>
                     )}
                     {orders.map((order, index) => (
@@ -105,16 +108,16 @@ const HistoryDeliveryOrder = () => {
                         <td className="py-2 align-content-center">{order.FullName}</td>
                         <td className="py-2 align-content-center">{order.PhoneNumber}</td>
                         <td className="py-2 align-content-center">{order.DeliveryAddress}</td>
-                        <td className="py-2 align-content-center">{format(new Date(order.OrderDate), 'MMMM dd, yyyy hh:mm:ss a')}</td>
-                        <td className="py-2 align-content-center">{format(new Date(order.EstimatedDeliveryTime), 'MMMM dd, yyyy hh:mm:ss a')}</td>
-                        <td className="py-2 align-content-center">{format(new Date(order.ActualDeliveryTime), 'MMMM dd, yyyy hh:mm:ss a')}</td>
+                        <td className="py-2 align-content-center">{format(new Date(order.OrderDate), 'dd/MM/yyyy HH:mm:ss')}</td>
+                        <td className="py-2 align-content-center">{format(new Date(order.EstimatedDeliveryTime), 'dd/MM/yyyy HH:mm:ss')}</td>
+                        <td className="py-2 align-content-center">{format(new Date(order.ActualDeliveryTime), 'dd/MM/yyyy HH:mm:ss')}</td>
                         <td className="py-2 align-content-center">
                             {order.OrderStatus === 'Delivered' && (
-                                <span className="badge bg-success">Delivered</span>
+                                <span className="badge bg-success">Đã Giao</span>
                             )}
 
                             {order.OrderStatus === 'Cancelled' && (
-                                <span className="badge bg-danger">Cancelled</span>
+                                <span className="badge bg-danger">Đã Hủy</span>
                             )}
                         </td>   
                       </tr>
@@ -125,12 +128,12 @@ const HistoryDeliveryOrder = () => {
               {totalPages > 0 &&
                 <div className='d-flex justify-content-end'>
                     <ReactPaginate
-                      nextLabel="next"
+                      nextLabel="Tiếp"
                       onPageChange={handlePageClick}
                       pageRangeDisplayed={3}
                       marginPagesDisplayed={2}
                       pageCount={totalPages}
-                      previousLabel="previous"
+                      previousLabel="Trước"
                       pageClassName="page-item"
                       pageLinkClassName="page-link"
                       previousClassName="page-item"
