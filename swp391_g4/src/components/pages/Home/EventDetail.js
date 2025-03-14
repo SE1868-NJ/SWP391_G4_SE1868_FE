@@ -5,7 +5,7 @@ import '../../../styles/EventDetail.css';
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
-
+import ChatPopup from "./ChatPopup";
 const EventDetail = () => {
   const { eventId } = useParams(); // Lấy ID sự kiện từ URL
   const navigate = useNavigate();
@@ -167,6 +167,7 @@ const closeLoginPopup = () => {
           </div>
         </div>
       )}
+      <ChatPopup />
       <Footer />
     </div>
   );

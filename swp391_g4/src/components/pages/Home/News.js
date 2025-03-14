@@ -4,6 +4,7 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
 import { Link } from 'react-router-dom';
+import ChatPopup from './ChatPopup';
 
 const News = () => {
   const newsNavigationItems = [
@@ -241,7 +242,7 @@ const News = () => {
         </div>
       )}
 
-      {/* Footer */}
+      <ChatPopup/>
       <Footer
         showAccountSection={true}
         onLoginClick={openLoginPopup}

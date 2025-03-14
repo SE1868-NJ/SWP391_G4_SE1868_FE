@@ -87,7 +87,7 @@ const OrderDetails = () => {
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {
-        window.location.href = "/shipper";
+        window.location.href = "/dashboard";
       });
       return response.data;
     } catch (error) {
