@@ -15,8 +15,6 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
-import driverLicense from '../../../images/DriverLicense.png';
-import idCard from '../../../images/IDCard.png';
 const ShipperDetail = () => {
   const [shippersList, setShippersList] = useState([]);
   const [selectedShipper, setSelectedShipper] = useState(null);
@@ -486,7 +484,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">Giấy Phép Lái Xe</p>
                     <img 
-                      src={driverLicense}
+                      src="https://useless-gold-stingray.myfilebase.com/ipfs/QmTM6m5UYBmxKiT9iGZeLifPo4hzbgkvRtTMN15B1BE2zt"
                       alt="Driver License"
                       className="document-image"
                     />
@@ -498,7 +496,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">Đăng Ký Xe</p>
                     <img 
-                      src="VehicleRegistration.png" 
+                      src="https://useless-gold-stingray.myfilebase.com/ipfs/QmajDrgo5Bmazep3MVFUd1f4EsNVirbEacLUUhDt83pYzf" 
                       alt="Vehicle Registration"
                       className="document-image"
                     />
@@ -510,7 +508,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">CMND/CCCD</p>
                     <img 
-                      src={idCard}
+                      src="https://useless-gold-stingray.myfilebase.com/ipfs/QmWzLEcBiQk8E65TW3SRjtJM5ZnjfRGXhMFWZCif6TcSwp"
                       alt="ID Card"
                       className="document-image"
                     />

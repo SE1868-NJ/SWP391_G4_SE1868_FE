@@ -5,7 +5,6 @@ import moment from "moment";
 import BackButton from "../../buttons/BackButton";
 import { useNavigate } from "react-router-dom";
 
-
 const ManageShipper = () => {
   const navigate = useNavigate();
   const [pendingRegisterShippers, setPendingRegisterShippers] = useState([]);
@@ -19,7 +18,7 @@ const ManageShipper = () => {
   const [cancelTime, setCancelTime] = useState("Forever");
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
   const [shipperUpdateDetails, setShipperUpdateDetails] = useState(null);
-
+  const [activeTable, setActiveTable] = useState("pending"); // Default to showing pending table
 
   useEffect(() => {
     fetchShippers();
@@ -48,8 +47,8 @@ const ManageShipper = () => {
         console.error("Error fetching canceling shippers:", error)
       );
 
-    axios.get("http://localhost:5000/api/shippers")
-
+    axios
+      .get("http://localhost:5000/api/shippers")
       .then((response) => setApprovedShippers(response.data))
       .catch((error) =>
         console.error("Error fetching approved shippers:", error)
@@ -92,6 +91,7 @@ const ManageShipper = () => {
         console.error("Error searching approved shippers:", error)
       );
   };
+
   const fetchShipperUpdateDetails = (id) => {
     axios
       .get(`http://localhost:5000/api/shipper-update-details/${id}`)
@@ -156,6 +156,7 @@ const ManageShipper = () => {
         console.error("Error canceling shipper account:", error)
       );
   };
+
   const handleConfirmUpdate = () => {
     if (!shipperUpdateDetails) return;
 
@@ -173,6 +174,7 @@ const ManageShipper = () => {
         console.error("Error updating shipper account:", error)
       );
   };
+
   const handleUpdatePopupClose = () => {
     setShowUpdatePopup(false);
     setShipperUpdateDetails(null);
@@ -184,17 +186,6 @@ const ManageShipper = () => {
     setSelectedShipper(null);
   };
 
-  const handleShipperDetail = () => {
-    window.location.href = `/shipper-detail`;
-  };
-  // Hàm để highlight thay đổi
-  const highlightChange = (oldValue, newValue) => {
-    if (oldValue !== newValue && newValue) {
-      return { color: "#388e3c", fontWeight: "bold" };
-    }
-    return {};
-  };
-
   const handleRevenueDashboard = () => {
     navigate('/revenue-dashboard');
   };
@@ -202,6 +193,15 @@ const ManageShipper = () => {
   const handleReportHandling = () => {
     navigate('/admin-report-handling');
   };
+
+  // Function to highlight changes
+  const highlightChange = (oldValue, newValue) => {
+    if (oldValue !== newValue && newValue) {
+      return { color: "#388e3c", fontWeight: "bold" };
+    }
+    return {};
+  };
+
   return (
     <div className="manage-shipper-container">
       <h2>Quản lý Shipper</h2>
@@ -215,42 +215,238 @@ const ManageShipper = () => {
         className="manage-shipper-search-bar"
       />
 
-      {/* Pending Register */}
-      <h2>Danh sách đăng ký chờ duyệt</h2>
-      <table className="manage-shipper-table">
-        <thead>
-          <tr>
-            <th>ID Shipper</th>
-            <th>Họ tên</th>
-            <th>Số điện thoại</th>
-            <th>Email</th>
-            <th>Ngày sinh</th>
-            <th>Quận</th>
-            <th>Ngân Hàng</th>
-            <th>Loại xe</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pendingRegisterShippers.map((shipper) => (
-            <tr key={shipper.ShipperID}>
-              <td>{shipper.ShipperID}</td>
-              <td>{shipper.FullName}</td>
-              <td>{shipper.PhoneNumber}</td>
-              <td>{shipper.Email}</td>
-              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
-              <td>{shipper.District}</td>
-              <td>{shipper.BankName}</td>
-              <td>{shipper.VehicleType}</td>
-              <td>{shipper.Status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Main navigation buttons */}
+      <div style={{ textAlign: "center", marginTop: "20px", display: "flex", justifyContent: "center", gap: "20px" }}>
+        <button
+          className={`manage-shipper-detail-button ${activeTable === "pending" ? "active" : ""}`}
+          onClick={() => setActiveTable("pending")}
+        >
+          Danh sách đăng ký chờ duyệt
+        </button>
+        <button
+          className={`manage-shipper-detail-button ${activeTable === "updating" ? "active" : ""}`}
+          onClick={() => setActiveTable("updating")}
+        >
+          Danh sách chờ cập nhật
+        </button>
+        <button
+          className={`manage-shipper-detail-button ${activeTable === "approved" ? "active" : ""}`}
+          onClick={() => setActiveTable("approved")}
+        >
+          Danh sách đã duyệt
+        </button>
+      </div>
+
+      {/* Pending Register Shippers Table */}
+      {activeTable === "pending" && (
+        <div>
+          <h2>Danh sách đăng ký chờ duyệt</h2>
+          <table className="manage-shipper-table">
+            <thead>
+              <tr>
+                <th>ID Shipper</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Ngày sinh</th>
+                <th>Quận</th>
+                <th>Ngân Hàng</th>
+                <th>Loại xe</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingRegisterShippers.map((shipper) => (
+                <tr key={shipper.ShipperID}>
+                  <td>{shipper.ShipperID}</td>
+                  <td>{shipper.FullName}</td>
+                  <td>{shipper.PhoneNumber}</td>
+                  <td>{shipper.Email}</td>
+                  <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+                  <td>{shipper.District}</td>
+                  <td>{shipper.BankName}</td>
+                  <td>{shipper.VehicleType}</td>
+                  <td>
+                    <select
+                      value={shipper.Status}
+                      onChange={(e) =>
+                        handleStateChange(
+                          shipper.ShipperID,
+                          e.target.value,
+                          shipper.Status
+                        )
+                      }
+                    >
+                      <option value="PendingRegister">Pending Register</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Updating/Canceling Shippers Table */}
+      {activeTable === "updating" && (
+        <div>
+          <h2>Danh sách shipper đang chờ cập nhật</h2>
+          <table className="manage-shipper-table">
+            <thead>
+              <tr>
+                <th>ID Shipper</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Ngày sinh</th>
+                <th>Quận</th>
+                <th>Ngân Hàng</th>
+                <th>Loại xe</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {updatingShippers.map((shipper) => (
+                <tr key={shipper.ShipperID}>
+                  <td>{shipper.ShipperID}</td>
+                  <td>{shipper.FullName}</td>
+                  <td>{shipper.PhoneNumber}</td>
+                  <td>{shipper.Email}</td>
+                  <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+                  <td>{shipper.District}</td>
+                  <td>{shipper.BankName}</td>
+                  <td>{shipper.VehicleType}</td>
+                  <td>
+                    <select
+                      value={shipper.Status}
+                      onChange={(e) =>
+                        handleStateChange(
+                          shipper.ShipperID,
+                          e.target.value,
+                          shipper.Status
+                        )
+                      }
+                    >
+                      <option value="PendingUpdate">Pending Update</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h2>Danh sách shipper đang chờ hủy tài khoản</h2>
+          <table className="manage-shipper-table">
+            <thead>
+              <tr>
+                <th>ID Shipper</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Ngày sinh</th>
+                <th>Quận</th>
+                <th>Ngân Hàng</th>
+                <th>Loại xe</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cancelingShippers.map((shipper) => (
+                <tr key={shipper.ShipperID}>
+                  <td>{shipper.ShipperID}</td>
+                  <td>{shipper.FullName}</td>
+                  <td>{shipper.PhoneNumber}</td>
+                  <td>{shipper.Email}</td>
+                  <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+                  <td>{shipper.District}</td>
+                  <td>{shipper.BankName}</td>
+                  <td>{shipper.VehicleType}</td>
+                  <td>
+                    <select
+                      value={shipper.Status}
+                      onChange={(e) =>
+                        handleStateChange(
+                          shipper.ShipperID,
+                          e.target.value,
+                          shipper.Status
+                        )
+                      }
+                    >
+                      <option value="PendingCancel">Pending Cancel</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Approved Shippers Table */}
+      {activeTable === "approved" && (
+        <div>
+          <h2>Danh sách shipper đã duyệt</h2>
+          <table className="manage-shipper-table">
+            <thead>
+              <tr>
+                <th>ID Shipper</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Ngày sinh</th>
+                <th>Quận</th>
+                <th>Ngân Hàng</th>
+                <th>Loại xe</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {approvedShippers.map((shipper) => (
+                <tr key={shipper.ShipperID}>
+                  <td>{shipper.ShipperID}</td>
+                  <td>{shipper.FullName}</td>
+                  <td>{shipper.PhoneNumber}</td>
+                  <td>{shipper.Email}</td>
+                  <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
+                  <td>{shipper.District}</td>
+                  <td>{shipper.BankName}</td>
+                  <td>{shipper.VehicleType}</td>
+                  <td>
+                    <select
+                      value={shipper.Status}
+                      onChange={(e) =>
+                        handleStateChange(
+                          shipper.ShipperID,
+                          e.target.value,
+                          shipper.Status
+                        )
+                      }
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                      <option value="PendingUpdate">Pending Update</option>
+                      <option value="PendingCancel">Pending Cancel</option>
+                      <option value="Updated">Updated</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Additional action buttons */}
       <div style={{ textAlign: "center", marginTop: "20px", display: "flex", justifyContent: "center", gap: "12px" }}>
         <button
           className="manage-shipper-detail-button"
-          onClick={handleShipperDetail}
+          onClick={() => navigate('/shipper-detail')}
         >
           Duyệt chi tiết
         </button>
@@ -268,152 +464,10 @@ const ManageShipper = () => {
         </button>
       </div>
 
-      {/* Pending Update */}
-      <h2>Danh sách shipper đang chờ cập nhật</h2>
-      <table className="manage-shipper-table">
-        <thead>
-          <tr>
-            <th>ID Shipper</th>
-            <th>Họ tên</th>
-            <th>Số điện thoại</th>
-            <th>Email</th>
-            <th>Ngày sinh</th>
-            <th>Quận</th>
-            <th>Ngân Hàng</th>
-            <th>Loại xe</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          {updatingShippers.map((shipper) => (
-            <tr key={shipper.ShipperID}>
-              <td>{shipper.ShipperID}</td>
-              <td>{shipper.FullName}</td>
-              <td>{shipper.PhoneNumber}</td>
-              <td>{shipper.Email}</td>
-              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
-              <td>{shipper.District}</td>
-              <td>{shipper.BankName}</td>
-              <td>{shipper.VehicleType}</td>
-              <td>
-                <select
-                  value={shipper.Status}
-                  onChange={(e) =>
-                    handleStateChange(
-                      shipper.ShipperID,
-                      e.target.value,
-                      shipper.Status
-                    )
-                  }
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Pending Cancel */}
-      <h2>Danh sách shipper đang chờ hủy tài khoản</h2>
-      <table className="manage-shipper-table">
-        <thead>
-          <tr>
-            <th>ID Shipper</th>
-            <th>Họ tên</th>
-            <th>Số điện thoại</th>
-            <th>Email</th>
-            <th>Ngày sinh</th>
-            <th>Quận</th>
-            <th>Ngân Hàng</th>
-            <th>Loại xe</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cancelingShippers.map((shipper) => (
-            <tr key={shipper.ShipperID}>
-              <td>{shipper.ShipperID}</td>
-              <td>{shipper.FullName}</td>
-              <td>{shipper.PhoneNumber}</td>
-              <td>{shipper.Email}</td>
-              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
-              <td>{shipper.District}</td>
-              <td>{shipper.BankName}</td>
-              <td>{shipper.VehicleType}</td>
-              <td>
-                <select
-                  value={shipper.Status}
-                  onChange={(e) =>
-                    handleStateChange(
-                      shipper.ShipperID,
-                      e.target.value,
-                      shipper.Status
-                    )
-                  }
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Approved Shippers */}
-      <h2>Danh sách shipper đã duyệt</h2>
-      <table className="manage-shipper-table">
-        <thead>
-          <tr>
-            <th>ID Shipper</th>
-            <th>Họ tên</th>
-            <th>Số điện thoại</th>
-            <th>Email</th>
-            <th>Ngày sinh</th>
-            <th>Quận</th>
-            <th>Ngân Hàng</th>
-            <th>Loại xe</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          {approvedShippers.map((shipper) => (
-            <tr key={shipper.ShipperID}>
-              <td>{shipper.ShipperID}</td>
-              <td>{shipper.FullName}</td>
-              <td>{shipper.PhoneNumber}</td>
-              <td>{shipper.Email}</td>
-              <td>{moment(shipper.DateOfBirth).format("DD-MM-YYYY")}</td>
-              <td>{shipper.District}</td>
-              <td>{shipper.BankName}</td>
-              <td>{shipper.VehicleType}</td>
-              <td>
-                <select
-                  value={shipper.Status}
-                  onChange={(e) =>
-                    handleStateChange(
-                      shipper.ShipperID,
-                      e.target.value,
-                      shipper.Status
-                    )
-                  }
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                  <option value="PendingUpdate">Pending Update</option>
-                  <option value="PendingCancel">Pending Cancel</option>
-                  <option value="Updated">Updated</option>
-                </select>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
       <div>
         <BackButton />
       </div>
+
       {/* Cancel Confirmation Popup */}
       {showCancelPopup && selectedShipper && (
         <div className="manage-shipper-popup-overlay">
@@ -468,6 +522,7 @@ const ManageShipper = () => {
           </div>
         </div>
       )}
+
       {/* Update Confirmation Popup */}
       {showUpdatePopup && shipperUpdateDetails && (
         <div className="manage-shipper-popup-overlay">

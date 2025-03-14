@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/AdminReportHandling.css";
-import { Header } from "../header/Header";
-import Footer from "../footer/Footer";
+import "../../../styles/AdminReportHandling.css";
+import { Header } from "../../header/Header";
+import Footer from "../../footer/Footer";
 
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);

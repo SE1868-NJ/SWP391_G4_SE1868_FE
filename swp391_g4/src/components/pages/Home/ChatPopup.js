@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/ChatPopup.css";
-import avatarImage from "../../../images/EcoShipper_rbg_noname.png";
 
 const ChatPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -87,7 +86,7 @@ const ChatPopup = () => {
       <div className={`popup_chatbox ${isOpen ? "popup_open" : ""}`}>
         {!isOpen ? (
           <img 
-            src={avatarImage} 
+            src="https://useless-gold-stingray.myfilebase.com/ipfs/QmdjqTuFUF1yeoPh8GBh3SP5hegdQ16fasvUEVxYtaoBoR" 
             alt="Chat Avatar" 
             className="popup_avatar" 
             onClick={toggleChat}
@@ -97,7 +96,7 @@ const ChatPopup = () => {
             <div className="popup_header">
               <div className="popup_header_left">
                 <img 
-                  src={avatarImage} 
+                  src="https://useless-gold-stingray.myfilebase.com/ipfs/QmdjqTuFUF1yeoPh8GBh3SP5hegdQ16fasvUEVxYtaoBoR" 
                   alt="EcoShipper Logo" 
                   className="popup_logo" 
                 />

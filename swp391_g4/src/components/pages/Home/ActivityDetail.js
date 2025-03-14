@@ -5,6 +5,7 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
 import ChatPopup from "./ChatPopup";
+import BackButton from "../../buttons/BackButton";
 const ActivityDetail = () => {
   const { activityId } = useParams(); // Lấy ID hoạt động từ URL
   const navigate = useNavigate();
@@ -93,9 +94,6 @@ const ActivityDetail = () => {
       </div>
 
       <div className="activity-detail">
-        <button className="back-button" onClick={() => navigate("/activities")}>
-          Quay lại
-        </button>
         <h1>{activity.title}</h1>
         <img
           src={activity.image}
@@ -132,6 +130,7 @@ const ActivityDetail = () => {
           </div>
         </div>
       )}
+      <div className="backbutton"><BackButton/></div>
       <ChatPopup />
       <Footer />
     </div>

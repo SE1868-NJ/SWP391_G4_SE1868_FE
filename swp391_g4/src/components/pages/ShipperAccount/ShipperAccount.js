@@ -4,7 +4,6 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/ShipperAccount.css";
 import axios from 'axios';
-import Qrcode from "../../../images/QRcode.png";
 import { FaEye, FaEyeSlash, FaTimes, FaCheckCircle } from 'react-icons/fa';
 const formatData = {
   date: (dateString) => {
@@ -765,7 +764,7 @@ const ShipperAccount = () => {
                     <p><strong>Số tiền:</strong> {formatData.currency(depositAmount)}</p>
                   </div>
                   <div className="qr-code-container">
-                    <img src={Qrcode} alt="QR Code" />
+                    <img src="https://useless-gold-stingray.myfilebase.com/ipfs/QmUBSUdCRZuE8jgxbgME5yjDScNSKandXKHP77jSFccS6s" alt="QR Code" />
                   </div>
                 </div>
                 <div className="shipperAccount-popup-actions">
