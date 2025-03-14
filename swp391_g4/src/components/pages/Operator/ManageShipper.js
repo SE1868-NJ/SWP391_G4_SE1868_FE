@@ -200,7 +200,7 @@ const ManageShipper = () => {
   };
 
   const handleReportHandling = () => {
-    navigate('/admin-report-handling');
+    navigate('/incident-management');
   };
   return (
     <div className="manage-shipper-container">
