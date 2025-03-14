@@ -97,17 +97,17 @@ const Shipper = () => {
           />
           <div className='ProfileShipper'><ProfileShipper props={shipper} /></div>
         </div>
-        <h2 className="text-center">Shipping Orders</h2>
+        <h2 className="text-center">Đơn Hàng Đang Chờ</h2>
         <div className="row">
           <div className='col-6 align-content-end'>
-            <h5>Total Orders: {totalOrders}</h5> 
+            <h5>Tổng Số Đơn Hàng: {totalOrders}</h5> 
           </div>
           <div className='col-6' >
             <div className='d-flex justify-content-end my-2'>
               <div className="input-group w-50">
-                <input type="search" className="form-control rounded" placeholder="Name, phone or email"
-                      aria-label="Search" aria-describedby="search-addon" onChange={handleSearchChange} />
-                <button type="button" className="btn btn-outline-primary" onClick={handleSearch} >search</button>
+                <input type="search" className="form-control rounded" placeholder="Tên, điện thoại hoặc email"
+                      aria-label="Tìm Kiếm" aria-describedby="search-addon" onChange={handleSearchChange} />
+                <button type="button" className="btn btn-outline-primary" onClick={handleSearch} >Tìm Kiếm</button>
               </div>
             </div>
           </div>
@@ -116,18 +116,18 @@ const Shipper = () => {
           <table className="table table-hover" >
             <thead className='table-light'>
               <tr>
-                <th scope="col">Order ID</th>
-                <th scope="col">Customer Name</th>
-                <th scope="col">Phone</th>
+                <th scope="col">Mã Đơn Hàng</th>
+                <th scope="col">Tên Khách Hàng</th>
+                <th scope="col">Số Điện Thoại</th>
                 <th scope="col">Email</th>
-                <th scope="col">Address</th>
-                <th scope="col">Oreder Time</th>
+                <th scope="col">Địa Chỉ</th>
+                <th scope="col">Ngày Đặt Hàng</th>
               </tr>
             </thead>
             <tbody  >
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan="9">No orders found</td>
+                  <td colSpan="9">Không Tìm Thấy Đơn Hàng</td>
                 </tr>
               )}
               {orders.map((order, index) => (
@@ -137,7 +137,7 @@ const Shipper = () => {
                   <td className="py-2 align-content-center">{order.PhoneNumber}</td>
                   <td className="py-2 align-content-center">{order.Email}</td>
                   <td className="py-2 align-content-center">{order.DeliveryAddress}</td>
-                  <td className="py-2 align-content-center">{format(new Date(order.OrderDate), 'MMMM dd, yyyy hh:mm:ss a')}</td>
+                  <td className="py-2 align-content-center">{format(new Date(order.OrderDate), 'dd/MM/yyyy HH:mm:ss')}</td>
                 </tr>
               ))}
             </tbody>
@@ -146,12 +146,12 @@ const Shipper = () => {
         {totalPages > 0 &&
           <div className='d-flex justify-content-end'>
               <ReactPaginate
-                nextLabel="next"
+                nextLabel="Tiếp"
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={3}
                 marginPagesDisplayed={2}
                 pageCount={totalPages}
-                previousLabel="previous"
+                previousLabel="Trước"
                 pageClassName="page-item"
                 pageLinkClassName="page-link"
                 previousClassName="page-item"
@@ -168,7 +168,6 @@ const Shipper = () => {
           </div>
         }
       </main>
-      <Footer/>
     </div>
   );
 };

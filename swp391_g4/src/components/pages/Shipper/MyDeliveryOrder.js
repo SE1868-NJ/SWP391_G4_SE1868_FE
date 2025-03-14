@@ -49,13 +49,17 @@ const MyDeliveryOrder = () => {
     FetchOrders();
   };
 
+  const handleReportIssue = () => {
+    navigate('/report-issue');
+  };
+
   return (
     <div className="form shipper">
       <main className="mx-md-5">
-        <h2 className="text-center mt-5">My Delivery Orders</h2>
+        <h2 className="text-center mt-5">Đơn Hàng Đang Giao</h2>
         <div className="row">
           <div className="col-6 align-content-end">
-            <h5>Total Orders: {totalOrders}</h5>
+            <h5>Tổng Số Đơn Hàng: {totalOrders}</h5>
           </div>
           <div className="col-6">
             <div className="d-flex justify-content-end my-2">
@@ -63,8 +67,8 @@ const MyDeliveryOrder = () => {
                 <input
                   type="search"
                   className="form-control rounded"
-                  placeholder="Name, phone or email"
-                  aria-label="Search"
+                  placeholder="Tên, điện thoại hoặc email"
+                  aria-label="Tìm Kiếm"
                   aria-describedby="search-addon"
                   onChange={handleSearchChange}
                 />
@@ -73,7 +77,7 @@ const MyDeliveryOrder = () => {
                   className="btn btn-outline-primary"
                   onClick={handleSearch}
                 >
-                  search
+                  Tìm Kiếm
                 </button>
               </div>
             </div>
@@ -83,19 +87,19 @@ const MyDeliveryOrder = () => {
           <table className="table table-hover">
             <thead className="table-light">
               <tr>
-                <th scope="col">Order ID</th>
-                <th scope="col">Customer Name</th>
-                <th scope="col">Phone</th>
+                <th scope="col">Mã Đơn Hàng</th>
+                <th scope="col">Tên Khách Hàng</th>
+                <th scope="col">Số Điện Thoại</th>
                 <th scope="col">Email</th>
-                <th scope="col">Address</th>
-                <th scope="col">Order Time</th>
-                <th scope="col">Estimated Time</th>
+                <th scope="col">Địa Chỉ</th>
+                <th scope="col">Ngày Đặt Hàng</th>
+                <th scope="col">Thời Gian Dự Kiến</th>
               </tr>
             </thead>
             <tbody>
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan="9">No orders found</td>
+                  <td colSpan="9">Không Tìm Thấy Đơn Hàng</td>
                 </tr>
               )}
               {orders.map((order, index) => (
@@ -120,13 +124,13 @@ const MyDeliveryOrder = () => {
                   <td className="py-2 align-content-center">
                     {format(
                       new Date(order.OrderDate),
-                      "MMMM dd, yyyy hh:mm:ss a"
+                      "dd/MM/yyyy HH:mm:ss"
                     )}
                   </td>
                   <td className="py-2 align-content-center">
                     {format(
                       new Date(order.EstimatedDeliveryTime),
-                      "MMMM dd, yyyy hh:mm:ss a"
+                      "dd/MM/yyyy HH:mm:ss"
                     )}
                   </td>
                 </tr>
@@ -137,12 +141,12 @@ const MyDeliveryOrder = () => {
         {totalPages > 0 && (
           <div className="d-flex justify-content-end">
             <ReactPaginate
-              nextLabel="next"
+              nextLabel="Tiếp"
               onPageChange={handlePageClick}
               pageRangeDisplayed={3}
               marginPagesDisplayed={2}
               pageCount={totalPages}
-              previousLabel="previous"
+              previousLabel="Trước"
               pageClassName="page-item"
               pageLinkClassName="page-link"
               previousClassName="page-item"
@@ -158,6 +162,16 @@ const MyDeliveryOrder = () => {
             />
           </div>
         )}
+
+        {/* Nút Sự cố đơn hàng */}
+        <div className="d-flex justify-content-end mt-3">
+          <button 
+            className="btn btn-warning"
+            onClick={handleReportIssue}
+          >
+            Sự Cố Đơn Hàng
+          </button>
+        </div>
       </main>
     </div>
   );

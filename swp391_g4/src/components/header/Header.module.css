@@ -241,3 +241,188 @@
   background-color: #ffebee;
   color: #d32f2f;
  }
+
+ .authSection {
+  display: flex;
+  align-items: center;
+}
+
+.notificationButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  margin-right: 10px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.notificationButton:hover {
+  opacity: 0.7;
+}
+
+.notificationButton .unreadBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4d4f;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 5px;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 1px solid white;
+}
+
+.dropdownWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.dropdownToggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Notification Modal Styling */
+.notificationModal {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  width: 300px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  overflow: hidden;
+}
+
+.notificationHeader {
+  background-color: #2196F3;
+  color: white;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notificationTitle {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.notificationActions {
+  display: flex;
+  align-items: center;
+}
+
+.markAllRead {
+  cursor: pointer;
+  font-size: 13px;
+  margin-right: 10px;
+  color: white;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.markAllRead:hover {
+  opacity: 0.8;
+}
+
+.closeNotification {
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  line-height: 1;
+  transition: opacity 0.2s ease;
+}
+
+.closeNotification:hover {
+  opacity: 0.8;
+}
+
+.notificationList {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.notificationItem {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.notificationItem:hover {
+  background-color: #f5f5f5;
+}
+
+.notificationItem.unread {
+  background-color: #f0f0f0;
+}
+
+.notificationMessage {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.notificationTime {
+  font-size: 12px;
+  color: #888;
+}
+
+.emptyNotification {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* Notification Button Styling */
+.notificationButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  margin-right: 10px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.notificationButton:hover {
+  opacity: 0.7;
+}
+
+.notificationButton .unreadBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4d4f;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 5px;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 1px solid white;
+}

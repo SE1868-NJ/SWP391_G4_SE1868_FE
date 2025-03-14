@@ -229,6 +229,7 @@ body {
 .banner-slide.active {
   opacity: 1;
   transform: translateX(0);
+  padding-top: 100px;
 }
 
 .banner-slide.prev {
