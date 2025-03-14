@@ -115,7 +115,7 @@ root.render(
 
       <Route path="/shipper-detail" element={<ShipperDetail />} />
       <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
-
+      <Route path="/incident-management" element={<IncidentManagement />} />
       {/* ** Phan bao cao su co** */}
       <Route path="/report-issue" element={<ReportIssue />} />
       <Route path="/admin-report-handling" element={<AdminReportHandling />} />

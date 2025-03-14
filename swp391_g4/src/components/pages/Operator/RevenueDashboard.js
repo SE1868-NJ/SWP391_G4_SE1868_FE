@@ -5,7 +5,9 @@ import {
 } from 'recharts';
 import axios from 'axios';
 import '../../../styles/RevenueDashboard.css';
-import { exportToExcel, exportMultipleSheets, formatDataForExport } from '../Operator/ExportExcel';
+import { exportToExcel, exportMultipleSheets, formatDataForExport } from './ExportExcel_Revenue';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 // Utility function
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('vi-VN', { 
@@ -400,7 +402,7 @@ function OrdersPanel({ filters }) {
         <div className="RevenueDashboard-panel-title">Chi tiết doanh thu theo đơn hàng</div>
         <div className="RevenueDashboard-panel-actions">
           <button onClick={handleExport}>Xuất danh sách</button>
-          {exportLoading ? 'Đang xuất...' : 'Xuất danh sách'}
+          
         </div>
       </div>
       

@@ -247,12 +247,17 @@
     color: var(--white);
     border: none;
     border-radius: var(--border-radius);
-    padding: 6px 12px;
+    padding: 14px 28px;
     cursor: pointer;
-    font-size: 0.75rem;
-    transition: all 0.2s;
+    font-size: 1.0rem;
+    transition: all 0.1s;
   }
-  
+  .incident_management_actions {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    height: 100%; /* Ensure the container takes enough height for vertical centering */
+  }
   .incident_management_action-btn:hover {
     opacity: 0.9;
   }

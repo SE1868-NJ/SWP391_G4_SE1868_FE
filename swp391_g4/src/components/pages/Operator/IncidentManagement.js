@@ -2,91 +2,184 @@ import React, { useState, useEffect } from 'react';
 import '../../../styles/IncidentManagement.css';
 import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Search, Download, FileText, Filter, CheckCircle, Clock, AlertTriangle, Users } from 'lucide-react';
+import axios from 'axios'; // Make sure axios is installed
 
 const IncidentManagement = () => {
-  // Mock data for incidents
-  const mockIncidents = [
-    { id: 1, shipper: 'Nguyễn Văn A', type: 'Giao hàng trễ', status: 'Đang xử lý', date: '2025-03-10', reportedBy: 'Khách hàng' },
-    { id: 2, shipper: 'Trần Văn B', type: 'Hàng hóa hư hỏng', status: 'Đã xử lý', date: '2025-03-09', reportedBy: 'Khách hàng' },
-    { id: 3, shipper: 'Lê Thị C', type: 'Thái độ không tốt', status: 'Đang xử lý', date: '2025-03-08', reportedBy: 'Nhân viên' },
-    { id: 4, shipper: 'Phạm Văn D', type: 'Giao sai hàng', status: 'Chưa xử lý', date: '2025-03-07', reportedBy: 'Khách hàng' },
-    { id: 5, shipper: 'Hoàng Văn E', type: 'Không liên lạc được', status: 'Đã xử lý', date: '2025-03-06', reportedBy: 'Nhân viên' },
-    { id: 6, shipper: 'Nguyễn Thị F', type: 'Giao hàng trễ', status: 'Đã xử lý', date: '2025-03-05', reportedBy: 'Khách hàng' },
-    { id: 7, shipper: 'Trần Văn G', type: 'Hàng hóa hư hỏng', status: 'Chưa xử lý', date: '2025-03-04', reportedBy: 'Khách hàng' },
-    { id: 8, shipper: 'Lê Văn H', type: 'Thái độ không tốt', status: 'Đã xử lý', date: '2025-03-03', reportedBy: 'Nhân viên' },
-  ];
-
-  // Mock data for charts
-  const typeChartData = [
-    { name: 'Giao hàng trễ', value: 35 },
-    { name: 'Hàng hóa hư hỏng', value: 25 },
-    { name: 'Thái độ không tốt', value: 20 },
-    { name: 'Giao sai hàng', value: 15 },
-    { name: 'Không liên lạc được', value: 5 },
-  ];
-
-  const timeChartData = [
-    { name: '01/03', count: 5 },
-    { name: '02/03', count: 7 },
-    { name: '03/03', count: 4 },
-    { name: '04/03', count: 8 },
-    { name: '05/03', count: 6 },
-    { name: '06/03', count: 9 },
-    { name: '07/03', count: 11 },
-    { name: '08/03', count: 8 },
-    { name: '09/03', count: 6 },
-    { name: '10/03', count: 4 },
-  ];
-
-  const shipperChartData = [
-    { name: 'Nguyễn Văn A', count: 12 },
-    { name: 'Trần Văn B', count: 8 },
-    { name: 'Lê Thị C', count: 6 },
-    { name: 'Phạm Văn D', count: 5 },
-    { name: 'Hoàng Văn E', count: 4 },
-  ];
-
-  const [incidents, setIncidents] = useState(mockIncidents);
-  const [filteredIncidents, setFilteredIncidents] = useState(mockIncidents);
+  // State for incidents data
+  const [incidents, setIncidents] = useState([]);
+  const [filteredIncidents, setFilteredIncidents] = useState([]);
   const [statusFilter, setStatusFilter] = useState('Tất cả');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('list');
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit, setLimit] = useState(10);
+  
+  // State for statistics
+  const [summaryStats, setSummaryStats] = useState({
+    totalIncidents: 0,
+    inProgressCount: 0,
+    resolvedCount: 0,
+    totalShippers: 0,
+    avgResolutionDays: "0",
+    severeCases: 0,
+    topShipper: "N/A",
+    successRate: 0
+  });
+  
+  // State for chart data
+  const [typeChartData, setTypeChartData] = useState([]);
+  const [timeChartData, setTimeChartData] = useState([]);
+  const [shipperChartData, setShipperChartData] = useState([]);
+  
   // COLORS for the charts
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
+  // Fetch incidents data
+  const fetchIncidents = async () => {
+    try {
+      // Convert Vietnamese status to database status
+      let dbStatus = null;
+      if (statusFilter !== 'Tất cả') {
+        switch(statusFilter) {
+          case 'Chưa xử lý':
+            dbStatus = 'Pending';
+            break;
+          case 'Đang xử lý':
+            dbStatus = 'In Progress';
+            break;
+          case 'Đã xử lý':
+            dbStatus = 'Resolved';
+            break;
+          case 'Từ chối':
+            dbStatus = 'Rejected';
+            break;
+        }
+      }
+      console.log("Sending status to API:", dbStatus);
+      const response = await axios.get('http://localhost:5000/api/incidents', {
+        params: {
+          dbStatus: dbStatus, // Send the converted status
+          search: searchTerm || null,
+          page: currentPage,
+          limit: limit
+        }
+      });
+      console.log("API response:", response.data);
+      setIncidents(response.data.incidents);
+      setFilteredIncidents(response.data.incidents);
+      setTotalPages(response.data.pagination.totalPages);
+    } catch (error) {
+      console.error('Error fetching incidents:', error);
+      alert('Đã xảy ra lỗi khi lấy danh sách sự cố');
+    }
+  };
+  
+  // Fetch summary statistics
+  const fetchSummaryStats = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/incidents/summary-stats');
+      setSummaryStats(response.data);
+    } catch (error) {
+      console.error('Error fetching summary stats:', error);
+      alert('Đã xảy ra lỗi khi lấy số liệu thống kê');
+    }
+  };
+  
+  // Fetch incident type chart data
+  const fetchTypeChartData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/incidents/type-stats');
+      setTypeChartData(response.data);
+    } catch (error) {
+      console.error('Error fetching type chart data:', error);
+    }
+  };
+  
+  // Fetch incident time chart data
+  const fetchTimeChartData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/incidents/time-stats', {
+        params: { days: 10 }
+      });
+      setTimeChartData(response.data);
+    } catch (error) {
+      console.error('Error fetching time chart data:', error);
+    }
+  };
+  
+  // Fetch incident shipper chart data
+  const fetchShipperChartData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/incidents/shipper-stats', {
+        params: { limit: 5 }
+      });
+      setShipperChartData(response.data);
+    } catch (error) {
+      console.error('Error fetching shipper chart data:', error);
+    }
+  };
+
+  // Load data on initial render and when filters change
   useEffect(() => {
-    let filtered = [...incidents];
-    
-    // Apply status filter
-    if (statusFilter !== 'Tất cả') {
-      filtered = filtered.filter(incident => incident.status === statusFilter);
+    fetchIncidents();
+    fetchSummaryStats();
+  }, [statusFilter, searchTerm, currentPage, limit]);
+  useEffect(() => {
+    fetchSummaryStats();
+  }, []);
+  // Load statistics when tab changes
+  useEffect(() => {
+    if (activeTab === 'stats') {
+      fetchSummaryStats();
+      fetchTypeChartData();
+      fetchTimeChartData();
+      fetchShipperChartData();
     }
-    
-    // Apply search term
-    if (searchTerm) {
-      filtered = filtered.filter(incident => 
-        incident.shipper.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    setFilteredIncidents(filtered);
-  }, [statusFilter, searchTerm, incidents]);
+  }, [activeTab]);
 
   const handleStatusFilterChange = (status) => {
     setStatusFilter(status);
+    setCurrentPage(1); // Reset to first page when filter changes
   };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page when search changes
   };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  const handleExport = (type) => {
-    alert(`Xuất báo cáo dạng ${type}`);
+  const handleExport = async (format) => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/export-report', {
+        params: { format },
+        responseType: format === 'json' ? 'json' : 'blob'
+      });
+      
+      if (format === 'json') {
+        // Just display a success message for JSON
+        alert('Xuất báo cáo dạng JSON thành công');
+      } else {
+        // For Excel/PDF, handle file download
+        alert(`Tính năng xuất ${format.toUpperCase()} đang được phát triển`);
+      }
+    } catch (error) {
+      console.error(`Error exporting as ${format}:`, error);
+      alert(`Đã xảy ra lỗi khi xuất báo cáo dạng ${format}`);
+    }
+  };
+  
+  const handleViewDetails = () => {
+    // Navigate to detail page or open a modal
+    window.location.href = `/admin-report-handling`;
+    // Alternatively, set a state to open a modal
+  };
+  
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -154,6 +247,12 @@ const IncidentManagement = () => {
               >
                 Đã xử lý
               </button>
+              <button 
+                className={statusFilter === 'Từ chối' ? 'active' : ''}
+                onClick={() => handleStatusFilterChange('Từ chối')}
+              >
+                Từ chối
+              </button>
             </div>
           </div>
 
@@ -164,7 +263,7 @@ const IncidentManagement = () => {
               </div>
               <div className="incident_management_summary-content">
                 <h3>Tổng số sự cố</h3>
-                <p>{incidents.length}</p>
+                <p>{summaryStats.totalIncidents}</p>
               </div>
             </div>
             <div className="incident_management_summary-card">
@@ -173,7 +272,7 @@ const IncidentManagement = () => {
               </div>
               <div className="incident_management_summary-content">
                 <h3>Đang xử lý</h3>
-                <p>{incidents.filter(i => i.status === 'Đang xử lý').length}</p>
+                <p>{summaryStats.inProgressCount}</p>
               </div>
             </div>
             <div className="incident_management_summary-card">
@@ -182,7 +281,7 @@ const IncidentManagement = () => {
               </div>
               <div className="incident_management_summary-content">
                 <h3>Đã xử lý</h3>
-                <p>{incidents.filter(i => i.status === 'Đã xử lý').length}</p>
+                <p>{summaryStats.resolvedCount}</p>
               </div>
             </div>
             <div className="incident_management_summary-card">
@@ -191,7 +290,7 @@ const IncidentManagement = () => {
               </div>
               <div className="incident_management_summary-content">
                 <h3>Shipper liên quan</h3>
-                <p>{new Set(incidents.map(i => i.shipper)).size}</p>
+                <p>{summaryStats.totalShippers}</p>
               </div>
             </div>
           </div>
@@ -206,7 +305,7 @@ const IncidentManagement = () => {
                   <th>Trạng thái</th>
                   <th>Ngày báo cáo</th>
                   <th>Người báo cáo</th>
-                  <th>Hành động</th>
+                  <th>Mức độ</th>
                 </tr>
               </thead>
               <tbody>
@@ -222,21 +321,64 @@ const IncidentManagement = () => {
                     </td>
                     <td>{incident.date}</td>
                     <td>{incident.reportedBy}</td>
-                    <td>
-                      <button className="incident_management_action-btn">Chi tiết</button>
-                    </td>
+                    <td>{incident.severity}</td>
                   </tr>
                 ))}
+                {filteredIncidents.length === 0 && (
+                  <tr>
+                    <td colSpan="8" className="incident_management_no-data">Không có dữ liệu</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
-
+              <div className="incident_management_actions">
+              <button 
+                        className="incident_management_action-btn"
+                        onClick={() => handleViewDetails()}
+                      >
+                        Chi tiết & Điều chỉnh sự cố
+                      </button>
+              </div>
           <div className="incident_management_pagination">
-            <button>&laquo;</button>
-            <button className="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>&raquo;</button>
+            <button 
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              &laquo;
+            </button>
+            
+            {/* Generate page buttons */}
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              // Show pages around current page
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+              
+              return (
+                <button 
+                  key={pageNum}
+                  className={currentPage === pageNum ? 'active' : ''}
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+            
+            <button 
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              &raquo;
+            </button>
           </div>
         </div>
       )}
@@ -260,19 +402,19 @@ const IncidentManagement = () => {
           <div className="incident_management_stats-summary">
             <div className="incident_management_stats-card">
               <h3>Tỷ lệ xử lý thành công</h3>
-              <p className="incident_management_stats-value">85%</p>
+              <p className="incident_management_stats-value">{summaryStats.successRate}%</p>
             </div>
             <div className="incident_management_stats-card">
               <h3>Thời gian xử lý trung bình</h3>
-              <p className="incident_management_stats-value">1.5 ngày</p>
+              <p className="incident_management_stats-value">{summaryStats.avgResolutionDays} ngày</p>
             </div>
             <div className="incident_management_stats-card">
               <h3>Sự cố nghiêm trọng</h3>
-              <p className="incident_management_stats-value">12</p>
+              <p className="incident_management_stats-value">{summaryStats.severeCases}</p>
             </div>
             <div className="incident_management_stats-card">
               <h3>Shipper có nhiều sự cố</h3>
-              <p className="incident_management_stats-value">Nguyễn Văn A</p>
+              <p className="incident_management_stats-value">{summaryStats.topShipper}</p>
             </div>
           </div>
 
