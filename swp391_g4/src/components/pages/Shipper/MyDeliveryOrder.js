@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import ProfileShipper from "../../common/profileShipper";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -16,7 +15,6 @@ const MyDeliveryOrder = () => {
   const shipperID = localStorage.getItem("shipperId");
   const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
 
-  
   const FetchOrders = () => {
     axios
       .get(
@@ -33,6 +31,7 @@ const MyDeliveryOrder = () => {
         console.log(error);
       });
   };
+
   useEffect(() => {
     FetchOrders();
   }, [currentPage]);
@@ -45,7 +44,7 @@ const MyDeliveryOrder = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = () => {
     FetchOrders();
   };
 
@@ -94,19 +93,19 @@ const MyDeliveryOrder = () => {
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Ngày Đặt Hàng</th>
                 <th scope="col">Thời Gian Dự Kiến</th>
+                <th scope="col">Hành Động</th>
               </tr>
             </thead>
             <tbody>
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan="9">Không Tìm Thấy Đơn Hàng</td>
+                  <td colSpan="8" className="text-center">Không Tìm Thấy Đơn Hàng</td>
                 </tr>
               )}
               {orders.map((order, index) => (
                 <tr
                   className={`${index % 2 !== 0 ? "table-active" : ""}`}
                   key={order.OrderID}
-                  onClick={() => navigate(`/orderdetail/${order.OrderID}`)}
                 >
                   <td className="py-2 align-content-center">
                     #{order.OrderID}
@@ -132,6 +131,15 @@ const MyDeliveryOrder = () => {
                       new Date(order.EstimatedDeliveryTime),
                       "dd/MM/yyyy HH:mm:ss"
                     )}
+                  </td>
+                  <td className="py-2 align-content-center">
+                    <button 
+                      className="btn btn-primary btn-sm"
+                      onClick={() => navigate(`/orderdetail/${order.OrderID}`)}
+                      style={{ backgroundColor: "green" }}
+                    >
+                      Xác Nhận
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -42,7 +42,7 @@ const HistoryDeliveryOrder = () => {
         const selectedStatus = event.target.value;
         console.log(selectedStatus);
         setStatus(selectedStatus);
-        setCurrentPage(1); // Reset to first page when changing status
+        setCurrentPage(1);
     };
   
     const handleSearchChange = (event) => {
