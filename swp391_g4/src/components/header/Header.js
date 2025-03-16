@@ -67,7 +67,7 @@ export class Header extends React.Component {
   fetchNotifications = async (shipperId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/notifications?shipperId=${shipperId}`
+        `http://localhost:4000/api/notifications?shipperId=${shipperId}`
       );
       const notifications = response.data.notifications;
 
@@ -83,7 +83,7 @@ export class Header extends React.Component {
   markAllAsRead = async () => {
     try {
       const shipperId = localStorage.getItem("shipperId");
-      await axios.put(`http://localhost:5000/api/notifications/mark-all-read`, {
+      await axios.put(`http://localhost:4000/api/notifications/mark-all-read`, {
         shipperId,
       });
       this.fetchNotifications(shipperId);
@@ -95,7 +95,7 @@ export class Header extends React.Component {
   handleMarkAsRead = async (notificationId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/notifications/${notificationId}/read`
+        `http://localhost:4000/api/notifications/${notificationId}/read`
       );
       const shipperId = localStorage.getItem("shipperId");
       this.fetchNotifications(shipperId);

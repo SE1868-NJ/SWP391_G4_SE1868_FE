@@ -20,7 +20,7 @@ const MyDeliveryOrder = () => {
   const FetchOrders = () => {
     axios
       .get(
-        `http://localhost:5000/api/get-my-delivery-order?shipperId=${shipperID}&search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`
+        `http://localhost:4000/api/get-my-delivery-order?shipperId=${shipperID}&search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`
       )
       .then((response) => {
         console.log(response);
