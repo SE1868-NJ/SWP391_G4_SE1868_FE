@@ -1,6 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./index.css";
 
 // Trang home
@@ -24,9 +29,7 @@ import ShipperRegister from "./components/pages/Login/ShipperRegister";
 //Trang Operator
 import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
-
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
-
 
 //Trang Shipper Account
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
@@ -34,18 +37,17 @@ import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperIn
 
 //Trang Shipper
 import Shipper from "./components/pages/Shipper/Shipper";
-import OrderDetails from "./components/pages/Shipper/OrderDetails";
+import OrderDetails from "./components/pages/Shipper/OrderDetails"
+import ShipperDashboard from "./components/pages/Shipper/ShipperDashboard";
 
-
-//Phan bao cao su co
-import ReportIssue from "./components/pages/ReportIssue";
-import AdminReportHandling from "./components/pages/AdminReportHandling";
+//Report
+import ReportIssue from "./components/pages/Shipper/ReportIssue";
+import AdminReportHandling from "./components/pages/Operator/AdminReportHandling";
 import CustomerReportTracking from "./components/pages/CustomerReportTracking";
-
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-  return token ? children : <navigate to="/login" />;
+  return token ? children : <Navigate to="/login" />;
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -72,8 +74,19 @@ root.render(
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/register" element={<ShipperRegister />} />
 
-
       {/* ** Trang Shipper** */}
+      <Route
+        path="/history-delivery-order"
+        element={<Navigate to="/dashboard/history" />}
+      />
+
+      {/* Route cho shipper dashboard */}
+      <Route path="/dashboard" element={<ShipperDashboard />} />
+      <Route path="/dashboard/pending" element={<ShipperDashboard />} />
+      <Route path="/dashboard/my-orders" element={<ShipperDashboard />} />
+      <Route path="/dashboard/history" element={<ShipperDashboard />} />
+      <Route path="/dashboard/revenue" element={<ShipperDashboard />} />
+
       <Route
         path="/shipper"
         element={
@@ -83,6 +96,7 @@ root.render(
         }
       />
       <Route path="/orderdetail/:id" element={<OrderDetails />} />
+      <Route path="/shipper-dashboard" element={<Navigate to="/dashboard" />} />
 
       {/* ** Trang ShipperAccount** */}
       <Route
@@ -93,31 +107,20 @@ root.render(
           </PrivateRoute>
         }
       />
-      <Route path='/update-shipper-info' element={<UpdateShipperInfo />} />
+      <Route path="/update-shipper-info" element={<UpdateShipperInfo />} />
 
       {/* ** Trang Operator** */}
       <Route path="/manage-shipper" element={<ManageShipper />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/shipper-contact" element={<ShipperContact />} />
-      <Route path="/update-personal-info" element={<UpdateShipperInfo />} />
-      <Route path="/eventdetail" element={<EventDetail />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/news" element={<News />} />
-      <Route path="/register" element={<ShipperRegister />} />
-      <Route path="/news/:eventId" element={<EventDetail />} />
-      <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-      <Route path="/terms-of-use" element={<TermsOfUse />} />
-      <Route path="/job/:jobId" element={<JobDetail />} />
-      <Route path='/shipper-detail' element={<ShipperDetail />} />
-      <Route path='/revenue-dashboard' element={<RevenueDashboard />} />
       <Route path="/shipper-detail" element={<ShipperDetail />} />
+      <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
 
       {/* ** Phan bao cao su co** */}
       <Route path="/report-issue" element={<ReportIssue />} />
       <Route path="/admin-report-handling" element={<AdminReportHandling />} />
-      <Route path="/customer-report-tracking" element={<CustomerReportTracking />} />
+      <Route
+        path="/customer-report-tracking"
+        element={<CustomerReportTracking />}
+      />
     </Routes>
   </Router>
 );

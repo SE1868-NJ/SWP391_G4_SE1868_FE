@@ -5,7 +5,7 @@ import "../../../styles/ShiperContact.css";
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
-
+import ChatPopup from "./ChatPopup";
 function ShipperContact() {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
@@ -130,7 +130,7 @@ function ShipperContact() {
           </div>
         </div>
       )}
-
+      <ChatPopup/>
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );

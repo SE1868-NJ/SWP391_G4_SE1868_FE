@@ -5,6 +5,9 @@ import Header from "../../header/Header";
 import Login from "../Login/Login";
 import { useNavigate } from "react-router-dom";
 
+import ChatPopup from "../Home/ChatPopup";
+
+
 const Home = () => {
   // Navigation Items
   const homeNavigationItems = [
@@ -309,7 +312,7 @@ const Home = () => {
           </div>
         </div>
       )}
-
+      <ChatPopup />
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );

@@ -28,12 +28,12 @@ export class Footer extends React.Component {
       <footer className={styles.footer}>
         <div
           className={styles.background}
-          style={{ backgroundImage: "url('/FrameFooter.png')" }}
+          style={{ backgroundImage: 'url("https://useless-gold-stingray.myfilebase.com/ipfs/QmXbGqSZv3MwHrfBTf5CN1L5qdDAFEhe8HwZ74Y5Tbb2Tj")' }}
         >
           <div className={styles.logoContainer}>
             <img
               loading="lazy"
-              src="/EcoShipper_rbg.png"
+              src="https://useless-gold-stingray.myfilebase.com/ipfs/QmYsXLxt4iEbFG3ZZijiHEmgyt34WhtAX3CCGDcuKrKgWF"
               className={styles.logo}
               alt="Company logo"
             />

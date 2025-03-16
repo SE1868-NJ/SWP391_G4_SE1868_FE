@@ -3,7 +3,7 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/PrivacyPolicy.css";
 import Login from "../Login/Login";
-
+import ChatPopup from "./ChatPopup";
 const PrivacyPolicy = () => {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
@@ -155,7 +155,7 @@ const PrivacyPolicy = () => {
           </div>
         </div>
       )}
-
+      <ChatPopup/>
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );

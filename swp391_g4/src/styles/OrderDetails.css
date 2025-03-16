@@ -88,8 +88,12 @@ strong {
     right: 0;
     z-index: 1000;
     width: 100%;
-  }
+}
 
   .text-center{
     margin-top: 100px;
+  }
+
+  .orderdetail-container{
+    padding-top: 100px;
   }

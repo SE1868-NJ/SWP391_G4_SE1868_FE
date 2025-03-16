@@ -7,7 +7,8 @@ import { Badge } from '../../buttons/Badges';
 import { 
   Truck, User, Phone, Mail, MapPin, CreditCard, 
   FileCheck, AlertCircle, CheckCircle2, Shield, UserCheck,
-  Clock, CircleDollarSign, Calendar, Package2
+  Clock, CircleDollarSign, Calendar, Package2,
+  IdCard
 } from 'lucide-react';
 import '../../../styles/ShipperDetail.css';
 import axios from 'axios';
@@ -15,7 +16,6 @@ import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
 const ShipperDetail = () => {
-  // const [activeTab, setActiveTab] = useState('personal');
   const [shippersList, setShippersList] = useState([]);
   const [selectedShipper, setSelectedShipper] = useState(null);
   const [verificationStatus, setVerificationStatus] = useState({
@@ -484,7 +484,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">Giấy Phép Lái Xe</p>
                     <img 
-                      src="DriverLicense.png" 
+                      src="https://useless-gold-stingray.myfilebase.com/ipfs/QmTM6m5UYBmxKiT9iGZeLifPo4hzbgkvRtTMN15B1BE2zt"
                       alt="Driver License"
                       className="document-image"
                     />
@@ -496,7 +496,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">Đăng Ký Xe</p>
                     <img 
-                      src="VehicleRegistration.png" 
+                      src="https://useless-gold-stingray.myfilebase.com/ipfs/QmajDrgo5Bmazep3MVFUd1f4EsNVirbEacLUUhDt83pYzf" 
                       alt="Vehicle Registration"
                       className="document-image"
                     />
@@ -508,7 +508,7 @@ useEffect(() => {
                   <div className="info-content">
                     <p className="info-label">CMND/CCCD</p>
                     <img 
-                      src="IDCard.png" 
+                      src="https://useless-gold-stingray.myfilebase.com/ipfs/QmWzLEcBiQk8E65TW3SRjtJM5ZnjfRGXhMFWZCif6TcSwp"
                       alt="ID Card"
                       className="document-image"
                     />

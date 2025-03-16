@@ -21,7 +21,7 @@ const CustomerReportTracking = () => {
 
   const fetchOrderReports = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/customer-order-reports?customerId=${4}`);
+      const response = await axios.get(`http://localhost:4000/api/customer-order-reports?customerId=${1}`);
       setOrderReports(response.data.orderReports);
     } catch (error) {
       console.error("Error fetching order reports:", error);
@@ -34,9 +34,9 @@ const CustomerReportTracking = () => {
 
   return (
     <div className="report-page">
-      <header className="full-width-header">
+      <div className="header">
         <Header />
-      </header>
+      </div>
       <div className="report-container-wrapper">
         <div className="report-container">
           <h2>Sự cố đơn hàng của tôi</h2>

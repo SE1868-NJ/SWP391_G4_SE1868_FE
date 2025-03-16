@@ -6,7 +6,26 @@ import "../../../styles/UpdateShipperInfo.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
+const checkPhoneExists = async (phoneNumber) => {
+  try {
+    const response = await axios.get(`http://localhost:4000/api/check-phone/${phoneNumber}`);
+    return response.data.exists;
+  } catch (error) {
+    console.error('Error checking phone:', error);
+    return false;
+  }
+};
 
+const checkEmailExists = async (email) => {
+  if (!email) return false;
+  try {
+    const response = await axios.get(`http://localhost:4000/api/check-email/${email}`);
+    return response.data.exists;
+  } catch (error) {
+    console.error('Error checking email:', error);
+    return false;
+  }
+};
 // Constants for validation and configuration
 const VALIDATION_CONFIG = {
   phone: {
@@ -20,9 +39,9 @@ const VALIDATION_CONFIG = {
     message: "Email không hợp lệ"
   },
   licensePlate: {
-    pattern: /^[0-9]{2}[A-Z][0-9]-[0-9]{4,5}$/,
+    pattern: /^[0-9]{2}[A-Z]-[0-9]{4,5}$/,
     maxLength: 15,
-    message: "Biển số xe không hợp lệ (VD: 51F1-12345)"
+    message: "Biển số xe không hợp lệ (VD: 51F-12345)"
   },
   bankAccount: {
     pattern: /^[0-9]{10,20}$/,
@@ -32,14 +51,11 @@ const VALIDATION_CONFIG = {
 };
 
 const BANK_LIST = [
-  "Vietcombank",
-  "Techcombank",
-  "BIDV",
-  "Agribank",
-  "VPBank",
-  "ACB",
-  "MBBank",
-  "TPBank"
+  "Vietcombank", "Techcombank", "BIDV", "Agribank", "VPBank",
+  "ACB", "MBBank", "TPBank", "Sacombank", "VietinBank",
+  "SHB", "HDBank", "Eximbank", "VIB", "SCB",
+  "OCB", "MSB", "SeABank", "LienVietPostBank", "PVcomBank",
+  "NamABank", "BaoVietBank", "KienLongBank", "DongABank"
 ];
 
 const VEHICLE_TYPES = [
@@ -70,10 +86,10 @@ const FormInput = ({ label, name, type, value, onChange, onBlur, error, required
     />
     {error && <span className="UpdateShipperInfo-error-message">{error}</span>}
   </div>
- );
+);
 
 // UpdateField Component để hiển thị trường thông tin và nút cập nhật
-const UpdateField = ({ label, value, canUpdate, onUpdate, type = "text" }) => (
+const UpdateField = ({ label, value, canUpdate, onUpdate, type = "text",isActive }) => (
   <div className="UpdateShipperInfo-field-container">
     <div className="UpdateShipperInfo-field-info">
       <span className="UpdateShipperInfo-field-label">{label}:</span>
@@ -84,12 +100,13 @@ const UpdateField = ({ label, value, canUpdate, onUpdate, type = "text" }) => (
         type="button"
         className="UpdateShipperInfo-update-field-btn"
         onClick={onUpdate}
+        aria-label={isActive ? "Cancel" : "Update"}
       >
-        Cập nhật
+        {isActive ? "X" : "Cập nhật"}
       </button>
     )}
   </div>
- );
+);
 
 const UpdateShipperInfo = () => {
   const navigate = useNavigate();
@@ -100,23 +117,23 @@ const UpdateShipperInfo = () => {
   const [touchedFields, setTouchedFields] = useState({});
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   // Navigation Items
-    const newsNavigationItems = [
-      { text: "Trang chủ", path: "/home" },
-      { text: "Về chúng tôi", path: "/about" },
-      { text: "Tin tức", path: "/news", isActive: true },
-      { text: "Liên hệ", path: "/shipper-contact" },
-    ];
-  
-    // Login Popup State
-    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-  
-    const openLoginPopup = () => {
-      setIsLoginPopupOpen(true);
-    };
-  
-    const closeLoginPopup = () => {
-      setIsLoginPopupOpen(false);
-    };
+  const newsNavigationItems = [
+    { text: "Trang chủ", path: "/home" },
+    { text: "Về chúng tôi", path: "/about" },
+    { text: "Tin tức", path: "/news", isActive: true },
+    { text: "Liên hệ", path: "/shipper-contact" },
+  ];
+
+  // Login Popup State
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+
+  const openLoginPopup = () => {
+    setIsLoginPopupOpen(true);
+  };
+
+  const closeLoginPopup = () => {
+    setIsLoginPopupOpen(false);
+  };
 
   // State để theo dõi các trường đang được cập nhật
   const [activeUpdateFields, setActiveUpdateFields] = useState({
@@ -214,6 +231,8 @@ const UpdateShipperInfo = () => {
 
   // Validation
   const validateField = (name, value) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     // Skip validation if field is empty
     if (!value && name !== 'TempEmail') {
       return "";
@@ -243,6 +262,21 @@ const UpdateShipperInfo = () => {
           return VALIDATION_CONFIG.bankAccount.message;
         }
         break;
+      case 'TempRegistrationVehicle':
+        if (!value) return "Vui lòng nhập ngày đăng kiểm xe";
+        const regDate = new Date(value);
+        if (isNaN(regDate.getTime())) return "Ngày đăng kiểm không hợp lệ";
+        if (regDate > today) return "Ngày đăng kiểm không được là ngày trong tương lai";
+        break;
+
+      case 'TempExpiryVehicle':
+        if (!value) return "Vui lòng nhập ngày hết hạn đăng kiểm";
+        const expiryDate = new Date(value);
+        const regVehicleDate = new Date(updateData.TempRegistrationVehicle);
+        if (isNaN(expiryDate.getTime())) return "Ngày hết hạn đăng kiểm không hợp lệ";
+        if (updateData.TempRegistrationVehicle && expiryDate <= regVehicleDate)
+          return "Ngày hết hạn đăng kiểm phải sau ngày đăng kiểm";
+        break;
 
       default:
         break;
@@ -262,10 +296,27 @@ const UpdateShipperInfo = () => {
     }
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = async (e) => {
     const { name, value } = e.target;
     setTouchedFields(prev => ({ ...prev, [name]: true }));
-    const error = validateField(name, value);
+    let error = validateField(name, value);
+
+    // Kiểm tra số điện thoại nếu thay đổi
+    if (name === 'TempPhoneNumber' && !error && value && value !== shipperData.PhoneNumber) {
+      const phoneExists = await checkPhoneExists(value);
+      if (phoneExists) {
+        error = "Số điện thoại đã được đăng ký bởi shipper khác";
+      }
+    }
+
+    // Kiểm tra email nếu thay đổi
+    if (name === 'TempEmail' && !error && value && value !== shipperData.Email) {
+      const emailExists = await checkEmailExists(value);
+      if (emailExists) {
+        error = "Email đã được đăng ký bởi shipper khác";
+      }
+    }
+
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
@@ -284,7 +335,21 @@ const UpdateShipperInfo = () => {
         if (error) newErrors[field] = error;
       }
     });
+    // Kiểm tra số điện thoại nếu thay đổi
+    if (activeUpdateFields.PhoneNumber && updateData.TempPhoneNumber && updateData.TempPhoneNumber !== shipperData.PhoneNumber) {
+      const phoneExists = await checkPhoneExists(updateData.TempPhoneNumber);
+      if (phoneExists) {
+        newErrors.TempPhoneNumber = "Số điện thoại đã được đăng ký bởi shipper khác";
+      }
+    }
 
+    // Kiểm tra email nếu thay đổi
+    if (activeUpdateFields.Email && updateData.TempEmail && updateData.TempEmail !== shipperData.Email) {
+      const emailExists = await checkEmailExists(updateData.TempEmail);
+      if (emailExists) {
+        newErrors.TempEmail = "Email đã được đăng ký bởi shipper khác";
+      }
+    }
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       toast.error("Vui lòng kiểm tra lại thông tin");
@@ -355,13 +420,13 @@ const UpdateShipperInfo = () => {
 
   return (
     <div className="UpdateShipperInfo-container">
-       <div className='header'>
-            <Header
-              navigationItems={newsNavigationItems}
-              showLoginButton={true}
-              onLoginClick={openLoginPopup}
-            />
-            </div>
+      <div className='header'>
+        <Header
+          navigationItems={newsNavigationItems}
+          showLoginButton={true}
+          onLoginClick={openLoginPopup}
+        />
+      </div>
       <main className="UpdateShipperInfo-main">
         {showConfirmPopup && (
           <div className="UpdateShipperInfo-confirm-popup-overlay">
@@ -382,7 +447,7 @@ const UpdateShipperInfo = () => {
         <div className="UpdateShipperInfo-form-container">
           <form onSubmit={handleSubmit} className="UpdateShipperInfo-form">
             <h1 className="UpdateShipperInfo-form-title">Thông Tin Shipper</h1>
- 
+  
             {/* Thông tin cá nhân (chỉ xem) */}
             <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin cá nhân</h2>
@@ -395,7 +460,6 @@ const UpdateShipperInfo = () => {
                 <UpdateField
                   label="Ngày sinh"
                   value={shipperData.DateOfBirth}
-                  type="date"
                   canUpdate={false}
                 />
                 <UpdateField
@@ -411,12 +475,11 @@ const UpdateShipperInfo = () => {
                 <UpdateField
                   label="Ngày hết hạn GPLX"
                   value={shipperData.LicenseExpiryDate}
-                  type="date"
                   canUpdate={false}
                 />
               </div>
             </section>
- 
+  
             {/* Thông tin liên lạc */}
             <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin liên lạc</h2>
@@ -427,8 +490,9 @@ const UpdateShipperInfo = () => {
                     value={shipperData.PhoneNumber}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('PhoneNumber')}
+                    fieldName="PhoneNumber"
+                    isActive={activeUpdateFields.PhoneNumber}
                   />
- 
                   {activeUpdateFields.PhoneNumber && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -445,15 +509,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
- 
+  
                 <div className="UpdateShipperInfo-field-row">
-                <UpdateField
+                  <UpdateField
                     label="Email"
                     value={shipperData.Email}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('Email')}
+                    fieldName="Email"
+                    isActive={activeUpdateFields.Email}
                   />
-
                   {activeUpdateFields.Email && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -471,7 +536,7 @@ const UpdateShipperInfo = () => {
                 </div>
               </div>
             </section>
-
+  
             {/* Địa chỉ */}
             <section className="UpdateShipperInfo-form-section">
               <h2>Địa chỉ</h2>
@@ -482,8 +547,9 @@ const UpdateShipperInfo = () => {
                     value={shipperData.HouseNumber}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('HouseNumber')}
+                    fieldName="HouseNumber"
+                    isActive={activeUpdateFields.HouseNumber}
                   />
-
                   {activeUpdateFields.HouseNumber && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -500,15 +566,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Phường/Xã"
                     value={shipperData.Ward}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('Ward')}
+                    fieldName="Ward"
+                    isActive={activeUpdateFields.Ward}
                   />
-
                   {activeUpdateFields.Ward && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -525,15 +592,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Quận/Huyện"
                     value={shipperData.District}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('District')}
+                    fieldName="District"
+                    isActive={activeUpdateFields.District}
                   />
-
                   {activeUpdateFields.District && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -550,15 +618,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Tỉnh/Thành phố"
                     value={shipperData.City}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('City')}
+                    fieldName="City"
+                    isActive={activeUpdateFields.City}
                   />
-
                   {activeUpdateFields.City && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -577,7 +646,7 @@ const UpdateShipperInfo = () => {
                 </div>
               </div>
             </section>
-
+  
             {/* Thông tin ngân hàng */}
             <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin ngân hàng</h2>
@@ -588,8 +657,9 @@ const UpdateShipperInfo = () => {
                     value={shipperData.BankName}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('BankName')}
+                    fieldName="BankName"
+                    isActive={activeUpdateFields.BankName}
                   />
-
                   {activeUpdateFields.BankName && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <div className="UpdateShipperInfo-input-wrapper">
@@ -623,8 +693,9 @@ const UpdateShipperInfo = () => {
                     value={shipperData.BankAccountNumber}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('BankAccountNumber')}
+                    fieldName="BankAccountNumber"
+                    isActive={activeUpdateFields.BankAccountNumber}
                   />
-
                   {activeUpdateFields.BankAccountNumber && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -643,7 +714,7 @@ const UpdateShipperInfo = () => {
                 </div>
               </div>
             </section>
-
+  
             {/* Thông tin phương tiện */}
             <section className="UpdateShipperInfo-form-section">
               <h2>Thông tin phương tiện</h2>
@@ -654,8 +725,9 @@ const UpdateShipperInfo = () => {
                     value={shipperData.VehicleType}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('VehicleType')}
+                    fieldName="VehicleType"
+                    isActive={activeUpdateFields.VehicleType}
                   />
-
                   {activeUpdateFields.VehicleType && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <div className="UpdateShipperInfo-input-wrapper">
@@ -683,15 +755,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Biển số xe"
                     value={shipperData.LicensePlate}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('LicensePlate')}
+                    fieldName="LicensePlate"
+                    isActive={activeUpdateFields.LicensePlate}
                   />
-
                   {activeUpdateFields.LicensePlate && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -708,16 +781,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Ngày đăng kiểm xe"
                     value={shipperData.RegistrationVehicle}
-                    type="date"
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('RegistrationVehicle')}
+                    fieldName="RegistrationVehicle"
+                    isActive={activeUpdateFields.RegistrationVehicle}
                   />
-
                   {activeUpdateFields.RegistrationVehicle && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -733,16 +806,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="Ngày hết hạn đăng kiểm"
                     value={shipperData.ExpiryVehicle}
-                    type="date"
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('ExpiryVehicle')}
+                    fieldName="ExpiryVehicle"
+                    isActive={activeUpdateFields.ExpiryVehicle}
                   />
-
                   {activeUpdateFields.ExpiryVehicle && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -760,7 +833,7 @@ const UpdateShipperInfo = () => {
                 </div>
               </div>
             </section>
-
+  
             {/* Giấy tờ */}
             <section className="UpdateShipperInfo-form-section">
               <h2>Giấy tờ (URL ảnh)</h2>
@@ -771,8 +844,9 @@ const UpdateShipperInfo = () => {
                     value={shipperData.VehicleRegistrationImage}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('VehicleRegistrationImage')}
+                    fieldName="VehicleRegistrationImage"
+                    isActive={activeUpdateFields.VehicleRegistrationImage}
                   />
-
                   {activeUpdateFields.VehicleRegistrationImage && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -788,15 +862,16 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="URL ảnh thẻ Shipper"
                     value={shipperData.ImageShipper}
                     canUpdate={true}
                     onUpdate={() => toggleUpdateField('ImageShipper')}
+                    fieldName="ImageShipper"
+                    isActive={activeUpdateFields.ImageShipper}
                   />
-
                   {activeUpdateFields.ImageShipper && (
                     <div className="UpdateShipperInfo-update-input-container">
                       <FormInput
@@ -812,7 +887,7 @@ const UpdateShipperInfo = () => {
                     </div>
                   )}
                 </div>
-
+  
                 <div className="UpdateShipperInfo-field-row">
                   <UpdateField
                     label="URL ảnh GPLX"
@@ -822,7 +897,7 @@ const UpdateShipperInfo = () => {
                 </div>
               </div>
             </section>
-
+  
             <div className="UpdateShipperInfo-form-actions">
               {Object.values(activeUpdateFields).some(value => value) && (
                 <button type="submit" className="UpdateShipperInfo-submit-button">

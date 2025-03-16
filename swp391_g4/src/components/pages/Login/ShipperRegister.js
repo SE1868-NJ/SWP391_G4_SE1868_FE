@@ -53,9 +53,13 @@ const VALIDATION_CONFIG = {
 };
 
 const BANK_LIST = [
-  "Vietcombank", "Techcombank", "BIDV", "Agribank",
-  "VPBank", "ACB", "MBBank", "TPBank"
+  "Vietcombank", "Techcombank", "BIDV", "Agribank", "VPBank", 
+  "ACB", "MBBank", "TPBank", "Sacombank", "VietinBank", 
+  "SHB", "HDBank", "Eximbank", "VIB", "SCB", 
+  "OCB", "MSB", "SeABank", "LienVietPostBank", "PVcomBank", 
+  "NamABank", "BaoVietBank", "KienLongBank", "DongABank"
 ];
+
 
 const VEHICLE_TYPES = [
   "Xe máy", "Xe tải nhỏ", "Xe tải lớn", "Xe van"
@@ -75,9 +79,9 @@ const FormInput = ({
   maxLength,
   ...props
 }) => (
-  <div className="input-wrapper">
+  <div className="shipperRegister-input-wrapper">
     <label htmlFor={name}>
-      {label} {required && <span className="required">*</span>}
+      {label} {required && <span className="shipperRegister-required">*</span>}
     </label>
     <input
       id={name}
@@ -86,18 +90,19 @@ const FormInput = ({
       value={value}
       onChange={onChange}
       onBlur={onBlur}
-      className={`form-input ${error ? 'error' : ''} ${className}`}
+      className={`shipperRegister-form-input ${error ? 'shipperRegister-error' : ''} ${className}`}
       placeholder={placeholder}
       required={required}
       maxLength={maxLength}
       {...props}
     />
-    {error && <span className="error-message">{error}</span>}
+    {error && <span className="shipperRegister-error-message">{error}</span>}
   </div>
 );
 
 const ShipperRegister = () => {
   const navigate = useNavigate();
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const initialFormData = {
     FullName: "",
     PhoneNumber: "",
@@ -160,6 +165,8 @@ const ShipperRegister = () => {
     }
   };
   const validateField = (name, value) => {
+    const today = new Date();
+  today.setHours(0, 0, 0, 0);
     switch (name) {
       case 'FullName':
         if (!value.trim()) return "Vui lòng nhập họ tên";
@@ -212,7 +219,28 @@ const ShipperRegister = () => {
         if (!VALIDATION_CONFIG.bankAccount.pattern.test(value))
           return VALIDATION_CONFIG.bankAccount.message;
         return "";
-
+        case 'RegistrationVehicle':
+          if (!value) return "Vui lòng nhập ngày đăng kiểm xe";
+          const regDate = new Date(value);
+          if (isNaN(regDate.getTime())) return "Ngày đăng kiểm không hợp lệ";
+          if (regDate > today) return "Ngày đăng kiểm không được là ngày trong tương lai";
+          return "";
+    
+        case 'ExpiryVehicle':
+          if (!value) return "Vui lòng nhập ngày hết hạn đăng kiểm";
+          const expiryDate = new Date(value);
+          const regVehicleDate = new Date(formData.RegistrationVehicle);
+          if (isNaN(expiryDate.getTime())) return "Ngày hết hạn đăng kiểm không hợp lệ";
+          if (formData.RegistrationVehicle && expiryDate <= regVehicleDate)
+            return "Ngày hết hạn đăng kiểm phải sau ngày đăng kiểm";
+          return "";
+    
+        case 'LicenseExpiryDate':
+          if (!value) return "Vui lòng nhập ngày hết hạn GPLX";
+          const licenseExpiryDate = new Date(value);
+          if (isNaN(licenseExpiryDate.getTime())) return "Ngày hết hạn GPLX không hợp lệ";
+          if (licenseExpiryDate <= today) return "GPLX đã hết hạn, vui lòng gia hạn trước khi đăng ký";
+          return "";
       // Validate other required fields
       case 'DateOfBirth':
       case 'HouseNumber':
@@ -221,9 +249,6 @@ const ShipperRegister = () => {
       case 'City':
       case 'BankName':
       case 'VehicleType':
-      case 'RegistrationVehicle':
-      case 'ExpiryVehicle':
-      case 'LicenseExpiryDate':
       case 'DriverLicenseImage':
       case 'VehicleRegistrationImage':
       case 'ImageShipper':
@@ -252,10 +277,33 @@ const ShipperRegister = () => {
     }
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = async (e) => {
     const { name, value } = e.target;
     setTouchedFields(prev => ({ ...prev, [name]: true }));
-    const error = validateField(name, value);
+    let error = validateField(name, value);
+
+    // Real-time checking for PhoneNumber, Email, and CitizenID
+    if (name === 'PhoneNumber' && !error && value) {
+      const phoneExists = await checkPhoneExists(value);
+      if (phoneExists) {
+        error = "Số điện thoại đã được đăng ký";
+      }
+    }
+
+    if (name === 'Email' && !error && value) {
+      const emailExists = await checkEmailExists(value);
+      if (emailExists) {
+        error = "Email đã được đăng ký";
+      }
+    }
+
+    if (name === 'CitizenID' && !error && value) {
+      const citizenIdExists = await checkCitizenIDExists(value);
+      if (citizenIdExists) {
+        error = "Số CCCD đã được đăng ký";
+      }
+    }
+
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
@@ -279,6 +327,40 @@ const ShipperRegister = () => {
     }
 
     try {
+      // Check if phone number exists
+      const phoneExists = await checkPhoneExists(formData.PhoneNumber);
+      if (phoneExists) {
+        setErrors(prev => ({
+          ...prev,
+          PhoneNumber: "Số điện thoại đã được đăng ký"
+        }));
+        toast.error("Số điện thoại đã được đăng ký");
+        return;
+      }
+
+      // Check if email exists (if provided)
+      if (formData.Email) {
+        const emailExists = await checkEmailExists(formData.Email);
+        if (emailExists) {
+          setErrors(prev => ({
+            ...prev,
+            Email: "Email đã được đăng ký"
+          }));
+          toast.error("Email đã được đăng ký");
+          return;
+        }
+      }
+
+      // Check if CitizenID exists
+      const citizenIdExists = await checkCitizenIDExists(formData.CitizenID);
+      if (citizenIdExists) {
+        setErrors(prev => ({
+          ...prev,
+          CitizenID: "Số CCCD đã được đăng ký"
+        }));
+        toast.error("Số CCCD đã được đăng ký");
+        return;
+      }
       // Remove ConfirmPassword and format dates
       const { ConfirmPassword, ...submitData } = formData;
 
@@ -303,8 +385,7 @@ const ShipperRegister = () => {
       );
 
       if (response.data.success) {
-        toast.success('Đăng ký thành công! Vui lòng đợi xác nhận.');
-        navigate('/home');
+        setShowConfirmation(true);
       }
     } catch (error) {
       console.error('Error details:', error.response?.data);
@@ -316,17 +397,17 @@ const ShipperRegister = () => {
     }
   };
   return (
-    <div className="shipper-register-container">
+    <div className="shipperRegister-shipper-register-container">
       <Header />
-      <main className="register-main">
-        <div className="register-form-container">
-          <form onSubmit={handleSubmit} className="register-form">
-            <h1 className="form-title">Đăng Ký Tài Khoản Shipper</h1>
-
+      <main className="shipperRegister-register-main">
+        <div className="shipperRegister-register-form-container">
+          <form onSubmit={handleSubmit} className="shipperRegister-register-form">
+            <h1 className="shipperRegister-form-title">Đăng Ký Tài Khoản Shipper</h1>
+  
             {/* Personal Information Section */}
-            <section className="form-section">
+            <section className="shipperRegister-form-section">
               <h2>Thông tin cá nhân</h2>
-              <div className="input-grid">
+              <div className="shipperRegister-input-grid">
                 <FormInput
                   label="Họ và tên"
                   name="FullName"
@@ -339,7 +420,7 @@ const ShipperRegister = () => {
                   maxLength={100}
                   placeholder="Nguyễn Văn A"
                 />
-
+  
                 <FormInput
                   label="Số điện thoại"
                   name="PhoneNumber"
@@ -352,7 +433,7 @@ const ShipperRegister = () => {
                   maxLength={15}
                   placeholder="0901234567"
                 />
-
+  
                 <FormInput
                   label="Email"
                   name="Email"
@@ -363,7 +444,7 @@ const ShipperRegister = () => {
                   error={errors.Email}
                   placeholder="example@email.com"
                 />
-
+  
                 <FormInput
                   label="Ngày sinh"
                   name="DateOfBirth"
@@ -377,11 +458,11 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-
+  
             {/* Address Section */}
-            <section className="form-section">
+            <section className="shipperRegister-form-section">
               <h2>Địa chỉ</h2>
-              <div className="input-grid">
+              <div className="shipperRegister-input-grid">
                 <FormInput
                   label="Số nhà, Tên đường"
                   name="HouseNumber"
@@ -393,7 +474,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="123 Đường ABC"
                 />
-
+  
                 <FormInput
                   label="Phường/Xã"
                   name="Ward"
@@ -405,7 +486,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="Phường XYZ"
                 />
-
+  
                 <FormInput
                   label="Quận/Huyện"
                   name="District"
@@ -417,7 +498,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="Quận 1"
                 />
-
+  
                 <FormInput
                   label="Tỉnh/Thành phố"
                   name="City"
@@ -431,14 +512,14 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-
+  
             {/* Bank Information Section */}
-            <section className="form-section">
+            <section className="shipperRegister-form-section">
               <h2>Thông tin ngân hàng</h2>
-              <div className="input-grid">
-                <div className="input-wrapper">
+              <div className="shipperRegister-input-grid">
+                <div className="shipperRegister-input-wrapper">
                   <label htmlFor="BankName">
-                    Ngân hàng <span className="required">*</span>
+                    Ngân hàng <span className="shipperRegister-required">*</span>
                   </label>
                   <select
                     id="BankName"
@@ -446,7 +527,7 @@ const ShipperRegister = () => {
                     value={formData.BankName}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
-                    className={`form-input ${errors.BankName ? 'error' : ''}`}
+                    className={`shipperRegister-form-input ${errors.BankName ? 'shipperRegister-error' : ''}`}
                     required
                   >
                     <option value="">Chọn ngân hàng</option>
@@ -455,10 +536,10 @@ const ShipperRegister = () => {
                     ))}
                   </select>
                   {errors.BankName && (
-                    <span className="error-message">{errors.BankName}</span>
+                    <span className="shipperRegister-error-message">{errors.BankName}</span>
                   )}
                 </div>
-
+  
                 <FormInput
                   label="Số tài khoản"
                   name="BankAccountNumber"
@@ -472,14 +553,14 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-
+  
             {/* Vehicle Information Section */}
-            <section className="form-section">
+            <section className="shipperRegister-form-section">
               <h2>Thông tin phương tiện</h2>
-              <div className="input-grid">
-                <div className="input-wrapper">
+              <div className="shipperRegister-input-grid">
+                <div className="shipperRegister-input-wrapper">
                   <label htmlFor="VehicleType">
-                    Loại phương tiện <span className="required">*</span>
+                    Loại phương tiện <span className="shipperRegister-required">*</span>
                   </label>
                   <select
                     id="VehicleType"
@@ -487,7 +568,7 @@ const ShipperRegister = () => {
                     value={formData.VehicleType}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
-                    className={`form-input ${errors.VehicleType ? 'error' : ''}`}
+                    className={`shipperRegister-form-input ${errors.VehicleType ? 'shipperRegister-error' : ''}`}
                     required
                   >
                     <option value="">Chọn loại phương tiện</option>
@@ -496,10 +577,10 @@ const ShipperRegister = () => {
                     ))}
                   </select>
                   {errors.VehicleType && (
-                    <span className="error-message">{errors.VehicleType}</span>
+                    <span className="shipperRegister-error-message">{errors.VehicleType}</span>
                   )}
                 </div>
-
+  
                 <FormInput
                   label="Biển số xe"
                   name="LicensePlate"
@@ -511,7 +592,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="51F-12345"
                 />
-
+  
                 <FormInput
                   label="Số GPLX"
                   name="LicenseNumber"
@@ -523,7 +604,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="B123456789"
                 />
-
+  
                 <FormInput
                   label="Ngày đăng kiểm xe"
                   name="RegistrationVehicle"
@@ -534,7 +615,7 @@ const ShipperRegister = () => {
                   error={errors.RegistrationVehicle}
                   required
                 />
-
+  
                 <FormInput
                   label="Ngày hết hạn đăng kiểm"
                   name="ExpiryVehicle"
@@ -545,7 +626,7 @@ const ShipperRegister = () => {
                   error={errors.ExpiryVehicle}
                   required
                 />
-
+  
                 <FormInput
                   label="Ngày hết hạn GPLX"
                   name="LicenseExpiryDate"
@@ -558,11 +639,11 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-
+  
             {/* Documents Section */}
-            <section className="form-section">
+            <section className="shipperRegister-form-section">
               <h2>Giấy tờ tùy thân</h2>
-              <div className="input-grid">
+              <div className="shipperRegister-input-grid">
                 <FormInput
                   label="Số CCCD"
                   name="CitizenID"
@@ -575,7 +656,7 @@ const ShipperRegister = () => {
                   maxLength={12}
                   placeholder="012345678901"
                 />
-
+  
                 <FormInput
                   label="Ảnh GPLX"
                   name="DriverLicenseImage"
@@ -587,7 +668,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="URL ảnh GPLX"
                 />
-
+  
                 <FormInput
                   label="Ảnh đăng ký xe"
                   name="VehicleRegistrationImage"
@@ -599,7 +680,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="URL ảnh đăng ký xe"
                 />
-
+  
                 <FormInput
                   label="Ảnh CCCD"
                   name="IDCardImage"
@@ -611,7 +692,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="URL ảnh CCCD"
                 />
-
+  
                 <FormInput
                   label="Ảnh Shipper"
                   name="ImageShipper"
@@ -625,16 +706,16 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-
+  
             {/* Password Section */}
-            <section className="form-section">
+            <section className="shipperRegister-form-section">
               <h2>Bảo mật</h2>
-              <div className="input-grid">
-                <div className="password-input-wrapper">
+              <div className="shipperRegister-input-grid">
+                <div className="shipperRegister-password-input-wrapper">
                   <label htmlFor="Password">
-                    Mật khẩu <span className="required">*</span>
+                    Mật khẩu <span className="shipperRegister-required">*</span>
                   </label>
-                  <div className="password-input-container">
+                  <div className="shipperRegister-password-input-container">
                     <input
                       id="Password"
                       name="Password"
@@ -642,28 +723,28 @@ const ShipperRegister = () => {
                       value={formData.Password}
                       onChange={handleInputChange}
                       onBlur={handleBlur}
-                      className={`form-input ${errors.Password ? 'error' : ''}`}
+                      className={`shipperRegister-form-input ${errors.Password ? 'shipperRegister-error' : ''}`}
                       required
                       placeholder="Nhập mật khẩu"
                     />
                     <button
                       type="button"
-                      className="password-toggle"
+                      className="shipperRegister-password-toggle"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </div>
                   {errors.Password && (
-                    <span className="error-message">{errors.Password}</span>
+                    <span className="shipperRegister-error-message">{errors.Password}</span>
                   )}
                 </div>
-
-                <div className="password-input-wrapper">
+  
+                <div className="shipperRegister-password-input-wrapper">
                   <label htmlFor="ConfirmPassword">
-                    Xác nhận mật khẩu <span className="required">*</span>
+                    Xác nhận mật khẩu <span className="shipperRegister-required">*</span>
                   </label>
-                  <div className="password-input-container">
+                  <div className="shipperRegister-password-input-container">
                     <input
                       id="ConfirmPassword"
                       name="ConfirmPassword"
@@ -671,26 +752,41 @@ const ShipperRegister = () => {
                       value={formData.ConfirmPassword}
                       onChange={handleInputChange}
                       onBlur={handleBlur}
-                      className={`form-input ${errors.ConfirmPassword ? 'error' : ''}`}
+                      className={`shipperRegister-form-input ${errors.ConfirmPassword ? 'shipperRegister-error' : ''}`}
                       required
                       placeholder="Nhập lại mật khẩu"
                     />
                     <button
                       type="button"
-                      className="password-toggle"
+                      className="shipperRegister-password-toggle"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
                       {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </div>
                   {errors.ConfirmPassword && (
-                    <span className="error-message">{errors.ConfirmPassword}</span>
+                    <span className="shipperRegister-error-message">{errors.ConfirmPassword}</span>
                   )}
                 </div>
               </div>
             </section>
-
-            <button type="submit" className="submit-button">
+            {
+              showConfirmation && (
+                <div className="shipperRegister-confirmation-modal">
+                  <div className="shipperRegister-confirmation-content">
+                    <p>YÊU CẦU CỦA BẠN ĐANG CHỜ XÁC NHẬN. VUI LÒNG ĐỢI!</p>
+                    <button
+                      type="button"
+                      className="shipperRegister-confirmation-button"
+                      onClick={() => navigate('/home')}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              )
+            }
+            <button type="submit" className="shipperRegister-submit-button">
               Đăng Ký
             </button>
           </form>

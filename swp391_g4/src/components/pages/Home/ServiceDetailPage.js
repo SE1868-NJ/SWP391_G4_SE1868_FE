@@ -4,7 +4,7 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
 import "../../../styles/ServiceDetailPage.css";
-
+import ChatPopup from "./ChatPopup";
 const ServiceDetailsPage = () => {
   const { serviceId } = useParams();
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
@@ -164,7 +164,7 @@ const ServiceDetailsPage = () => {
           </div>
         </div>
       )}
-
+      <ChatPopup/>
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
   );
