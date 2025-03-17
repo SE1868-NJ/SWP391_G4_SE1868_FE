@@ -29,18 +29,15 @@ export class Header extends React.Component {
     if (token && shipperId) {
       this.fetchNotifications(shipperId);
 
-      // Set up polling for notifications
       this.notificationInterval = setInterval(() => {
         this.fetchNotifications(shipperId);
-      }, 60000); // Check notifications every minute
+      }, 60000); 
 
-      // Add click outside listener
       document.addEventListener("click", this.handleClickOutside);
     }
   }
 
   componentWillUnmount() {
-    // Clear interval and remove event listener
     if (this.notificationInterval) {
       clearInterval(this.notificationInterval);
     }
@@ -48,7 +45,6 @@ export class Header extends React.Component {
   }
 
   handleClickOutside = (event) => {
-    // Close dropdown and notification modal if clicked outside
     if (
       this.state.isDropdownOpen &&
       !event.target.closest(`.${styles.dropdownWrapper}`)
@@ -125,9 +121,7 @@ export class Header extends React.Component {
     }));
   };
 
-  // Handle logout
   handleLogout = () => {
-    // Remove token and shipper info from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("shipperId");
     localStorage.removeItem("shipperName");

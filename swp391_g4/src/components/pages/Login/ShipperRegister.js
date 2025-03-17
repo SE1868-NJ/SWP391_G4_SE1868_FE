@@ -62,7 +62,11 @@ const BANK_LIST = [
 
 
 const VEHICLE_TYPES = [
-  "Xe máy", "Xe tải nhỏ", "Xe tải lớn", "Xe van"
+  "Xe máy",
+  "Xe máy điện",
+  "Xe điện",
+  "Xe ô tô con",
+  "Xe van nhỏ"
 ];
 // FormInput Component
 const FormInput = ({

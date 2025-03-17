@@ -28,7 +28,7 @@ const OrderDetails = () => {
   const [addresses, setAddresses] = useState({ delivery: "", shop: "" });
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
-  let shippingFee = 15000 + distance * 1000;
+  let shippingFee = 14000 + distance * 1000;
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import "../../styles/ReportIssue.css";
+import "../../../styles/ReportIssue.css";
 import axios from "axios";
-import { Header } from "../header/Header";
-import Footer from "../footer/Footer";
+import { Header } from "../../header/Header";
+import Footer from "../../footer/Footer";
 
 const ReportIssue = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);

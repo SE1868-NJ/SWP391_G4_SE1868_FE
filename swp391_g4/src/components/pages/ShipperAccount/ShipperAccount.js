@@ -29,12 +29,10 @@ const formatData = {
 const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
   const [cancelReason, setCancelReason] = useState('');
   const [otherReason, setOtherReason] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // Thêm state để hiển thị lỗi
+  const [errorMessage, setErrorMessage] = useState('');
 
   const cancelReasons = [
     { id: 'inactive', label: 'Không còn hoạt động' },
-    { id: 'unsatisfied', label: 'Không hài lòng với dịch vụ' },
-    { id: 'income_unsatisfied', label: 'Không hài lòng với thu nhập' },
     { id: 'workload_too_heavy', label: 'Khối lượng công việc quá tải' },
     { id: 'system_issue', label: 'Vấn đề với hệ thống hoặc ứng dụng' },
     { id: 'work_condition', label: 'Điều kiện làm việc không thoải mái' },
@@ -47,12 +45,9 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
     const isValid = cancelReason && (cancelReason !== 'other' || otherReason.trim());
 
     if (!isValid) {
-      // Hiển thị thông báo lỗi nếu chưa chọn lý do
       setErrorMessage('Vui lòng chọn một lý do hủy hoặc nhập lý do khác.');
       return;
     }
-
-    // Nếu hợp lệ, gọi onConfirm và xóa thông báo lỗi
     setErrorMessage('');
     console.log('Submitting cancel with reason:', finalReason);
     onConfirm(finalReason);
@@ -89,7 +84,6 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
           />
         )}
 
-        {/* Hiển thị thông báo lỗi nếu có */}
         {errorMessage && (
           <p className="shipperAccount-error-message" style={{ color: 'red', marginTop: '10px' }}>
             {errorMessage}
@@ -100,7 +94,6 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
           <button
             className="shipperAccount-cancel-popup-button"
             onClick={handleSubmit}
-          // Bỏ disabled để nút luôn hoạt động
           >
             {isSubmitting ? 'Đang xử lý...' : 'Xác nhận hủy'}
           </button>
@@ -149,16 +142,6 @@ const ShipperAccount = () => {
   const [orderDetails, setOrderDetails] = useState([]);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [searchDate, setSearchDate] = useState('');
-  // Login Popup State
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-
-  const openLoginPopup = () => {
-    setIsLoginPopupOpen(true);
-  };
-
-  const closeLoginPopup = () => {
-    setIsLoginPopupOpen(false);
-  };
 
   useEffect(() => {
     const fetchShipperData = async () => {
@@ -327,9 +310,7 @@ const ShipperAccount = () => {
         navigate('/login');
         return;
       }
-
-      // Đảm bảo định dạng ngày là YYYY-MM-DD
-      const formattedDate = date; // date đã ở định dạng YYYY-MM-DD từ walletData
+      const formattedDate = date; 
       console.log('Fetching order details for date:', formattedDate);
 
       const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/orders-by-date`, {
@@ -337,12 +318,12 @@ const ShipperAccount = () => {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        params: { deliveryDate: formattedDate }, // Gửi đúng định dạng ngày
+        params: { deliveryDate: formattedDate }, 
       });
 
       if (response.data.success) {
         setOrderDetails(response.data.data);
-        setSelectedDate(formattedDate); // Cập nhật ngày đã chọn
+        setSelectedDate(formattedDate); 
       } else {
         throw new Error(response.data.message || 'Không thể tải chi tiết đơn hàng');
       }
@@ -354,7 +335,7 @@ const ShipperAccount = () => {
     }
   };
   const handleCancelAccount = async (reason) => {
-    console.log('Cancel account initiated with reason:', reason); // Debug
+    console.log('Cancel account initiated with reason:', reason); 
     setIsSubmitting(true);
     try {
       const shipperId = localStorage.getItem('shipperId');
@@ -400,8 +381,6 @@ const ShipperAccount = () => {
         navigate('/login');
         return;
       }
-
-      // Kiểm tra số dư ví có đủ không
       if (withdrawAmount > totalWallet) {
         setError('Số dư trong ví không đủ để thực hiện giao dịch');
         return;
@@ -796,7 +775,6 @@ const ShipperAccount = () => {
         <Header
           navigationItems={newsNavigationItems}
           showLoginButton={true}
-          onLoginClick={openLoginPopup}
         />
       </div>
       <main className="shipperAccount-main">
