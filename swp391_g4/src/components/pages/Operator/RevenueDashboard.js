@@ -28,7 +28,7 @@ function Header({ onSearch }) {
   return (
     <header className="RevenueDashboard-header">
       <div className="RevenueDashboard-logo">
-        <h1>View Revenue System</h1>
+        <h1>Xem doanh thu của hệ thống</h1>
       </div>
       <div className="RevenueDashboard-search-bar">
         <input 
@@ -61,6 +61,15 @@ function Filters({ filters, onChange }) {
       onChange('endDate', null);
     }
   };
+  const handleDateChange = (type, value) => {
+    onChange(type, value);
+    
+    // You could add validation here
+    // For example, ensure end date is after start date
+    if (type === 'endDate' && filters.startDate && new Date(value) < new Date(filters.startDate)) {
+      alert('End date must be after start date');
+      onChange('endDate', filters.startDate);
+    }
 
   return (
     <div className="RevenueDashboard-filters">
@@ -88,7 +97,7 @@ function Filters({ filters, onChange }) {
               type="date" 
               id="start-date"
               value={filters.startDate || ''}
-              onChange={(e) => onChange('startDate', e.target.value)}
+              onChange={(e) => handleDateChange('startDate', e.target.value)}
             />
           </div>
           <div className="RevenueDashboard-filter-group">
@@ -97,7 +106,7 @@ function Filters({ filters, onChange }) {
               type="date" 
               id="end-date"
               value={filters.endDate || ''}
-              onChange={(e) => onChange('endDate', e.target.value)}
+              onChange={(e) => handleDateChange('endDate', e.target.value)}
             />
           </div>
         </div>
@@ -246,16 +255,10 @@ function OrdersPanel({ filters }) {
     // Function to fetch orders for the current page
     const fetchOrders = async () => {
       try {
-<<<<<<< HEAD
         setLoading(true);
         
         // Đảm bảo gửi thông tin phân trang đến API
         const response = await axios.get('http://localhost:5000/api/orders', { 
-=======
-        // Nếu bạn muốn gọi API mới khi thay đổi trang, bỏ comment đoạn code dưới đây
-        /*
-        const response = await axios.get('http://localhost:4000/api/orders', { 
->>>>>>> dev
           params: { 
             ...filters,
             page: currentPage,
@@ -824,7 +827,13 @@ function App() {
     const fetchAllData = async () => {
       try {
         setLoading(true);
-        
+        const apiParams = {
+          ...filters,
+          // Định dạng ngày bắt đầu (nếu có)
+          startDate: filters.startDate ? new Date(filters.startDate).toISOString().split('T')[0] : undefined,
+          // Định dạng ngày kết thúc (nếu có)
+          endDate: filters.endDate ? new Date(filters.endDate).toISOString().split('T')[0] : undefined
+        };
         // Gọi API song song
         const [
           overviewRes,
@@ -835,24 +844,13 @@ function App() {
           feesRes,
           alertsRes
         ] = await Promise.all([
-<<<<<<< HEAD
-          axios.get('http://localhost:5000/api/revenue-overview', { params: filters }),
-          axios.get('http://localhost:5000/api/revenue-by-day', { params: filters }),
-          axios.get('http://localhost:5000/api/revenue-by-region', { params: filters }),
-          axios.get('http://localhost:5000/api/revenue-by-service', { params: filters }),
+          axios.get('http://localhost:5000/api/revenue-overview', { params: apiParams }),
+          axios.get('http://localhost:5000/api/revenue-by-day', { params: apiParams }),
+          axios.get('http://localhost:5000/api/revenue-by-region', { params: apiParams }),
+          axios.get('http://localhost:5000/api/revenue-by-service', { params: apiParams }),
           axios.get('http://localhost:5000/api/payments', { params: { page: 1, limit: 10 } }),
           axios.get('http://localhost:5000/api/fees'),
           axios.get('http://localhost:5000/api/alerts')
-=======
-          axios.get('http://localhost:4000/api/revenue-overview', { params: filters }),
-          axios.get('http://localhost:4000/api/revenue-by-day', { params: filters }),
-          axios.get('http://localhost:4000/api/revenue-by-region', { params: filters }),
-          axios.get('http://localhost:4000/api/revenue-by-service', { params: filters }),
-          axios.get('http://localhost:4000/api/orders', { params: { ...filters, page: 1, limit: 10 } }),
-          axios.get('http://localhost:4000/api/payments', { params: { page: 1, limit: 10 } }),
-          axios.get('http://localhost:4000/api/fees'),
-          axios.get('http://localhost:4000/api/alerts')
->>>>>>> dev
         ]);
 
         // Kiểm tra dữ liệu trước khi đặt trạng thái
