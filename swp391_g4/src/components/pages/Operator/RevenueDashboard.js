@@ -45,6 +45,23 @@ function Header({ onSearch }) {
 
 // Filters Component
 function Filters({ filters, onChange }) {
+  // State để kiểm soát hiển thị date pickers
+  const [showDatePickers, setShowDatePickers] = useState(false);
+
+  // Xử lý khi thay đổi loại khoảng thời gian
+  const handleTimePeriodChange = (value) => {
+    if (value === 'custom') {
+      setShowDatePickers(true);
+      onChange('timePeriod', value);
+    } else {
+      setShowDatePickers(false);
+      onChange('timePeriod', value);
+      // Reset các giá trị startDate và endDate nếu không chọn custom
+      onChange('startDate', null);
+      onChange('endDate', null);
+    }
+  };
+
   return (
     <div className="RevenueDashboard-filters">
       <div className="RevenueDashboard-filter-group">
@@ -52,14 +69,40 @@ function Filters({ filters, onChange }) {
         <select 
           id="time-period" 
           value={filters.timePeriod}
-          onChange={(e) => onChange('timePeriod', e.target.value)}
+          onChange={(e) => handleTimePeriodChange(e.target.value)}
         >
           <option value="day">Hôm nay</option>
           <option value="week">Tuần này</option>
           <option value="month">Tháng này</option>
           <option value="year">Năm nay</option>
+          <option value="custom">Tùy chỉnh</option>
         </select>
       </div>
+      
+      {/* Date pickers cho khoảng thời gian tùy chỉnh */}
+      {showDatePickers && (
+        <div className="RevenueDashboard-date-range">
+          <div className="RevenueDashboard-filter-group">
+            <label htmlFor="start-date">Từ ngày</label>
+            <input 
+              type="date" 
+              id="start-date"
+              value={filters.startDate || ''}
+              onChange={(e) => onChange('startDate', e.target.value)}
+            />
+          </div>
+          <div className="RevenueDashboard-filter-group">
+            <label htmlFor="end-date">Đến ngày</label>
+            <input 
+              type="date" 
+              id="end-date"
+              value={filters.endDate || ''}
+              onChange={(e) => onChange('endDate', e.target.value)}
+            />
+          </div>
+        </div>
+      )}
+      
       <div className="RevenueDashboard-filter-group">
         <label htmlFor="region">Khu vực</label>
         <select 
@@ -764,6 +807,8 @@ function App() {
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     timePeriod: 'month',
+    startDate: null,
+    endDate: null,
     region: 'all',
     serviceType: 'all',
     shipperCode: ''
