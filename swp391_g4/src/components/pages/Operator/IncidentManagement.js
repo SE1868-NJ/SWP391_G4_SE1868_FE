@@ -14,7 +14,7 @@ const IncidentManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(10);
-  
+
   // State for statistics
   const [summaryStats, setSummaryStats] = useState({
     totalIncidents: 0,
@@ -26,12 +26,12 @@ const IncidentManagement = () => {
     topShipper: "N/A",
     successRate: 0
   });
-  
+
   // State for chart data
   const [typeChartData, setTypeChartData] = useState([]);
   const [timeChartData, setTimeChartData] = useState([]);
   const [shipperChartData, setShipperChartData] = useState([]);
-  
+
   // COLORS for the charts
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
@@ -41,7 +41,7 @@ const IncidentManagement = () => {
       // Convert Vietnamese status to database status
       let dbStatus = null;
       if (statusFilter !== 'Tất cả') {
-        switch(statusFilter) {
+        switch (statusFilter) {
           case 'Chưa xử lý':
             dbStatus = 'Pending';
             break;
@@ -57,7 +57,7 @@ const IncidentManagement = () => {
         }
       }
       console.log("Sending status to API:", dbStatus);
-      const response = await axios.get('http://localhost:5000/api/incidents', {
+      const response = await axios.get('http://localhost:4000/api/incidents', {
         params: {
           dbStatus: dbStatus, // Send the converted status
           search: searchTerm || null,
@@ -74,32 +74,32 @@ const IncidentManagement = () => {
       alert('Đã xảy ra lỗi khi lấy danh sách sự cố');
     }
   };
-  
+
   // Fetch summary statistics
   const fetchSummaryStats = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/summary-stats');
+      const response = await axios.get('http://localhost:4000/api/incidents/summary-stats');
       setSummaryStats(response.data);
     } catch (error) {
       console.error('Error fetching summary stats:', error);
       alert('Đã xảy ra lỗi khi lấy số liệu thống kê');
     }
   };
-  
+
   // Fetch incident type chart data
   const fetchTypeChartData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/type-stats');
+      const response = await axios.get('http://localhost:4000/api/incidents/type-stats');
       setTypeChartData(response.data);
     } catch (error) {
       console.error('Error fetching type chart data:', error);
     }
   };
-  
+
   // Fetch incident time chart data
   const fetchTimeChartData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/time-stats', {
+      const response = await axios.get('http://localhost:4000/api/incidents/time-stats', {
         params: { days: 10 }
       });
       setTimeChartData(response.data);
@@ -107,11 +107,11 @@ const IncidentManagement = () => {
       console.error('Error fetching time chart data:', error);
     }
   };
-  
+
   // Fetch incident shipper chart data
   const fetchShipperChartData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/shipper-stats', {
+      const response = await axios.get('http://localhost:4000/api/incidents/shipper-stats', {
         params: { limit: 5 }
       });
       setShipperChartData(response.data);
@@ -154,11 +154,11 @@ const IncidentManagement = () => {
 
   const handleExport = async (format) => {
     try {
-      const response = await axios.get('http://localhost:5000/api/export-report', {
+      const response = await axios.get('http://localhost:4000/api/export-report', {
         params: { format },
         responseType: format === 'json' ? 'json' : 'blob'
       });
-      
+
       if (format === 'json') {
         // Just display a success message for JSON
         alert('Xuất báo cáo dạng JSON thành công');
@@ -171,13 +171,13 @@ const IncidentManagement = () => {
       alert(`Đã xảy ra lỗi khi xuất báo cáo dạng ${format}`);
     }
   };
-  
+
   const handleViewDetails = () => {
     // Navigate to detail page or open a modal
     window.location.href = `/admin-report-handling`;
     // Alternatively, set a state to open a modal
   };
-  
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -193,14 +193,14 @@ const IncidentManagement = () => {
       </header>
 
       <div className="incident_management_tabs">
-        <button 
+        <button
           className={`incident_management_tab ${activeTab === 'list' ? 'active' : ''}`}
           onClick={() => handleTabChange('list')}
         >
           <AlertTriangle size={16} />
           Danh sách sự cố
         </button>
-        <button 
+        <button
           className={`incident_management_tab ${activeTab === 'stats' ? 'active' : ''}`}
           onClick={() => handleTabChange('stats')}
         >
@@ -214,40 +214,40 @@ const IncidentManagement = () => {
           <div className="incident_management_filters">
             <div className="incident_management_search-bar">
               <Search size={18} />
-              <input 
-                type="text" 
-                placeholder="Tìm kiếm theo tên shipper..." 
+              <input
+                type="text"
+                placeholder="Tìm kiếm theo tên shipper..."
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
             </div>
             <div className="incident_management_status-filters">
               <Filter size={18} />
-              <button 
+              <button
                 className={statusFilter === 'Tất cả' ? 'active' : ''}
                 onClick={() => handleStatusFilterChange('Tất cả')}
               >
                 Tất cả
               </button>
-              <button 
+              <button
                 className={statusFilter === 'Chưa xử lý' ? 'active' : ''}
                 onClick={() => handleStatusFilterChange('Chưa xử lý')}
               >
                 Chưa xử lý
               </button>
-              <button 
+              <button
                 className={statusFilter === 'Đang xử lý' ? 'active' : ''}
                 onClick={() => handleStatusFilterChange('Đang xử lý')}
               >
                 Đang xử lý
               </button>
-              <button 
+              <button
                 className={statusFilter === 'Đã xử lý' ? 'active' : ''}
                 onClick={() => handleStatusFilterChange('Đã xử lý')}
               >
                 Đã xử lý
               </button>
-              <button 
+              <button
                 className={statusFilter === 'Từ chối' ? 'active' : ''}
                 onClick={() => handleStatusFilterChange('Từ chối')}
               >
@@ -332,22 +332,22 @@ const IncidentManagement = () => {
               </tbody>
             </table>
           </div>
-              <div className="incident_management_actions">
-              <button 
-                        className="incident_management_action-btn"
-                        onClick={() => handleViewDetails()}
-                      >
-                        Chi tiết & Điều chỉnh sự cố
-                      </button>
-              </div>
+          <div className="incident_management_actions">
+            <button
+              className="incident_management_action-btn"
+              onClick={() => handleViewDetails()}
+            >
+              Chi tiết & Điều chỉnh sự cố
+            </button>
+          </div>
           <div className="incident_management_pagination">
-            <button 
+            <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
               &laquo;
             </button>
-            
+
             {/* Generate page buttons */}
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               // Show pages around current page
@@ -361,9 +361,9 @@ const IncidentManagement = () => {
               } else {
                 pageNum = currentPage - 2 + i;
               }
-              
+
               return (
-                <button 
+                <button
                   key={pageNum}
                   className={currentPage === pageNum ? 'active' : ''}
                   onClick={() => handlePageChange(pageNum)}
@@ -372,8 +372,8 @@ const IncidentManagement = () => {
                 </button>
               );
             })}
-            
-            <button 
+
+            <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             >
@@ -432,7 +432,7 @@ const IncidentManagement = () => {
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                     >
                       {typeChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -444,7 +444,7 @@ const IncidentManagement = () => {
                 </ResponsiveContainer>
               </div>
             </div>
-            
+
             <div className="incident_management_chart-wrapper">
               <h3>Sự cố theo thời gian</h3>
               <div className="incident_management_chart-inner">
@@ -460,7 +460,7 @@ const IncidentManagement = () => {
                 </ResponsiveContainer>
               </div>
             </div>
-            
+
             <div className="incident_management_chart-wrapper">
               <h3>Sự cố theo shipper</h3>
               <div className="incident_management_chart-inner">

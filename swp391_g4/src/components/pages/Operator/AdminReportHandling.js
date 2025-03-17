@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/AdminReportHandling.css";
-import { Header } from "../../header/Header";
-import Footer from "../../footer/Footer";
+import BackButton from "../../buttons/BackButton";
 
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);
@@ -58,9 +57,6 @@ const AdminReportHandling = () => {
 
   return (
     <div className="admin-report-page">
-      <div className="header">
-        <Header />
-      </div>
       <div className="report-container-wrapper">
         {/* Tab buttons */}
         <div className="report-tabs">
@@ -190,7 +186,6 @@ const AdminReportHandling = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
