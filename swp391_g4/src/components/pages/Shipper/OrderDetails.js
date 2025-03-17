@@ -10,7 +10,6 @@ import {
   TableRow
 } from '@mui/material';
 import { Button } from 'react-bootstrap';
-import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 
 // Components
@@ -31,20 +30,18 @@ const OrderDetails = () => {
     products: [],
     addresses: []
   });
-  const [totalPrice, setTotalPrice] = useState(0);
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [shipperBalance, setShipperBalance] = useState(0);
-
-  // Calculated values
-  const shippingFee = Math.round((14000 + distance * 1000) / 10) * 10;
+  const [shipperBalance, setShipperBalance] = useState(null);
 
   // Currency formatter
   const formatCurrency = (value) =>
     new Intl.NumberFormat('vi-VN', {
       style: 'currency',
-      currency: 'VND'
-    }).format(value);
+      currency: 'VND',
+      minimumFractionDigits: 0, // Không hiển thị phần thập phân thừa
+      maximumFractionDigits: 0
+    }).format(value || 0);
 
   // Fetch order details
   useEffect(() => {
@@ -53,6 +50,7 @@ const OrderDetails = () => {
         const response = await axios.get(
           `http://localhost:4000/api/getOrderDetails/${id}`
         );
+        console.log('Order Details Response:', response.data);
 
         const { order, shop, customer, products } = response.data;
 
@@ -63,8 +61,6 @@ const OrderDetails = () => {
           products,
           addresses: [order.DeliveryAddress, shop.Address]
         });
-
-        setTotalPrice(order.TotalAmount || 0);
 
         if (shipperID) {
           fetchShipperBalance(shipperID);
@@ -81,100 +77,154 @@ const OrderDetails = () => {
   const fetchShipperBalance = async (shipperID) => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token không tồn tại, hãy đăng nhập lại');
+        setShipperBalance(0);
+        return;
+      }
+
       const response = await axios.get(
         `http://localhost:4000/api/getShipperBalance/${shipperID}`,
         {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+          headers: { 'Authorization': `Bearer ${token}` }
         }
       );
       setShipperBalance(response.data.balance || 0);
     } catch (error) {
       console.error('Lỗi lấy số dư:', error);
+      if (error.response?.status === 401) {
+        console.warn('Token không hợp lệ, cần đăng nhập lại');
+      }
       setShipperBalance(0);
     }
   };
 
+  // Hàm tính ShippingFee (dùng để cập nhật nếu cần)
+  const calculateShippingFee = () => {
+    const fee = Math.round((14000 + distance * 1000) / 10) * 10;
+    console.log('Calculated ShippingFee:', fee, 'Distance:', distance);
+    return fee;
+  };
+
+  // Cập nhật ShippingFee lên server khi distance thay đổi
+  useEffect(() => {
+    const updateShippingFee = async () => {
+      if (distance > 0 && orderData.order.OrderID) {
+        const shippingFee = calculateShippingFee();
+        try {
+          await axios.put(`http://localhost:4000/api/updateShippingFee`, {
+            OrderID: orderData.order.OrderID,
+            ShippingFee: shippingFee
+          });
+          setOrderData((prevData) => ({
+            ...prevData,
+            order: { ...prevData.order, ShippingFee: shippingFee }
+          }));
+          console.log('Updated ShippingFee to DB:', shippingFee);
+        } catch (error) {
+          console.error('Lỗi khi cập nhật ShippingFee:', error);
+        }
+      }
+    };
+
+    updateShippingFee();
+  }, [distance, orderData.order.OrderID]);
+
+  // Utility methods
+  const getPaymentAmount = () => {
+    const totalAmount = orderData.order.TotalAmount || 0;
+    const shippingFee = orderData.order.ShippingFee || calculateShippingFee();
+
+    // Nhân ShippingFee và TotalAmount với 1000 để loại bỏ sai số thập phân, rồi chia lại
+    const multiplier = 1000;
+    const adjustedTotalAmount = totalAmount * multiplier;
+    const adjustedShippingFee = shippingFee * multiplier;
+    const result = (adjustedTotalAmount + adjustedShippingFee) / multiplier;
+
+    console.log('Payment Amount Calc:', {
+      PaymentStatus: orderData.order.PaymentStatus,
+      TotalAmount: totalAmount,
+      ShippingFee: shippingFee,
+      AdjustedTotalAmount: adjustedTotalAmount,
+      AdjustedShippingFee: adjustedShippingFee,
+      Result: result
+    });
+
+    return orderData.order.PaymentStatus === 'PrePaid' ? 0 : result;
+  };
+
+  const getPaymentStatusLabel = () =>
+    orderData.order.PaymentStatus === 'PrePaid' ? 'Trả trước' : 'Trả sau';
+
   // Order handling methods
   const pickOrder = async () => {
     try {
-      // Lấy thông tin đơn hàng từ state orderData
+      if (shipperBalance === null) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Lỗi',
+          text: 'Không thể lấy số dư tài khoản. Vui lòng thử lại hoặc đăng nhập lại.',
+        });
+        return;
+      }
+
       const deposit = orderData.order.Deposit || 0;
 
       const pickOrderData = {
         OrderID: id,
         ShipperID: shipperID,
-        ShippingFee: shippingFee,
-        Deposit: deposit, // Sử dụng deposit từ state
+        Deposit: deposit,
         EstimatedDeliveryTime: dayjs()
           .add(duration * 60 + 60, 'minutes')
           .format('YYYY-MM-DD HH:mm:ss'),
       };
 
-      try {
-        await axios.put('http://localhost:4000/api/pickOrder', pickOrderData);
+      await axios.put('http://localhost:4000/api/pickOrder', pickOrderData);
 
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Xác nhận thành công',
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          window.location.href = '/dashboard';
-        });
-      } catch (error) {
-        if (error.response?.status === 400) {
-          const { currentBalance, requiredDeposit } = error.response.data;
-
-          Swal.fire({
-            icon: 'warning',
-            title: 'Số Dư Không Đủ',
-            html: `
-              <p>Số dư hiện tại: <strong>${formatCurrency(currentBalance)}</strong></p>
-              <p>Số tiền cọc yêu cầu: <strong>${formatCurrency(requiredDeposit)}</strong></p>
-              <p>Vui lòng nạp thêm tiền để nhận đơn.</p>
-            `,
-            confirmButtonText: 'Nạp Tiền Ngay',
-            cancelButtonText: 'Đóng',
-            showCancelButton: true
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = '/shipper-account';
-            }
-          });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Lỗi',
-            text: error.response?.data?.message || 'Có lỗi xảy ra khi xác nhận đơn hàng',
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Chi tiết lỗi:', error);
       Swal.fire({
-        icon: 'error',
-        title: 'Lỗi Hệ Thống',
-        text: 'Đã có lỗi không mong muốn xảy ra'
+        position: 'center',
+        icon: 'success',
+        title: 'Xác nhận thành công',
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/dashboard';
       });
+    } catch (error) {
+      if (error.response?.status === 400) {
+        const { currentBalance, requiredDeposit } = error.response.data;
+        Swal.fire({
+          icon: 'warning',
+          title: 'Số Dư Không Đủ',
+          html: `
+            <p>Số dư hiện tại: <strong>${formatCurrency(currentBalance)}</strong></p>
+            <p>Số tiền cọc yêu cầu: <strong>${formatCurrency(requiredDeposit)}</strong></p>
+            <p>Vui lòng nạp thêm tiền để nhận đơn.</p>
+          `,
+          confirmButtonText: 'Nạp Tiền Ngay',
+          cancelButtonText: 'Đóng',
+          showCancelButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/shipper-account';
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: error.response?.data?.message || 'Có lỗi xảy ra khi xác nhận đơn hàng',
+        });
+      }
     }
   };
 
   const confirmOrder = async (status) => {
     try {
       let failureReason = null;
-
-      // Lấy các giá trị tiền từ order
       const depositValue = parseFloat(orderData.order.Deposit || 0).toFixed(2);
-      const calculatedShippingFee = parseFloat((14000 + distance * 1000).toFixed(2));
+      const shippingFee = orderData.order.ShippingFee;
 
-      console.log('Deposit Value:', depositValue);
-      console.log('Calculated Shipping Fee:', calculatedShippingFee);
-      console.log('Distance:', distance);
-
-      // Hiển thị popup chọn lý do nếu giao hàng thất bại
       if (status === 'Cancelled') {
         const result = await Swal.fire({
           title: 'Lý Do Giao Hàng Thất Bại',
@@ -199,32 +249,21 @@ const OrderDetails = () => {
           }
         });
 
-        if (result.dismiss) {
-          return; // Người dùng hủy popup
-        }
-
+        if (result.dismiss) return;
         failureReason = result.value;
       }
 
-      // Chuẩn bị dữ liệu gửi lên server
       const confirmData = {
         OrderID: id,
         Status: status,
         Deposit: Number(depositValue),
-        ShippingFee: Number(calculatedShippingFee),
+        ShippingFee: shippingFee,
         FailureReason: failureReason
       };
 
-      console.log('Dữ liệu xác nhận đơn hàng:', confirmData);
-
-      // Gọi API xác nhận đơn hàng
       const response = await axios.put('http://localhost:4000/api/confirm-delivery-order', confirmData);
 
-      console.log('Phản hồi xác nhận đơn hàng:', response.data);
-
-      // Xử lý kết quả
       if (status === 'Delivered') {
-        // Giao hàng thành công - hiện thông báo hoàn tiền cọc và phí ship
         Swal.fire({
           icon: 'success',
           title: 'Giao Hàng Thành Công',
@@ -237,9 +276,7 @@ const OrderDetails = () => {
           window.location.href = '/dashboard';
         });
       } else if (status === 'Cancelled') {
-        // Giao hàng thất bại
         if (failureReason === 'shipper_error') {
-          // Lỗi do shipper - không hoàn tiền
           Swal.fire({
             icon: 'warning',
             title: 'Giao Hàng Thất Bại',
@@ -249,7 +286,6 @@ const OrderDetails = () => {
             window.location.href = '/dashboard';
           });
         } else {
-          // Lỗi do khách hàng hoặc khác - hoàn tiền cọc
           Swal.fire({
             icon: 'warning',
             title: 'Giao Hàng Thất Bại',
@@ -263,13 +299,6 @@ const OrderDetails = () => {
         }
       }
     } catch (error) {
-      console.error('Chi tiết lỗi khi xác nhận đơn hàng:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        headers: error.response?.headers
-      });
-
       Swal.fire({
         icon: 'error',
         title: 'Đã xảy ra lỗi',
@@ -278,26 +307,6 @@ const OrderDetails = () => {
       });
     }
   };
-
-  // Utility methods
-  // Utility methods
-  const getPaymentAmount = () => {
-    console.log('Payment Status:', orderData.order.PaymentStatus);
-    console.log('Total Price:', totalPrice);
-    console.log('Shipping Fee:', shippingFee);
-
-    if (orderData.order.PaymentStatus === 'PrePaid') {
-      return 0;
-    }
-
-    // Trả về tổng tiền hàng + phí ship cho trạng thái PostPaid
-    return totalPrice + shippingFee;
-  };
-
-  const getPaymentStatusLabel = () =>
-    orderData.order.PaymentStatus === 'PrePaid'
-      ? 'Trả trước'
-      : 'Trả sau';
 
   // Render methods
   const renderOrderActions = () => {
@@ -395,7 +404,7 @@ const OrderDetails = () => {
 
   return (
     <div>
-      <div className='header'><Header /></div>
+      <div className="header"><Header /></div>
       <div
         className="orderdetail-container"
         style={{
@@ -413,13 +422,13 @@ const OrderDetails = () => {
               className={`badge ${orderData.order.PaymentStatus === 'PrePaid'
                 ? 'bg-primary'
                 : 'bg-warning text-dark'
-                } fs-6 px-3 py-2`}
+              } fs-6 px-3 py-2`}
             >
               <i
                 className={`fa-solid ${orderData.order.PaymentStatus === 'PrePaid'
                   ? 'fa-credit-card'
                   : 'fa-money-bill-wave'
-                  } me-2`}
+                } me-2`}
               ></i>
               Phương thức thanh toán: {getPaymentStatusLabel()}
             </span>
@@ -433,21 +442,10 @@ const OrderDetails = () => {
             style={{ background: '#88f3c1' }}
           >
             <div>
-              <h5>
-                <i className="fa-solid fa-shop"></i> Địa Chỉ Lấy Hàng
-              </h5>
-              <h5>
-                <strong>
-                  <i className="fa-solid fa-user"></i> {orderData.shop.ShopName}
-                </strong>
-              </h5>
-              <span>
-                <i className="fa-solid fa-phone"></i> (+84) {orderData.shop.PhoneNumber}
-              </span>
-              <br />
-              <span>
-                <i className="fa-solid fa-location-dot"></i> {orderData.shop.Address}
-              </span>
+              <h5><i className="fa-solid fa-shop"></i> Địa Chỉ Lấy Hàng</h5>
+              <h5><strong><i className="fa-solid fa-user"></i> {orderData.shop.ShopName}</strong></h5>
+              <span><i className="fa-solid fa-phone"></i> (+84) {orderData.shop.PhoneNumber}</span><br />
+              <span><i className="fa-solid fa-location-dot"></i> {orderData.shop.Address}</span>
             </div>
           </div>
           <div
@@ -455,21 +453,10 @@ const OrderDetails = () => {
             style={{ background: '#caf4e0' }}
           >
             <div>
-              <h5>
-                <i className="fa-solid fa-house"></i> Địa Chỉ Nhận Hàng
-              </h5>
-              <h5>
-                <strong>
-                  <i className="fa-solid fa-user"></i> {orderData.customer.FullName}
-                </strong>
-              </h5>
-              <span>
-                <i className="fa-solid fa-phone"></i> (+84) {orderData.customer.PhoneNumber}
-              </span>
-              <br />
-              <span>
-                <i className="fa-solid fa-location-dot"></i> {orderData.order.DeliveryAddress}
-              </span>
+              <h5><i className="fa-solid fa-house"></i> Địa Chỉ Nhận Hàng</h5>
+              <h5><strong><i className="fa-solid fa-user"></i> {orderData.customer.FullName || 'Không có tên'}</strong></h5>
+              <span><i className="fa-solid fa-phone"></i> (+84) {orderData.customer.PhoneNumber}</span><br />
+              <span><i className="fa-solid fa-location-dot"></i> {orderData.order.DeliveryAddress}</span>
             </div>
           </div>
         </div>
@@ -479,9 +466,7 @@ const OrderDetails = () => {
           className="w-100 p-5 rounded-4 my-4 shadow-2"
           style={{ background: '#caf4e0' }}
         >
-          <h3>
-            <i className="fa-solid fa-bag-shopping"></i> Đơn Hàng
-          </h3>
+          <h3><i className="fa-solid fa-bag-shopping"></i> Đơn Hàng</h3>
           <h6>Khoảng cách: {distance} Km</h6>
           <h6>Thời gian vận chuyển dự tính: {duration} giờ</h6>
 
@@ -517,46 +502,30 @@ const OrderDetails = () => {
           <Table>
             <TableBody>
               <TableRow>
-                <TableCell className="fw-bold fs-5 text-end border-black">
-                  Tổng tiền hàng:
-                </TableCell>
+                <TableCell className="fw-bold fs-5 text-end border-black">Tổng tiền hàng:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">{formatCurrency(totalPrice)}</span>
+                  <span className="me-4">{formatCurrency(orderData.order.TotalAmount)}</span>
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="fw-bold fs-5 text-end border-black">
-                  Phí vận chuyển:
-                </TableCell>
+                <TableCell className="fw-bold fs-5 text-end border-black">Phí vận chuyển:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">{formatCurrency(shippingFee)}</span>
+                  <span className="me-4">{formatCurrency(orderData.order.ShippingFee || calculateShippingFee())}</span>
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="fw-bold fs-5 text-end border-black">
-                  Tiền cọc yêu cầu:
-                </TableCell>
+                <TableCell className="fw-bold fs-5 text-end border-black">Tiền cọc yêu cầu:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">
-                    {formatCurrency(orderData.order.Deposit || 0)}
-                  </span>
+                  <span className="me-4">{formatCurrency(orderData.order.Deposit || 0)}</span>
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="fw-bold fs-4 text-end border-black">
                   Tổng thanh toán (
-                  {orderData.order.PaymentStatus === 'PrePaid'
-                    ? 'Đã thanh toán trước'
-                    : 'Thu từ khách hàng'}
-                  ):
+                  {orderData.order.PaymentStatus === 'PrePaid' ? 'Đã thanh toán trước' : 'Thu từ khách hàng'}):
                 </TableCell>
                 <TableCell className="fw-bold fs-5 text-end col-2 border-black">
-                  <span
-                    className={`me-4 ${orderData.order.PaymentStatus === 'PrePaid'
-                      ? 'text-success'
-                      : ''
-                      }`}
-                  >
+                  <span className={`me-4 ${orderData.order.PaymentStatus === 'PrePaid' ? 'text-success' : ''}`}>
                     {formatCurrency(getPaymentAmount())}
                   </span>
                 </TableCell>
@@ -571,7 +540,6 @@ const OrderDetails = () => {
           style={{ background: '#caf4e0' }}
         >
           <BackButton />
-
           {renderOrderActions()}
         </div>
 
@@ -584,7 +552,6 @@ const OrderDetails = () => {
           />
         </div>
       </div>
-
       <Footer />
     </div>
   );
