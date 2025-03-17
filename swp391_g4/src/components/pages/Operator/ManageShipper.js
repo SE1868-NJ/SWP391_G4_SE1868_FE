@@ -49,7 +49,7 @@ const ManageShipper = () => {
 
     
 
-    axios.get("http://localhost:5000/api/shippers")
+    axios.get("http://localhost:4000/api/active-shippers")
       .then((response) => setApprovedShippers(response.data))
       .catch((error) =>
         console.error("Error fetching approved shippers:", error)
