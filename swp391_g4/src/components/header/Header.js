@@ -29,18 +29,15 @@ export class Header extends React.Component {
     if (token && shipperId) {
       this.fetchNotifications(shipperId);
 
-      // Set up polling for notifications
       this.notificationInterval = setInterval(() => {
         this.fetchNotifications(shipperId);
-      }, 60000); // Check notifications every minute
+      }, 60000); 
 
-      // Add click outside listener
       document.addEventListener("click", this.handleClickOutside);
     }
   }
 
   componentWillUnmount() {
-    // Clear interval and remove event listener
     if (this.notificationInterval) {
       clearInterval(this.notificationInterval);
     }
@@ -48,7 +45,6 @@ export class Header extends React.Component {
   }
 
   handleClickOutside = (event) => {
-    // Close dropdown and notification modal if clicked outside
     if (
       this.state.isDropdownOpen &&
       !event.target.closest(`.${styles.dropdownWrapper}`)
@@ -67,7 +63,7 @@ export class Header extends React.Component {
   fetchNotifications = async (shipperId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/notifications?shipperId=${shipperId}`
+        `http://localhost:4000/api/notifications?shipperId=${shipperId}`
       );
       const notifications = response.data.notifications;
 
@@ -83,7 +79,7 @@ export class Header extends React.Component {
   markAllAsRead = async () => {
     try {
       const shipperId = localStorage.getItem("shipperId");
-      await axios.put(`http://localhost:5000/api/notifications/mark-all-read`, {
+      await axios.put(`http://localhost:4000/api/notifications/mark-all-read`, {
         shipperId,
       });
       this.fetchNotifications(shipperId);
@@ -95,7 +91,7 @@ export class Header extends React.Component {
   handleMarkAsRead = async (notificationId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/notifications/${notificationId}/read`
+        `http://localhost:4000/api/notifications/${notificationId}/read`
       );
       const shipperId = localStorage.getItem("shipperId");
       this.fetchNotifications(shipperId);
@@ -125,9 +121,7 @@ export class Header extends React.Component {
     }));
   };
 
-  // Handle logout
   handleLogout = () => {
-    // Remove token and shipper info from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("shipperId");
     localStorage.removeItem("shipperName");

@@ -4,7 +4,6 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/ShipperAccount.css";
 import axios from 'axios';
-import Qrcode from "../../../images/QRcode.png";
 import { FaEye, FaEyeSlash, FaTimes, FaCheckCircle } from 'react-icons/fa';
 const formatData = {
   date: (dateString) => {
@@ -170,7 +169,7 @@ const ShipperAccount = () => {
         console.log('Fetching with Token:', token);
         console.log('Fetching Shipper ID:', shipperId);
 
-        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
+        const response = await axios.get(`http://localhost:4000/api/shippers-auth/${shipperId}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -205,7 +204,7 @@ const ShipperAccount = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/total-wallet`, {
+      const response = await axios.get(`http://localhost:4000/api/shipper/${shipperId}/total-wallet`, {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
       });
 
@@ -240,7 +239,7 @@ const ShipperAccount = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/wallet`, {
+      const response = await axios.get(`http://localhost:4000/api/shipper/${shipperId}/wallet`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -272,7 +271,7 @@ const ShipperAccount = () => {
       }
       console.log('Sending request to cancel account:', { shipperId, reason });
       const response = await axios.put(
-        `http://localhost:5000/api/shippers/${shipperId}/cancel`,
+        `http://localhost:4000/api/shippers/${shipperId}/cancel`,
         { reason },
         {
           headers: {
@@ -314,7 +313,7 @@ const ShipperAccount = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/shipper/${shipperId}/withdraw`,
+        `http://localhost:4000/api/shipper/${shipperId}/withdraw`,
         { amount: withdrawAmount },
         {
           headers: {
@@ -389,7 +388,7 @@ const ShipperAccount = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/shipper/${shipperId}/deposit`,
+        `http://localhost:4000/api/shipper/${shipperId}/deposit`,
         { amount: depositAmount },
         {
           headers: {
@@ -718,7 +717,7 @@ const ShipperAccount = () => {
                 <h2>Nạp Tiền</h2>
                 <p>Số tiền cần nạp:</p>
                 <div className="shipperAccount-deposit-options">
-                  {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
+                  {[40000, 100000, 200000, 400000, 1000000, 2000000].map((amount) => (
                     <button
                       key={amount}
                       className={`shipperAccount-deposit-option ${selectedAmount === amount ? 'selected' : ''}`}
@@ -765,7 +764,7 @@ const ShipperAccount = () => {
                     <p><strong>Số tiền:</strong> {formatData.currency(depositAmount)}</p>
                   </div>
                   <div className="qr-code-container">
-                    <img src={Qrcode} alt="QR Code" />
+                    <img src="https://useless-gold-stingray.myfilebase.com/ipfs/QmUBSUdCRZuE8jgxbgME5yjDScNSKandXKHP77jSFccS6s" alt="QR Code" />
                   </div>
                 </div>
                 <div className="shipperAccount-popup-actions">
@@ -820,7 +819,7 @@ const ShipperAccount = () => {
                 <h2>Rút Tiền</h2>
                 <p>Số tiền cần rút:</p>
                 <div className="shipperAccount-deposit-options">
-                  {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
+                  {[40000, 100000, 200000, 400000, 1000000, 2000000].map((amount) => (
                     <button
                       key={amount}
                       className={`shipperAccount-deposit-option ${selectedWithdrawAmount === amount ? 'selected' : ''}`}

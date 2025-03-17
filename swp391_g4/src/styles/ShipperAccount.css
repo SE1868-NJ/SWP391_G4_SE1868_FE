@@ -481,6 +481,7 @@ body {
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
+  margin-right: 20px;
 }
 
 .shipperAccount-update-button,

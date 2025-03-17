@@ -73,3 +73,15 @@
     display: none;
   }
   
+  .related-activity-item a {
+    text-decoration: none;
+  }
+  
+  .related-activity-item h3 {
+    color: #18d04d;
+    font-size: 1.3rem;
+  }
+  
+  .related-activity-item a:hover {
+    text-decoration: none;
+  }

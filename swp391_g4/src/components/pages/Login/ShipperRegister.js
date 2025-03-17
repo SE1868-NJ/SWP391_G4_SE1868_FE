@@ -136,7 +136,7 @@ const ShipperRegister = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const checkPhoneExists = async (phoneNumber) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/check-phone/${phoneNumber}`);
+      const response = await axios.get(`http://localhost:4000/api/check-phone/${phoneNumber}`);
       return response.data.exists;
     } catch (error) {
       console.error('Error checking phone:', error);
@@ -147,7 +147,7 @@ const ShipperRegister = () => {
   const checkEmailExists = async (email) => {
     if (!email) return false;
     try {
-      const response = await axios.get(`http://localhost:5000/api/check-email/${email}`);
+      const response = await axios.get(`http://localhost:4000/api/check-email/${email}`);
       return response.data.exists;
     } catch (error) {
       console.error('Error checking email:', error);
@@ -157,7 +157,7 @@ const ShipperRegister = () => {
 
   const checkCitizenIDExists = async (citizenId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/check-citizenid/${citizenId}`);
+      const response = await axios.get(`http://localhost:4000/api/check-citizenid/${citizenId}`);
       return response.data.exists;
     } catch (error) {
       console.error('Error checking CitizenID:', error);
@@ -375,7 +375,7 @@ const ShipperRegister = () => {
       console.log('Sending data:', formattedData);
 
       const response = await axios.post(
-        'http://localhost:5000/api/shippers',
+        'http://localhost:4000/api/shippers',
         formattedData,
         {
           headers: {
