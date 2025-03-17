@@ -57,7 +57,7 @@ const IncidentManagement = () => {
         }
       }
       console.log("Sending status to API:", dbStatus);
-      const response = await axios.get('http://localhost:5000/api/incidents', {
+      const response = await axios.get('http://localhost:4000/api/incidents', {
         params: {
           dbStatus: dbStatus, // Send the converted status
           search: searchTerm || null,
@@ -78,7 +78,7 @@ const IncidentManagement = () => {
   // Fetch summary statistics
   const fetchSummaryStats = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/summary-stats');
+      const response = await axios.get('http://localhost:4000/api/incidents/summary-stats');
       setSummaryStats(response.data);
     } catch (error) {
       console.error('Error fetching summary stats:', error);
@@ -89,7 +89,7 @@ const IncidentManagement = () => {
   // Fetch incident type chart data
   const fetchTypeChartData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/type-stats');
+      const response = await axios.get('http://localhost:4000/api/incidents/type-stats');
       setTypeChartData(response.data);
     } catch (error) {
       console.error('Error fetching type chart data:', error);
@@ -99,7 +99,7 @@ const IncidentManagement = () => {
   // Fetch incident time chart data
   const fetchTimeChartData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/time-stats', {
+      const response = await axios.get('http://localhost:4000/api/incidents/time-stats', {
         params: { days: 10 }
       });
       setTimeChartData(response.data);
@@ -111,7 +111,7 @@ const IncidentManagement = () => {
   // Fetch incident shipper chart data
   const fetchShipperChartData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/incidents/shipper-stats', {
+      const response = await axios.get('http://localhost:4000/api/incidents/shipper-stats', {
         params: { limit: 5 }
       });
       setShipperChartData(response.data);
@@ -154,7 +154,7 @@ const IncidentManagement = () => {
 
   const handleExport = async (format) => {
     try {
-      const response = await axios.get('http://localhost:5000/api/export-report', {
+      const response = await axios.get('http://localhost:4000/api/export-report', {
         params: { format },
         responseType: format === 'json' ? 'json' : 'blob'
       });
