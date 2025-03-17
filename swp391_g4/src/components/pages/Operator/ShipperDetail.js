@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
+import { addAdminNotification } from './AdminNotificationList';
 const ShipperDetail = () => {
   const [shippersList, setShippersList] = useState([]);
   const [selectedShipper, setSelectedShipper] = useState(null);
@@ -161,19 +162,30 @@ useEffect(() => {
       });
   };
   const handleRejectShipper = async () => {
+    if (!selectedShipper) {
+      alert('Vui lòng chọn một shipper trước khi từ chối');
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:4000/api/reject-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   
       if (response.data.success) {
-        // Cập nhật lại danh sách shipper
         const updatedList = shippersList.filter(
           shipper => shipper.ShipperID !== selectedShipper.ShipperID
         );
         setShippersList(updatedList);
         setSelectedShipper(null);
-        // Hiển thị thông báo thành công
+  
+        // Thêm thông báo khi từ chối thành công
+        // const notification = addAdminNotification(
+          // 'Từ Chối Shipper',
+          // `Shipper ${selectedShipper.FullName} (ID: ${selectedShipper.ShipperID}) đã bị từ chối.`,
+          // 'error'
+        // );
+        // await axios.post('http://localhost:4000/api/admin-notifications', notification);
+  
         alert('Đã từ chối đăng ký shipper thành công');
         window.location.reload();
       }
@@ -183,13 +195,16 @@ useEffect(() => {
     }
   };
   const handleApproveShipper = async () => {
+    if (!selectedShipper) {
+      alert('Vui lòng chọn một shipper trước khi duyệt');
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:4000/api/approve-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   
       if (response.data.success) {
-        // Cập nhật lại trạng thái trong danh sách
         const updatedList = shippersList.map(shipper => {
           if (shipper.ShipperID === selectedShipper.ShipperID) {
             return { ...shipper, Status: 'Active' };
@@ -198,7 +213,15 @@ useEffect(() => {
         });
         setShippersList(updatedList);
         setSelectedShipper({ ...selectedShipper, Status: 'Active' });
-        // Hiển thị thông báo thành công
+  
+        // Thêm thông báo khi duyệt thành công
+        // const notification = addAdminNotification(
+          // 'Duyệt Shipper Thành Công',
+          // `Shipper ${selectedShipper.FullName} (ID: ${selectedShipper.ShipperID}) đã được duyệt.`,
+          // 'success'
+        // );
+        // await axios.post('http://localhost:4000/api/admin-notifications', notification);
+  
         alert('Đã duyệt đăng ký shipper thành công');
         window.location.reload();
       }
@@ -210,6 +233,8 @@ useEffect(() => {
   const handleGoBack = () => {
     window.history.back();
   };
+
+
   
   return (
     <div className="shipper-container">

@@ -4,6 +4,7 @@ import "../../../styles/ManageShipper.css";
 import moment from "moment";
 import BackButton from "../../buttons/BackButton";
 import { useNavigate } from "react-router-dom";
+import { addAdminNotification } from './AdminNotificationList';
 
 const ManageShipper = () => {
   const navigate = useNavigate();
@@ -103,33 +104,36 @@ const ManageShipper = () => {
         console.error("Error fetching shipper update details:", error)
       );
   };
-
-  const handleStateChange = (id, newStatus, currentStatus) => {
-    // Nếu chuyển từ PendingCancel sang Inactive
+  const handleStateChange = async (id, newStatus, currentStatus) => {
     if (currentStatus === "PendingCancel" && newStatus === "Inactive") {
-      // Tìm shipper để hiển thị thông tin trong popup
       const shipper = cancelingShippers.find((s) => s.ShipperID === id);
       if (shipper) {
         setSelectedShipper(shipper);
         setShowCancelPopup(true);
       }
-    }
-    // Nếu chuyển từ PendingUpdate sang Active
-    else if (currentStatus === "PendingUpdate" && newStatus === "Active") {
+    } else if (currentStatus === "PendingUpdate" && newStatus === "Active") {
       fetchShipperUpdateDetails(id);
     } else {
-      // Xử lý các trường hợp khác
-      axios
-        .post("http://localhost:4000/api/change-shipper-status", {
+      try {
+        await axios.post("http://localhost:4000/api/change-shipper-status", {
           id,
           newStatus,
-        })
-        .then(() => {
-          fetchShippers(); // Refresh the list after state change
-        })
-        .catch((error) =>
-          console.error("Error changing shipper status:", error)
-        );
+        });
+
+        // Thêm thông báo khi thay đổi trạng thái
+        const shipper = [...pendingRegisterShippers, ...updatingShippers, ...cancelingShippers, ...approvedShippers]
+          .find(s => s.ShipperID === id);
+        // const notification = addAdminNotification(
+          // 'Thay Đổi Trạng Thái Shipper',
+          // `Shipper ${shipper.FullName} (ID: ${id}) đã được thay đổi trạng thái từ ${currentStatus} sang ${newStatus}.`,
+          // 'info'
+        // );
+        // await axios.post('http://localhost:4000/api/admin-notifications', notification);
+
+        fetchShippers();
+      } catch (error) {
+        console.error("Error changing shipper status:", error);
+      }
     }
   };
 
