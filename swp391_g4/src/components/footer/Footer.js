@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./Footer.module.css";
-import footerBackgroundImage from "../../images/FrameFooter.png";
-import ecoShipperLogo from "../../images/EcoShipper_rbg.png";
 
 export class Footer extends React.Component {
   constructor(props) {
@@ -30,12 +28,12 @@ export class Footer extends React.Component {
       <footer className={styles.footer}>
         <div
           className={styles.background}
-          style={{ backgroundImage: `url(${footerBackgroundImage})` }}
+          style={{ backgroundImage: 'url("https://useless-gold-stingray.myfilebase.com/ipfs/QmXbGqSZv3MwHrfBTf5CN1L5qdDAFEhe8HwZ74Y5Tbb2Tj")' }}
         >
           <div className={styles.logoContainer}>
             <img
               loading="lazy"
-              src={ecoShipperLogo}
+              src="https://useless-gold-stingray.myfilebase.com/ipfs/QmYsXLxt4iEbFG3ZZijiHEmgyt34WhtAX3CCGDcuKrKgWF"
               className={styles.logo}
               alt="Company logo"
             />

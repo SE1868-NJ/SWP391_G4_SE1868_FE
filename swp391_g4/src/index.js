@@ -42,8 +42,8 @@ import OrderDetails from "./components/pages/Shipper/OrderDetails"
 import ShipperDashboard from "./components/pages/Shipper/ShipperDashboard";
 
 //Report
-import ReportIssue from "./components/pages/ReportIssue";
-import AdminReportHandling from "./components/pages/AdminReportHandling";
+import ReportIssue from "./components/pages/Shipper/ReportIssue";
+import AdminReportHandling from "./components/pages/Operator/AdminReportHandling";
 import CustomerReportTracking from "./components/pages/CustomerReportTracking";
 
 const PrivateRoute = ({ children }) => {

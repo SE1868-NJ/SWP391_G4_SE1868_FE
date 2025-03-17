@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import "../../styles/ReportIssue.css";
+import "../../../styles/ReportIssue.css";
 import axios from "axios";
-import { Header } from "../header/Header";
-import Footer from "../footer/Footer";
+import { Header } from "../../header/Header";
+import Footer from "../../footer/Footer";
 
 const ReportIssue = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -47,7 +47,7 @@ const ReportIssue = () => {
     e.preventDefault();
     try {
       if (reportType === "order") {
-        const response = await axios.post("http://localhost:5000/api/reports/order", { ...report, shipperId });
+        const response = await axios.post("http://localhost:4000/api/reports/order", { ...report, shipperId });
         if (response.data.success) {
           setIsSubmitted(true);
           setTimeout(() => setIsSubmitted(false), 3000);
@@ -57,7 +57,7 @@ const ReportIssue = () => {
           console.error("Không thể gửi báo cáo do thiếu shipperId");
           return;
         }
-        const response = await axios.post("http://localhost:5000/api/reports/shipper", { ...report, shipperId });
+        const response = await axios.post("http://localhost:4000/api/reports/shipper", { ...report, shipperId });
         if (response.data.success) {
           setIsSubmitted(true);
           setTimeout(() => setIsSubmitted(false), 3000);
