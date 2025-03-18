@@ -3,11 +3,12 @@ import axios from "axios";
 import "../../../styles/AdminReportHandling.css";
 import BackButton from "../../buttons/BackButton";
 
+import { addAdminNotification } from './AdminNotificationList';
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);
   const [shipperReports, setShipperReports] = useState([]);
   const [updatedStatus, setUpdatedStatus] = useState({});
-  const [activeTab, setActiveTab] = useState("order"); // Thêm state để theo dõi tab đang hiển thị
+  const [activeTab, setActiveTab] = useState("order");
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -40,7 +41,6 @@ const AdminReportHandling = () => {
   const handleStatusChange = (reportId, status) => {
     setUpdatedStatus((prev) => ({ ...prev, [reportId]: status }));
   };
-
   const updateStatus = async (reportId) => {
     if (!updatedStatus[reportId]) return;
     try {
@@ -48,6 +48,16 @@ const AdminReportHandling = () => {
         status: updatedStatus[reportId],
         processedDate: new Date().toISOString().split("T")[0],
       });
+
+      // Thêm thông báo khi cập nhật trạng thái báo cáo
+      const report = [...orderReports, ...shipperReports].find(r => r.ReportID === reportId);
+      // const notification = addAdminNotification(
+        // 'Cập Nhật Báo Cáo Sự Cố',
+        // `Báo cáo ID: ${reportId} đã được cập nhật trạng thái thành ${updatedStatus[reportId]}.`,
+        // 'success'
+      // );
+      // await axios.post('http://localhost:4000/api/admin-notifications', notification);
+
       fetchOrderReports();
       fetchShipperReports();
     } catch (error) {
