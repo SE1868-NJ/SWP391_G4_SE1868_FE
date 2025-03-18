@@ -3,6 +3,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -13,6 +14,7 @@
     transform: translateY(30px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -23,9 +25,11 @@
   0% {
     box-shadow: 0 0 0 0 rgba(36, 174, 110, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 6px rgba(36, 174, 110, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(36, 174, 110, 0);
   }
@@ -35,6 +39,7 @@
   from {
     transform: scale(0);
   }
+
   to {
     transform: scale(1);
   }
@@ -220,39 +225,40 @@ body {
 
 .shipperAccount-date-filter {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, #ffffff, #f8f9fa);
-  padding: 1.2rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e9ecef;
-  transition: box-shadow 0.3s ease;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e4e8;
+  transition: box-shadow 0.2s ease;
 }
 
 .shipperAccount-date-filter:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
 }
 
 .shipperAccount-date-filter label {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #1a3c34;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .shipperAccount-date-filter input[type="week"] {
-  padding: 0.75rem 1.25rem;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
   color: #343a40;
   background: #fff;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 180px;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  height: 32px;
 }
 
 .shipperAccount-date-filter input[type="week"]:hover {
@@ -261,13 +267,13 @@ body {
 
 .shipperAccount-date-filter input[type="week"]:focus {
   border-color: #24ae6e;
-  box-shadow: 0 0 0 3px rgba(36, 174, 110, 0.25);
+  box-shadow: 0 0 0 2px rgba(36, 174, 110, 0.2);
   outline: none;
 }
 
 .shipperAccount-date-filter p {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #495057;
   font-weight: 500;
   background: #e6f3ed;
@@ -276,6 +282,7 @@ body {
   border: 1px dashed #24ae6e;
 }
 
+/* Wallet Table */
 .shipperAccount-wallet-table-container {
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -303,6 +310,16 @@ body {
   max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.shipperAccount-wallet-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.shipperAccount-wallet-table tbody tr:hover {
+  background-color: #e6f3ed;
+  box-shadow: inset 0 0 0 1px #24ae6e;
 }
 
 .shipperAccount-wallet-table tr {
@@ -444,18 +461,16 @@ body {
 /* Documents Grid */
 .shipperAccount-documents-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;  
+  padding: 10px;
 }
 
 .shipperAccount-document-item {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd; /* Tùy chọn: Thêm viền để phân biệt */
+  border-radius: 5px;
 }
 
 .shipperAccount-document-item:hover {
@@ -473,6 +488,9 @@ body {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 5px;
 }
 
 /* Account Actions */
@@ -669,24 +687,7 @@ body {
 .shipperAccount-cancel-reason-option input[type="radio"] {
   margin: 0;
   cursor: pointer;
-  accent-color: #dc3545;
-  width: 1.25rem;
-  height: 1.25rem;
-  transition: transform 0.2s ease;
-}
-
-.shipperAccount-cancel-reason-option input[type="radio"]:hover {
-  transform: scale(1.1);
-}
-
-.shipperAccount-cancel-reason-option input[type="radio"]:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
-}
-
-.shipperAccount-cancel-reason-option input[type="radio"]:checked + label {
-  color: #dc3545;
-  font-weight: 600;
+  accent-color: #007bff;
 }
 
 .shipperAccount-cancel-reason-option label {
@@ -842,83 +843,6 @@ body {
   padding: 1rem 0.5rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  font-size: 1rem;
-  border: 1px solid #e9ecef;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.shipperAccount-deposit-option:hover {
-  background-color: #e6f3ed;
-  border-color: #24ae6e;
-}
-
-.shipperAccount-deposit-option.selected {
-  background-color: #24ae6e;
-  color: white;
-  border-color: #1a8a55;
-  box-shadow: 0 4px 8px rgba(36, 174, 110, 0.3);
-  transform: translateY(-2px);
-}
-
-.shipperAccount-popup-content input[type="number"] {
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
-}
-
-.shipperAccount-popup-content input[type="number"]:focus {
-  border-color: #24ae6e;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(36, 174, 110, 0.2);
-  outline: none;
-}
-
-/* Beneficiary Info */
-.shipperAccount-beneficiary-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin: 1.5rem 0;
-  padding: 1.5rem;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  border: 1px solid #24ae6e;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-.shipperAccount-beneficiary-info.withdraw-info {
-  background-color: #f0f8ff;
-  border: 1px solid #4361ee;
-}
-
-.shipperAccount-beneficiary-info .beneficiary-details {
-  flex: 1;
-  padding-right: 1.5rem;
-}
-
-.shipperAccount-beneficiary-info.withdraw-info .beneficiary-details {
-  width: 100%;
-  padding-right: 0;
-  border-right: none;
-}
-
-.shipperAccount-beneficiary-info .beneficiary-details p {
-  margin: 0.75rem 0;
-  font-size: 1.1rem;
-  color: #343a40;
-  font-weight: 400;
-  text-align: left;
-  line-height: 1.5;
-}
-
-.shipperAccount-beneficiary-info .beneficiary-details p strong {
   font-weight: 600;
   color: #1a3c34;
   display: inline-block;
@@ -1037,9 +961,35 @@ body {
   }
 
   .shipperAccount-date-filter {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 0.5rem 0.8rem;
+    gap: 0.6rem;
   }
+
+  .shipperAccount-date-filter input[type="date"] {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #343a40;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    height: 32px;
+  }
+
+  .shipperAccount-date-filter input[type="date"]:disabled {
+    background: #e9ecef;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .shipperAccount-date-filter label {
+    margin-bottom: -0.2rem;
+  }
+
+
 
   .shipperAccount-wallet-table th,
   .shipperAccount-wallet-table td {

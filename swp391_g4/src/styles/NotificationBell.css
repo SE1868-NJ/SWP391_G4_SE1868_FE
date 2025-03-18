@@ -1,0 +1,208 @@
+/* Container chính của chuông thông báo, đặt trong header */
+.notification-bell-container {
+    position: relative;
+    display: inline-block;
+    margin-left: auto; /* Đẩy sang phải trong header */
+    padding: 10px;
+  }
+  
+  /* Biểu tượng chuông */
+  .notification-bell {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background: none;
+    border: none;
+  }
+  
+  /* Màu vàng cho chuông */
+  .notification-bell svg {
+    color: #ffd700;
+    width: 24px;
+    height: 24px;
+    transition: color 0.3s ease;
+  }
+  
+  .notification-bell:hover svg {
+    color: #e6b800; /* Đậm hơn khi hover */
+  }
+  
+  /* Badge hiển thị số lượng thông báo chưa đọc */
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff0000;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Dropdown thông báo */
+  .notification-dropdown {
+    position: absolute;
+    top: 100%; /* Xuất hiện ngay dưới chuông */
+    right: 0;
+    width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+    border-radius: 4px;
+    animation: slideDown 0.2s ease-out;
+  }
+  
+  /* Hiệu ứng trượt xuống cho dropdown */
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Header của dropdown */
+  .notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  /* Tiêu đề "Thông Báo" */
+  .notification-header h3 {
+    margin: 0;
+    color: #333;
+  }
+  
+  /* Các hành động trong header */
+  .notification-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Tùy chọn "Đánh dấu tất cả đã đọc" */
+  .mark-all-read {
+    color: #007bff;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+  }
+  
+  .mark-all-read:hover {
+    color: #0056b3;
+  }
+  
+  /* Nút đóng "X" */
+  .close-button {
+    cursor: pointer;
+    color: #ff0000;
+    transition: color 0.3s ease;
+  }
+  
+  .close-button:hover {
+    color: #cc0000;
+  }
+  
+  /* Danh sách thông báo */
+  .notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Mỗi mục thông báo */
+  .notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #444;
+  }
+  
+  /* Thông báo chưa đọc */
+  .notification-item.unread {
+    background-color: #f0f0f0;
+    font-weight: 500;
+  }
+  
+  /* Nội dung thông báo */
+  .notification-content {
+    margin-bottom: 5px;
+  }
+  
+  .notification-content strong {
+    color: #222;
+  }
+  
+  .notification-content p {
+    margin: 4px 0;
+    color: #666;
+  }
+  
+  .notification-content .timestamp {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  /* Nút "Đánh dấu đã đọc" */
+  .notification-item button {
+    margin-top: 5px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .notification-item button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Đảm bảo header của trang admin hỗ trợ chuông */
+  .admin-layout header {
+    display: flex;
+    justify-content: flex-end; /* Đẩy chuông sang phải */
+    align-items: center;
+    background-color: #2E8B57;
+    padding: 10px 20px;
+    position: relative;
+    height: 60px;
+  }
+  .notification-bell {
+    font-size: 24px; /* Kích thước emoji */
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .notification-bell:hover {
+    opacity: 0.8; /* Hiệu ứng khi hover */
+  }
