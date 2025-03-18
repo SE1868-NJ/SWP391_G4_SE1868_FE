@@ -188,17 +188,17 @@ const ShipperAccount = () => {
           const shipperId = localStorage.getItem('shipperId');
           const token = localStorage.getItem('token');
           const response = await axios.post(
-            `http://localhost:5000/api/shipper/${shipperId}/update-wallet`,
-            { amount: depositAmount },
+            `http://localhost:5000/api/shipper/${shipperId}/deposit`, // Thay đổi endpoint
+            { amount: depositAmount, isManualUpdate: true }, // Thêm isManualUpdate
             { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
           );
-  
+      
           if (response.data.success) {
             setTotalWallet(response.data.data.newBalance);
-            setShowPaymentSuccess(true); // Hiển thị thông báo thành công ngay lập tức
-            setShowDepositPopup(false); // Đóng popup nạp tiền
+            setShowPaymentSuccess(true);
+            setShowDepositPopup(false);
             setSelectedSection('wallet');
-            window.history.replaceState({}, document.title, '/shipper-account'); // Xóa query params
+            window.history.replaceState({}, document.title, '/shipper-account');
           }
         } catch (err) {
           setError(err.message || 'Đã xảy ra lỗi khi cập nhật ví');
