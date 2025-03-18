@@ -4,7 +4,6 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import "../../../styles/ShipperAccount.css";
 import axios from 'axios';
-import Qrcode from "../../../images/QRcode.png";
 import { FaEye, FaEyeSlash, FaTimes, FaCheckCircle } from 'react-icons/fa';
 const formatData = {
   date: (dateString) => {
@@ -27,6 +26,7 @@ const formatData = {
 const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
   const [cancelReason, setCancelReason] = useState('');
   const [otherReason, setOtherReason] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Thêm state để hiển thị lỗi
 
   const cancelReasons = [
     { id: 'inactive', label: 'Không còn hoạt động' },
@@ -41,20 +41,29 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
 
   const handleSubmit = () => {
     const finalReason = cancelReason === 'other' ? otherReason : cancelReason;
+    const isValid = cancelReason && (cancelReason !== 'other' || otherReason.trim());
+
+    if (!isValid) {
+      // Hiển thị thông báo lỗi nếu chưa chọn lý do
+      setErrorMessage('Vui lòng chọn một lý do hủy hoặc nhập lý do khác.');
+      return;
+    }
+
+    // Nếu hợp lệ, gọi onConfirm và xóa thông báo lỗi
+    setErrorMessage('');
+    console.log('Submitting cancel with reason:', finalReason);
     onConfirm(finalReason);
   };
 
-  const isValid = cancelReason && (cancelReason !== 'other' || otherReason.trim());
-
   return (
-    <div className="shipperAccount-popup-overlay">
-      <div className="shipperAccount-popup-content">
+    <div className="shipperAccount-cancel-popup-overlay">
+      <div className="shipperAccount-cancel-popup-content">
         <h2>Hủy tài khoản</h2>
         <p>Vui lòng cho chúng tôi biết lý do bạn muốn hủy tài khoản:</p>
 
-        <div className="shipperAccount-reason-options">
+        <div className="shipperAccount-cancel-reason-options">
           {cancelReasons.map(reason => (
-            <div key={reason.id} className="shipperAccount-reason-option">
+            <div key={reason.id} className="shipperAccount-cancel-reason-option">
               <input
                 type="radio"
                 id={reason.id}
@@ -73,19 +82,26 @@ const CancelAccountPopup = ({ onClose, onConfirm, isSubmitting }) => {
             placeholder="Vui lòng nhập lý do của bạn..."
             value={otherReason}
             onChange={(e) => setOtherReason(e.target.value)}
-            className="shipperAccount-other-reason-input"
+            className="shipperAccount-cancel-other-reason-input"
           />
         )}
 
-        <div className="shipperAccount-popup-actions">
+        {/* Hiển thị thông báo lỗi nếu có */}
+        {errorMessage && (
+          <p className="shipperAccount-error-message" style={{ color: 'red', marginTop: '10px' }}>
+            {errorMessage}
+          </p>
+        )}
+
+        <div className="shipperAccount-cancel-popup-actions">
           <button
-            className="shipperAccount-cancel-button"
+            className="shipperAccount-cancel-popup-button"
             onClick={handleSubmit}
-            disabled={isSubmitting || !isValid}
+            // Bỏ disabled để nút luôn hoạt động
           >
             {isSubmitting ? 'Đang xử lý...' : 'Xác nhận hủy'}
           </button>
-          <button className="shipperAccount-close-button" onClick={onClose}>
+          <button className="shipperAccount-cancel-close-button" onClick={onClose}>
             Đóng
           </button>
         </div>
@@ -153,7 +169,7 @@ const ShipperAccount = () => {
         console.log('Fetching with Token:', token);
         console.log('Fetching Shipper ID:', shipperId);
 
-        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
+        const response = await axios.get(`http://localhost:4000/api/shippers-auth/${shipperId}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -188,7 +204,7 @@ const ShipperAccount = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/total-wallet`, {
+      const response = await axios.get(`http://localhost:4000/api/shipper/${shipperId}/total-wallet`, {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
       });
 
@@ -199,7 +215,7 @@ const ShipperAccount = () => {
       }
     } catch (err) {
       console.error('Fetch Total Wallet Error:', err);
-      setTotalWallet(0); // Đặt mặc định là 0 nếu lỗi
+      setTotalWallet(0);
     }
   };
 
@@ -223,7 +239,7 @@ const ShipperAccount = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/wallet`, {
+      const response = await axios.get(`http://localhost:4000/api/shipper/${shipperId}/wallet`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -243,21 +259,29 @@ const ShipperAccount = () => {
     }
   };
   const handleCancelAccount = async (reason) => {
+    console.log('Cancel account initiated with reason:', reason); // Debug
     setIsSubmitting(true);
     try {
       const shipperId = localStorage.getItem('shipperId');
+      const token = localStorage.getItem('token');
+      if (!shipperId || !token) {
+        console.log('Missing shipperId or token, redirecting to login');
+        navigate('/login');
+        return;
+      }
+      console.log('Sending request to cancel account:', { shipperId, reason });
       const response = await axios.put(
-        `http://localhost:5000/api/shippers-auth/${shipperId}/cancel`,
-        {
-          reason,
-        },
+        `http://localhost:4000/api/shippers/${shipperId}/cancel`,
+        { reason },
         {
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
         }
       );
-
+  
+      console.log('API Response:', response.data); 
       if (response.data.success) {
         setShowCancelPopup(false);
         setShowConfirmationMessage(true);
@@ -266,7 +290,7 @@ const ShipperAccount = () => {
       }
     } catch (err) {
       setError(err.message || 'Đã xảy ra lỗi khi hủy tài khoản');
-      console.error('Error canceling account:', err);
+      console.error('Error canceling account:', err.response ? err.response.data : err);
     } finally {
       setIsSubmitting(false);
       setShowCancelPopup(false);
@@ -289,7 +313,7 @@ const ShipperAccount = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/shipper/${shipperId}/withdraw`,
+        `http://localhost:4000/api/shipper/${shipperId}/withdraw`,
         { amount: withdrawAmount },
         {
           headers: {
@@ -364,7 +388,7 @@ const ShipperAccount = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/shipper/${shipperId}/deposit`,
+        `http://localhost:4000/api/shipper/${shipperId}/deposit`,
         { amount: depositAmount },
         {
           headers: {
@@ -693,7 +717,7 @@ const ShipperAccount = () => {
                 <h2>Nạp Tiền</h2>
                 <p>Số tiền cần nạp:</p>
                 <div className="shipperAccount-deposit-options">
-                  {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
+                  {[40000, 100000, 200000, 400000, 1000000, 2000000].map((amount) => (
                     <button
                       key={amount}
                       className={`shipperAccount-deposit-option ${selectedAmount === amount ? 'selected' : ''}`}
@@ -740,7 +764,7 @@ const ShipperAccount = () => {
                     <p><strong>Số tiền:</strong> {formatData.currency(depositAmount)}</p>
                   </div>
                   <div className="qr-code-container">
-                    <img src={Qrcode} alt="QR Code" />
+                    <img src="https://useless-gold-stingray.myfilebase.com/ipfs/QmUBSUdCRZuE8jgxbgME5yjDScNSKandXKHP77jSFccS6s" alt="QR Code" />
                   </div>
                 </div>
                 <div className="shipperAccount-popup-actions">
@@ -795,7 +819,7 @@ const ShipperAccount = () => {
                 <h2>Rút Tiền</h2>
                 <p>Số tiền cần rút:</p>
                 <div className="shipperAccount-deposit-options">
-                  {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
+                  {[40000, 100000, 200000, 400000, 1000000, 2000000].map((amount) => (
                     <button
                       key={amount}
                       className={`shipperAccount-deposit-option ${selectedWithdrawAmount === amount ? 'selected' : ''}`}

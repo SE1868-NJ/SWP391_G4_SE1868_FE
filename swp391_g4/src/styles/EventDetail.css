@@ -71,7 +71,7 @@ h2 {
 .related-article-item h3 {
   font-size: 1.1em;
   font-weight: normal;
-  color: #333;
+  color: #18d04d;
   margin-top: 10px;
 }
 
@@ -84,12 +84,16 @@ a {
   display: none; /* Ẩn nút quay lại */
 }
 
+.related-article-item a{
+  text-decoration: none;
+}
+
 
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000; /* Đảm bảo header luôn ở trên các phần tử khác */
-  width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
+  z-index: 1000;
+  width: 100%;
 }

@@ -28,7 +28,7 @@ const OrderDetails = () => {
   const [addresses, setAddresses] = useState({ delivery: "", shop: "" });
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
-  let shippingFee = 15000 + distance * 1000;
+  let shippingFee = 14000 + distance * 1000;
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -39,7 +39,7 @@ const OrderDetails = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/getOrderDetails/${id}`
+          `http://localhost:4000/api/getOrderDetails/${id}`
         );
         setOrder(response.data.order);
         setShop(response.data.shop);
@@ -77,7 +77,7 @@ const OrderDetails = () => {
 
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/pickOrder",
+        "http://localhost:4000/api/pickOrder",
         orderData
       );
       Swal.fire({
@@ -132,7 +132,7 @@ const OrderDetails = () => {
     };
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/confirm-delivery-order",
+        "http://localhost:4000/api/confirm-delivery-order",
         orderData
       );
       Swal.fire({

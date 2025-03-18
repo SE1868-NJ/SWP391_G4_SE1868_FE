@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/AdminReportHandling.css";
-import { Header } from "../header/Header";
-import Footer from "../footer/Footer";
+import "../../../styles/AdminReportHandling.css";
+import BackButton from "../../buttons/BackButton";
 
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);
@@ -22,7 +21,7 @@ const AdminReportHandling = () => {
 
   const fetchOrderReports = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/order-reports");
+      const response = await axios.get("http://localhost:4000/api/order-reports");
       setOrderReports(response.data.orderReports);
     } catch (error) {
       console.error("Error fetching order reports:", error);
@@ -31,7 +30,7 @@ const AdminReportHandling = () => {
 
   const fetchShipperReports = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/shipper-reports");
+      const response = await axios.get("http://localhost:4000/api/shipper-reports");
       setShipperReports(response.data.shipperReports);
     } catch (error) {
       console.error("Error fetching shipper reports:", error);
@@ -45,7 +44,7 @@ const AdminReportHandling = () => {
   const updateStatus = async (reportId) => {
     if (!updatedStatus[reportId]) return;
     try {
-      await axios.put(`http://localhost:5000/api/reports/${reportId}`, {
+      await axios.put(`http://localhost:4000/api/reports/${reportId}`, {
         status: updatedStatus[reportId],
         processedDate: new Date().toISOString().split("T")[0],
       });
@@ -58,9 +57,6 @@ const AdminReportHandling = () => {
 
   return (
     <div className="admin-report-page">
-      <div className="header">
-        <Header />
-      </div>
       <div className="report-container-wrapper">
         {/* Tab buttons */}
         <div className="report-tabs">
@@ -190,7 +186,6 @@ const AdminReportHandling = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

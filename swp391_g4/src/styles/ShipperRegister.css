@@ -1,16 +1,16 @@
-.shipper-register-container {
+.shipperRegister-shipper-register-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
 }
 
-.register-main {
+.shipperRegister-register-main {
   flex: 1;
   padding: 2rem 0;
 }
 
-.register-form-container {
+.shipperRegister-register-form-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
@@ -19,7 +19,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-title {
+.shipperRegister-form-title {
   text-align: center;
   color: #333;
   margin-bottom: 2rem;
@@ -27,7 +27,7 @@
   font-weight: 600;
 }
 
-.form-section {
+.shipperRegister-form-section {
   margin-bottom: 2rem;
   padding: 1.5rem;
   background-color: #f8f9fa;
@@ -35,11 +35,11 @@
   transition: box-shadow 0.3s ease;
 }
 
-.form-section:hover {
+.shipperRegister-form-section:hover {
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
 }
 
-.form-section h2 {
+.shipperRegister-form-section h2 {
   color: #2c3e50;
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
@@ -47,30 +47,30 @@
   border-bottom: 2px solid #e9ecef;
 }
 
-.input-grid {
+.shipperRegister-input-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
-.input-wrapper {
+.shipperRegister-input-wrapper {
   position: relative;
   margin-bottom: 0.5rem;
 }
 
-.input-wrapper label {
+.shipperRegister-input-wrapper label {
   display: block;
   margin-bottom: 0.5rem;
   color: #495057;
   font-weight: 500;
 }
 
-.required {
+.shipperRegister-required {
   color: #dc3545;
   margin-left: 4px;
 }
 
-.form-input {
+.shipperRegister-form-input {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ced4da;
@@ -79,22 +79,22 @@
   transition: all 0.3s ease;
 }
 
-.form-input:focus {
+.shipperRegister-form-input:focus {
   border-color: #80bdff;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-.form-input.error {
+.shipperRegister-form-input.shipperRegister-error {
   border-color: #dc3545;
   background-color: #fff;
 }
 
-.form-input.error:focus {
+.shipperRegister-form-input.shipperRegister-error:focus {
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
 }
 
-.error-message {
+.shipperRegister-error-message {
   color: #dc3545;
   font-size: 0.875rem;
   margin-top: 0.25rem;
@@ -112,11 +112,11 @@
   }
 }
 
-.file-input-wrapper {
+.shipperRegister-file-input-wrapper {
   margin-bottom: 1rem;
 }
 
-.file-input-wrapper input[type="file"] {
+.shipperRegister-file-input-wrapper input[type="file"] {
   display: block;
   width: 100%;
   padding: 0.5rem;
@@ -126,7 +126,7 @@
   background-color: #fff;
 }
 
-.image-preview {
+.shipperRegister-image-preview {
   max-width: 200px;
   max-height: 200px;
   margin-top: 1rem;
@@ -134,13 +134,13 @@
   border: 1px solid #dee2e6;
 }
 
-.submit-button {
+.shipperRegister-submit-button {
   display: block;
   width: 100%;
   max-width: 300px;
   margin: 2rem auto;
   padding: 1rem;
-  background-color: #007bff;
+  background-color: #24ae6e;
   color: white;
   border: none;
   border-radius: 4px;
@@ -150,31 +150,32 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.submit-button:hover {
+.shipperRegister-submit-button:hover {
   background-color: #0056b3;
 }
 
-.submit-button:focus {
+.shipperRegister-submit-button:focus {
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
-.password-input-wrapper {
+
+.shipperRegister-password-input-wrapper {
   position: relative;
   width: 100%;
 }
 
-.password-input-container {
+.shipperRegister-password-input-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.password-input-container input {
+.shipperRegister-password-input-container input {
   width: 100%;
   padding-right: 40px;
 }
 
-.password-toggle {
+.shipperRegister-password-toggle {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -190,37 +191,87 @@
   transition: color 0.2s ease;
 }
 
-.password-toggle:hover {
+.shipperRegister-password-toggle:hover {
   color: #333;
 }
 
-.password-toggle:focus {
+.shipperRegister-password-toggle:focus {
   outline: none;
-  color: #007bff;
+  color: #24ae6e;
 }
 
-.form-input.error + .password-toggle {
+.shipperRegister-form-input.shipperRegister-error + .shipperRegister-password-toggle {
   color: #dc3545;
 }
+
+.shipperRegister-confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.shipperRegister-confirmation-content {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+}
+
+.shipperRegister-confirmation-content p {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.shipperRegister-confirmation-button {
+  padding: 0.75rem 2rem;
+  background-color: #24ae6e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.shipperRegister-confirmation-button:hover {
+  background-color: #0056b3;
+}
+
+.shipperRegister-confirmation-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 @media (max-width: 768px) {
-  .register-form-container {
+  .shipperRegister-register-form-container {
     padding: 1rem;
     margin: 1rem;
   }
 
-  .input-grid {
+  .shipperRegister-input-grid {
     grid-template-columns: 1fr;
   }
 
-  .form-section {
+  .shipperRegister-form-section {
     padding: 1rem;
   }
 
-  .form-title {
+  .shipperRegister-form-title {
     font-size: 1.5rem;
   }
 
-  .form-section h2 {
+  .shipperRegister-form-section h2 {
     font-size: 1.25rem;
   }
 }
