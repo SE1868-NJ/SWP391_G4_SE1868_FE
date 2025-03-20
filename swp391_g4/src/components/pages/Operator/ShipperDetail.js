@@ -15,7 +15,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
-import { addAdminNotification } from './AdminNotificationList';
+import NotificationBell from './NotificationBell';
 const ShipperDetail = () => {
   const [shippersList, setShippersList] = useState([]);
   const [selectedShipper, setSelectedShipper] = useState(null);
@@ -177,15 +177,6 @@ useEffect(() => {
         );
         setShippersList(updatedList);
         setSelectedShipper(null);
-  
-        // Thêm thông báo khi từ chối thành công
-        // const notification = addAdminNotification(
-          // 'Từ Chối Shipper',
-          // `Shipper ${selectedShipper.FullName} (ID: ${selectedShipper.ShipperID}) đã bị từ chối.`,
-          // 'error'
-        // );
-        // await axios.post('http://localhost:4000/api/admin-notifications', notification);
-  
         alert('Đã từ chối đăng ký shipper thành công');
         window.location.reload();
       }
@@ -238,7 +229,7 @@ useEffect(() => {
   
   return (
     <div className="shipper-container">
-      {/* Enhanced Header */}
+      
       <div className="back-button-container">
         <Button 
           variant="outline" 
@@ -258,6 +249,9 @@ useEffect(() => {
               <h1 className="shipper-title">Operator</h1>
               <p className="shipper-subtitle">Xem xét và xác minh các đơn đăng ký của shipper</p>
             </div>
+            <div className="shipper-notification-container">
+            <NotificationBell /> {/* Đây là component chuông bạn đã import */}
+          </div>
           </div>
         </div>
       </div>

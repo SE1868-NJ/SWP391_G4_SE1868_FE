@@ -627,3 +627,11 @@
   background-color: #10B981;
   color: white;
 }
+
+/* css biểu tượng chuông */
+.shipper-notification-container {
+  position: absolute; /* Use absolute positioning */
+  top: 20px; /* Adjust top distance */
+  right: 20px; /* Adjust right distance */
+  z-index: 1000; /* Ensure the icon stays on top of other elements */
+}

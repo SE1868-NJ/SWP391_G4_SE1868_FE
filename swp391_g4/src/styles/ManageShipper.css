@@ -269,3 +269,36 @@
 .manage-shipper-confirm-button:hover {
   background-color: #2c6e2f !important;
 }
+
+
+
+/* css biểu tượng chuông */
+.manage-shipper-container {
+  position: relative;
+}
+
+.manage-shipper-header {
+  display: flex;
+  justify-content: center; /* Căn giữa tiêu đề */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  position: relative; /* Đảm bảo chuông có thể căn chỉnh chính xác */
+  margin-bottom: 20px;
+}
+
+.manage-shipper-header h2 {
+  font-size: 1.8rem;
+  color: white;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.manage-shipper-header .notification-bell {
+  position: absolute;
+  right: 10px; /* Điều chỉnh khoảng cách với mép phải */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
+
+

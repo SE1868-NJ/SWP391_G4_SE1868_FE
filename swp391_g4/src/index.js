@@ -30,7 +30,6 @@ import ShipperRegister from "./components/pages/Login/ShipperRegister";
 import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
-import AdminLayout from "./components/pages/Operator/AdminLayout";
 
 //Trang Shipper Account
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
@@ -111,14 +110,14 @@ root.render(
       <Route path="/update-shipper-info" element={<UpdateShipperInfo />} />
 
       {/* ** Trang Operator** */}
-      <Route path="/manage-shipper" element={<AdminLayout><ManageShipper /></AdminLayout>} />
-      <Route path="/shipper-detail" element={<AdminLayout><ShipperDetail /></AdminLayout>} />
-      <Route path="/revenue-dashboard" element={<AdminLayout><RevenueDashboard /></AdminLayout>} />
+      <Route path="/manage-shipper" element={<ManageShipper />} />
+      <Route path="/shipper-detail" element={<ShipperDetail />} />
+      <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
 
 
       {/* ** Phan bao cao su co** */}
       <Route path="/report-issue" element={<ReportIssue />} />
-      <Route path="/admin-report-handling" element={<AdminLayout><AdminReportHandling /></AdminLayout>} />
+      <Route path="/admin-report-handling" element={<AdminReportHandling />} />
       <Route
         path="/customer-report-tracking"
         element={<CustomerReportTracking />}

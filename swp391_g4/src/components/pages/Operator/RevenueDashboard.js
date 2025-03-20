@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar, Legend
 } from 'recharts';
 import axios from 'axios';
 import '../../../styles/RevenueDashboard.css';
+import NotificationBell from './NotificationBell';
 
 // Utility function
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('vi-VN', { 
-    style: 'currency', 
-    currency: 'VND' 
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
   }).format(amount);
 };
 
@@ -29,13 +30,16 @@ function Header({ onSearch }) {
         <h1>View Revenue System</h1>
       </div>
       <div className="RevenueDashboard-search-bar">
-        <input 
-          type="text" 
+        <input
+          type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Tìm theo mã shipper..." 
+          placeholder="Tìm theo mã shipper..."
         />
         <button onClick={handleSubmit}>Tìm kiếm</button>
+        <div className="shipper-notification-container">
+          <NotificationBell />
+        </div>
       </div>
     </header>
   );
@@ -47,8 +51,8 @@ function Filters({ filters, onChange }) {
     <div className="RevenueDashboard-filters">
       <div className="RevenueDashboard-filter-group">
         <label htmlFor="time-period">Khoảng thời gian</label>
-        <select 
-          id="time-period" 
+        <select
+          id="time-period"
           value={filters.timePeriod}
           onChange={(e) => onChange('timePeriod', e.target.value)}
         >
@@ -60,8 +64,8 @@ function Filters({ filters, onChange }) {
       </div>
       <div className="RevenueDashboard-filter-group">
         <label htmlFor="region">Khu vực</label>
-        <select 
-          id="region" 
+        <select
+          id="region"
           value={filters.region}
           onChange={(e) => onChange('region', e.target.value)}
         >
@@ -73,8 +77,8 @@ function Filters({ filters, onChange }) {
       </div>
       <div className="RevenueDashboard-filter-group">
         <label htmlFor="service-type">Loại dịch vụ</label>
-        <select 
-          id="service-type" 
+        <select
+          id="service-type"
           value={filters.serviceType}
           onChange={(e) => onChange('serviceType', e.target.value)}
         >
@@ -91,7 +95,7 @@ function Filters({ filters, onChange }) {
 // Alerts Container Component
 function AlertsContainer({ alerts }) {
   if (!alerts || alerts.length === 0) return null;
-  
+
   return (
     <div id="alerts-container">
       {alerts.map((alert, index) => (
@@ -148,16 +152,16 @@ function OverviewPanel({ data, revenueByDay }) {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
-            <YAxis 
+            <YAxis
               tickFormatter={(value) => formatCurrency(value).replace('₫', '') + ' ₫'}
             />
             <Tooltip formatter={(value) => formatCurrency(value)} />
-            <Line 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="#3498db" 
-              activeDot={{ r: 8 }} 
-              name="Doanh thu (VND)" 
+            <Line
+              type="monotone"
+              dataKey="revenue"
+              stroke="#3498db"
+              activeDot={{ r: 8 }}
+              name="Doanh thu (VND)"
               strokeWidth={2}
               fill="rgba(52, 152, 219, 0.1)"
             />
@@ -174,7 +178,7 @@ function OrdersPanel({ orders }) {
   const [ordersData, setOrdersData] = useState(orders || []);
   const [totalOrders, setTotalOrders] = useState(orders ? orders.length : 0);
   const itemsPerPage = 10;
-  
+
   useEffect(() => {
     // Cập nhật dữ liệu khi props orders thay đổi
     if (orders) {
@@ -187,19 +191,6 @@ function OrdersPanel({ orders }) {
   useEffect(() => {
     const fetchPageData = async () => {
       try {
-        // Nếu bạn muốn gọi API mới khi thay đổi trang, bỏ comment đoạn code dưới đây
-        /*
-        const response = await axios.get('http://localhost:4000/api/orders', { 
-          params: { 
-            ...filters, 
-            page: currentPage, 
-            limit: itemsPerPage 
-          } 
-        });
-        setOrdersData(response.data);
-        */
-        
-        // Hoặc xử lý phân trang ở client nếu đã có tất cả dữ liệu
         const indexOfLastItem = currentPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         setOrdersData(orders.slice(indexOfFirstItem, indexOfLastItem));
@@ -210,7 +201,7 @@ function OrdersPanel({ orders }) {
 
     fetchPageData();
   }, [currentPage]);
-  
+
   const handleExport = () => {
     alert('Đang xuất danh sách đơn hàng...');
   };
@@ -221,28 +212,28 @@ function OrdersPanel({ orders }) {
     'pending': 'status-warning',
     'error': 'status-error'
   };
-  
+
   const statusText = {
     'success': 'Đã giao',
     'pending': 'Đang giao',
     'error': 'Lỗi giao'
   };
-  
+
   const serviceText = {
     'Standard': 'Tiêu chuẩn',
     'Express': 'Nhanh',
     'Scheduled': 'Hẹn giờ'
   };
-  
+
   const regionText = {
     'mid_zone': 'Quanh trung tâm',
     'central': 'Trung tâm',
     'outer_zone': 'Rìa trung tâm'
   };
-  
+
   // Pagination calculation
   const totalPages = Math.ceil(totalOrders / itemsPerPage);
-  
+
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -296,7 +287,7 @@ function OrdersPanel({ orders }) {
         </div>
         <div className="RevenueDashboard-paginator-controls">
           {pageNumbers.map(number => (
-            <button 
+            <button
               key={number}
               className={currentPage === number ? 'active' : ''}
               onClick={() => setCurrentPage(number)}
@@ -368,7 +359,7 @@ function ServiceRevenuePanel({ revenueByService }) {
 
   // Đảm bảo revenueByService tồn tại và có đúng format
   const safeRevenueByService = revenueByService || { standard: 0, express: 0, scheduled: 0 };
-  
+
   const data = [
     { name: 'Giao hàng tiêu chuẩn', value: Number(safeRevenueByService.standard) || 0 },
     { name: 'Giao hàng nhanh', value: Number(safeRevenueByService.express) || 0 },
@@ -524,7 +515,7 @@ function App() {
     const fetchAllData = async () => {
       try {
         setLoading(true);
-        
+
         // Gọi API song song
         const [
           overviewRes,
@@ -560,7 +551,7 @@ function App() {
         console.log('revenueByDay:', revenueByDay);
         console.log('revenueByRegion:', revenueByRegion);
         console.log('revenueByService:', revenueByService);
-        
+
         // Kết hợp tất cả các phản hồi thành một đối tượng dữ liệu
         setData({
           totals: {
