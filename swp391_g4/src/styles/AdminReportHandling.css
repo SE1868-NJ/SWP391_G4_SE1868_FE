@@ -428,4 +428,64 @@
     font-weight: inherit !important;
     font-style: inherit !important;
   }
-  
+
+
+
+  /* css biểu tượng chuông */
+.admin-header {
+  background-color: #2f8f4f; /* Green matching color */
+  padding: 15px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Add some margin-top to avoid overlap with the fixed header */
+.report-container-wrapper {
+  margin-top: 80px; /* Adjust this value as needed */
+}
+
+/* Position notification bell to the right */
+.notification-wrapper {
+  margin-left: auto; /* Pushes the bell to the right */
+}
+
+/* Optional: Style for notification bell (if needed) */
+.notification-wrapper .bell-icon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.report-tabs {
+  margin-top: 80px; /* Adjust this value based on the height of your header */
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.report-container-wrapper {
+  padding-top: 80px; /* This ensures the top padding of the container doesn't get hidden */
+}
+
+.admin-header h1 {
+  font-size: 28px; /* Kích thước chữ lớn hơn để nổi bật */
+  font-weight: 700; /* Đặt chữ đậm để dễ đọc hơn */
+  color: white; /* Màu chữ trắng */
+  text-transform: uppercase; /* Viết hoa toàn bộ chữ để trông mạnh mẽ hơn */
+  letter-spacing: 2px; /* Tăng khoảng cách giữa các chữ */
+  margin: 0; /* Loại bỏ khoảng cách mặc định của h1 */
+  font-family: 'Arial', sans-serif; /* Chọn font chữ đơn giản và dễ đọc */
+  text-align: center; /* Căn giữa tiêu đề */
+  padding: 10px 0; /* Thêm padding trên và dưới để tạo không gian */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Thêm bóng cho chữ để tạo hiệu ứng nổi bật */
+}

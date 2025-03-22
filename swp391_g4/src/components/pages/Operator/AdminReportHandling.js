@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/AdminReportHandling.css";
-import BackButton from "../../buttons/BackButton";
+import NotificationBell from './NotificationBell';
 
-import { addAdminNotification } from './AdminNotificationList';
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);
   const [shipperReports, setShipperReports] = useState([]);
@@ -47,17 +46,7 @@ const AdminReportHandling = () => {
       await axios.put(`http://localhost:4000/api/reports/${reportId}`, {
         status: updatedStatus[reportId],
         processedDate: new Date().toISOString().split("T")[0],
-      });
-
-      // Thêm thông báo khi cập nhật trạng thái báo cáo
-      const report = [...orderReports, ...shipperReports].find(r => r.ReportID === reportId);
-      // const notification = addAdminNotification(
-        // 'Cập Nhật Báo Cáo Sự Cố',
-        // `Báo cáo ID: ${reportId} đã được cập nhật trạng thái thành ${updatedStatus[reportId]}.`,
-        // 'success'
-      // );
-      // await axios.post('http://localhost:4000/api/admin-notifications', notification);
-
+      })
       fetchOrderReports();
       fetchShipperReports();
     } catch (error) {
@@ -67,6 +56,15 @@ const AdminReportHandling = () => {
 
   return (
     <div className="admin-report-page">
+      <div className="admin-header">
+        <div className="header-content">
+          <h1>Quản Lý Báo Cáo</h1>
+          <div className="notification-wrapper">
+            <NotificationBell />
+          </div>
+        </div>
+      </div>
+
       <div className="report-container-wrapper">
         {/* Tab buttons */}
         <div className="report-tabs">

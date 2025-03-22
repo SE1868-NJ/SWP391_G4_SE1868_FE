@@ -8,6 +8,8 @@ import '../../../styles/RevenueDashboard.css';
 import { exportToExcel, exportMultipleSheets, formatDataForExport } from './ExportExcel_Revenue';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import NotificationBell from './NotificationBell';
+
 // Utility function
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('vi-VN', { 
@@ -38,6 +40,9 @@ function Header({ onSearch }) {
           placeholder="Tìm theo mã shipper..." 
         />
         <button onClick={handleSubmit}>Tìm kiếm</button>
+        <div className="shipper-notification-container">
+          <NotificationBell />
+        </div>
       </div>
     </header>
   );
