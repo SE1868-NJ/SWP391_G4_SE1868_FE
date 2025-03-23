@@ -32,7 +32,8 @@ import IncidentManagement from "./components/pages/Operator/IncidentManagement";
 
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
 import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperInfo";
-
+import FinanceManagementPage from "./components/pages/ShipperAccount/FinanceManagementPage";
+//Trang Shipper
 import Shipper from "./components/pages/Shipper/Shipper";
 import OrderDetails from "./components/pages/Shipper/OrderDetails"
 import ShipperDashboard from "./components/pages/Shipper/ShipperDashboard";
@@ -148,15 +149,18 @@ root.render(
        <Route path="/orderdetail/:id" element={<OrderDetails />} />
        <Route path="/shipper-dashboard" element={<Navigate to="/dashboard" />} />
 
-       <Route
-         path="/shipper-account"
-         element={
-           <PrivateRoute>
-             <ShipperAccount />
-           </PrivateRoute>
-         }
-       />
-       <Route path="/update-shipper-info" element={<UpdateShipperInfo />} />
+      {/* ** Trang ShipperAccount** */}
+      <Route
+        path="/shipper-account"
+        element={
+          <PrivateRoute>
+            <ShipperAccount />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/update-shipper-info" element={<UpdateShipperInfo />} />
+      <Route path="/finance-management" element={<FinanceManagementPage />} />
+
 
       {/* ** Trang Operator** */}
       <Route path="/manage-shipper" element={<ManageShipper />} />
