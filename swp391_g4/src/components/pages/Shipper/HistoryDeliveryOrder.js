@@ -74,9 +74,9 @@ const HistoryDeliveryOrder = () => {
                             <option value="Cancelled">Đã Hủy</option>
                         </select>
                     </div>
-                    <div className="d-flex w-50">
+                    <div className="d-flex w-50" >
                       <input type="search" className="form-control rounded" placeholder="Tên, điện thoại hoặc email"
-                            aria-label="Tìm Kiếm" aria-describedby="search-addon" onChange={handleSearchChange} />
+                            aria-label="Tìm Kiếm" aria-describedby="search-addon" onChange={handleSearchChange } style={{width: '60%'}}/>
                       <button type="button" className="btn btn-outline-primary" onClick={handleSearch} >Tìm Kiếm</button>
                     </div>
                   </div>

@@ -75,7 +75,7 @@ const MyDeliveryOrder = () => {
                   type="button"
                   className="btn btn-outline-primary"
                   onClick={handleSearch}
-                >
+                 style={{marginRight: '75px'}}>
                   Tìm Kiếm
                 </button>
               </div>

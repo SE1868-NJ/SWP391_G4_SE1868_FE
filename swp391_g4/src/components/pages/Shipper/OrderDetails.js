@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import {
   Table,
@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom'; 
 
 // Components
 import MapBox from '../../common/mapbox';
@@ -21,6 +22,7 @@ import BackButton from '../../buttons/BackButton';
 const OrderDetails = () => {
   const { id } = useParams();
   const shipperID = localStorage.getItem('shipperId');
+  const navigate = useNavigate();
 
   // State management
   const [orderData, setOrderData] = useState({
@@ -134,13 +136,13 @@ const OrderDetails = () => {
   const getPaymentAmount = () => {
     const totalAmount = orderData.order.TotalAmount || 0;
     const shippingFee = orderData.order.ShippingFee || calculateShippingFee();
-
+  
     // Nhân ShippingFee và TotalAmount với 1000 để loại bỏ sai số thập phân, rồi chia lại
     const multiplier = 1000;
     const adjustedTotalAmount = totalAmount * multiplier;
     const adjustedShippingFee = shippingFee * multiplier;
     const result = (adjustedTotalAmount + adjustedShippingFee) / multiplier;
-
+  
     console.log('Payment Amount Calc:', {
       PaymentStatus: orderData.order.PaymentStatus,
       TotalAmount: totalAmount,
@@ -149,7 +151,7 @@ const OrderDetails = () => {
       AdjustedShippingFee: adjustedShippingFee,
       Result: result
     });
-
+  
     return orderData.order.PaymentStatus === 'PrePaid' ? 0 : result;
   };
 
@@ -221,82 +223,47 @@ const OrderDetails = () => {
 
   const confirmOrder = async (status) => {
     try {
-      let failureReason = null;
-      const depositValue = parseFloat(orderData.order.Deposit || 0).toFixed(2);
-      const shippingFee = orderData.order.ShippingFee;
-
       if (status === 'Cancelled') {
-        const result = await Swal.fire({
-          title: 'Lý Do Giao Hàng Thất Bại',
-          input: 'select',
-          inputOptions: {
-            'shipper_error': 'Lỗi do Shipper',
-            'customer_error': 'Lỗi do Khách Hàng',
-            'other': 'Lý Do Khác'
-          },
-          inputPlaceholder: 'Chọn lý do giao hàng thất bại',
-          showCancelButton: true,
-          confirmButtonText: 'Xác Nhận',
-          cancelButtonText: 'Hủy',
-          inputValidator: (value) => {
-            return new Promise((resolve) => {
-              if (value) {
-                resolve();
-              } else {
-                resolve('Bạn cần chọn lý do giao hàng thất bại');
-              }
-            });
-          }
+        navigate('/report-issue', { 
+          state: { 
+            orderId: id, 
+            orderStatus: 'Cancelled' 
+          } 
         });
-
-        if (result.dismiss) return;
-        failureReason = result.value;
-      }
-
-      const confirmData = {
-        OrderID: id,
-        Status: status,
-        Deposit: Number(depositValue),
-        ShippingFee: shippingFee,
-        FailureReason: failureReason
-      };
-
-      const response = await axios.put('http://localhost:4000/api/confirm-delivery-order', confirmData);
-
-      if (status === 'Delivered') {
+      } else {
+        const response = await axios.put('http://localhost:4000/api/confirm-delivery-order', {
+          OrderID: id,
+          Status: status
+        });
+  
+        // Lấy lại thông tin đơn hàng để tính toán
+        const orderResponse = await axios.get(`http://localhost:4000/api/getOrderDetails/${id}`);
+        const { order } = orderResponse.data;
+  
+        // Tính toán tổng thanh toán
+        const totalAmount = order.TotalAmount || 0;
+        const shippingFee = order.ShippingFee || 0;
+        const multiplier = 1000;
+        const adjustedTotalAmount = totalAmount * multiplier;
+        const adjustedShippingFee = shippingFee * multiplier;
+        const paymentAmount = (adjustedTotalAmount + adjustedShippingFee) / multiplier;
+  
+        // Lấy thông tin deposit từ response
+        const deposit = response.data.deposit || 0;
+        const addedShippingFee = response.data.shippingFee || 0;
+  
         Swal.fire({
           icon: 'success',
           title: 'Giao Hàng Thành Công',
           html: `
-            <p>Tiền cọc: <strong>${formatCurrency(response.data.deposit || 0)}</strong> đã được hoàn</p>
-            <p>Phí vận chuyển: <strong>${formatCurrency(response.data.shippingFee || 0)}</strong> đã được cộng vào tài khoản</p>
+            <p>Tổng giá trị đơn hàng: <strong>${formatCurrency(paymentAmount)}</strong></p>
+            <p>Tiền cọc: <strong>${formatCurrency(deposit)}</strong> đã được hoàn</p>
+            <p>Phí vận chuyển: <strong>${formatCurrency(addedShippingFee)}</strong> đã được cộng vào tài khoản</p>
           `,
           confirmButtonText: 'Xác Nhận'
         }).then(() => {
           window.location.href = '/dashboard';
         });
-      } else if (status === 'Cancelled') {
-        if (failureReason === 'shipper_error') {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Giao Hàng Thất Bại',
-            text: 'Đơn hàng giao thất bại do lỗi của Shipper. Bạn sẽ không được hoàn tiền cọc.',
-            confirmButtonText: 'Xác Nhận'
-          }).then(() => {
-            window.location.href = '/dashboard';
-          });
-        } else {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Giao Hàng Thất Bại',
-            html: `
-              <p>Tiền cọc: <strong>${formatCurrency(response.data.deposit || 0)}</strong> đã được hoàn</p>
-            `,
-            confirmButtonText: 'Xác Nhận'
-          }).then(() => {
-            window.location.href = '/dashboard';
-          });
-        }
       }
     } catch (error) {
       Swal.fire({
@@ -313,6 +280,7 @@ const OrderDetails = () => {
     const { order } = orderData;
 
     if (order.OrderStatus === 'Pending') {
+      const predictedBalance = (shipperBalance - (order.Deposit || 0));
       return (
         <Button
           variant="success"
@@ -321,7 +289,7 @@ const OrderDetails = () => {
             Swal.fire({
               title: 'Xác nhận đơn hàng này?',
               html: `Đơn hàng này yêu cầu đặt cọc <strong>${formatCurrency(order.Deposit || 0)}</strong>.<br>
-                     Số dư tài khoản hiện tại: <strong>${formatCurrency(shipperBalance)}</strong>`,
+                     Số dư còn lại: <strong>${formatCurrency(predictedBalance)}</strong>`,
               showCancelButton: true,
               confirmButtonText: 'Xác nhận',
               cancelButtonText: 'Hủy',
@@ -422,13 +390,13 @@ const OrderDetails = () => {
               className={`badge ${orderData.order.PaymentStatus === 'PrePaid'
                 ? 'bg-primary'
                 : 'bg-warning text-dark'
-              } fs-6 px-3 py-2`}
+                } fs-6 px-3 py-2`}
             >
               <i
                 className={`fa-solid ${orderData.order.PaymentStatus === 'PrePaid'
                   ? 'fa-credit-card'
                   : 'fa-money-bill-wave'
-                } me-2`}
+                  } me-2`}
               ></i>
               Phương thức thanh toán: {getPaymentStatusLabel()}
             </span>
