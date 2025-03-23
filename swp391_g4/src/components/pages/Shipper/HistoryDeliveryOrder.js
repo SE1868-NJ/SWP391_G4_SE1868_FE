@@ -113,11 +113,11 @@ const HistoryDeliveryOrder = () => {
                         <td className="py-2 align-content-center">{format(new Date(order.ActualDeliveryTime), 'dd/MM/yyyy HH:mm:ss')}</td>
                         <td className="py-2 align-content-center">
                             {order.OrderStatus === 'Delivered' && (
-                                <span className="badge bg-success">Đã Giao</span>
+                                <span className="badge bg-success">Hoàn thành</span>
                             )}
 
                             {order.OrderStatus === 'Cancelled' && (
-                                <span className="badge bg-danger">Đã Hủy</span>
+                                <span className="badge bg-danger">Không hoàn thành</span>
                             )}
                         </td>   
                       </tr>
