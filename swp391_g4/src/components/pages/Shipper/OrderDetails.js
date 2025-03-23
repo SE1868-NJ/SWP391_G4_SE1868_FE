@@ -39,7 +39,7 @@ const OrderDetails = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/getOrderDetails/${id}`
+          `http://localhost:5000/api/getOrderDetails/${id}`
         );
         setOrder(response.data.order);
         setShop(response.data.shop);
@@ -77,7 +77,7 @@ const OrderDetails = () => {
 
     try {
       const response = await axios.put(
-        "http://localhost:4000/api/pickOrder",
+        "http://localhost:5000/api/pickOrder",
         orderData
       );
       Swal.fire({
@@ -132,7 +132,7 @@ const OrderDetails = () => {
     };
     try {
       const response = await axios.put(
-        "http://localhost:4000/api/confirm-delivery-order",
+        "http://localhost:5000/api/confirm-delivery-order",
         orderData
       );
       Swal.fire({

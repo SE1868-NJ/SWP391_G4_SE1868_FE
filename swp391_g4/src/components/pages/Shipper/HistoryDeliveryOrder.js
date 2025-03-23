@@ -17,7 +17,7 @@ const HistoryDeliveryOrder = () => {
     const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
   
     const FetchOrders = () => {
-      axios.get(`http://localhost:4000/api/get-history-delivery-order?shipperId=${shipperID}&status=${status}&search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
+      axios.get(`http://localhost:5000/api/get-history-delivery-order?shipperId=${shipperID}&status=${status}&search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
       .then((response) => {
         console.log(response);
   

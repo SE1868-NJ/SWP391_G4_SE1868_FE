@@ -260,7 +260,7 @@ function OrdersPanel({ filters }) {
         setLoading(true);
         
         // Đảm bảo gửi thông tin phân trang đến API
-        const response = await axios.get('http://localhost:4000/api/orders', { 
+        const response = await axios.get('http://localhost:5000/api/orders', { 
           params: { 
             ...filters,
             page: currentPage,
@@ -301,7 +301,7 @@ function OrdersPanel({ filters }) {
       setExportLoading(true);
       
       // Fetch all orders for export (without pagination limits)
-      const response = await axios.get('http://localhost:4000/api/orders', { 
+      const response = await axios.get('http://localhost:5000/api/orders', { 
         params: { 
           ...filters,
           limit: 1000 // Large enough to get all orders that match the filters
@@ -846,13 +846,13 @@ function App() {
           feesRes,
           alertsRes
         ] = await Promise.all([
-          axios.get('http://localhost:4000/api/revenue-overview', { params: apiParams }),
-          axios.get('http://localhost:4000/api/revenue-by-day', { params: apiParams }),
-          axios.get('http://localhost:4000/api/revenue-by-region', { params: apiParams }),
-          axios.get('http://localhost:4000/api/revenue-by-service', { params: apiParams }),
-          axios.get('http://localhost:4000/api/payments', { params: { page: 1, limit: 10 } }),
-          axios.get('http://localhost:4000/api/fees'),
-          axios.get('http://localhost:4000/api/alerts')
+          axios.get('http://localhost:5000/api/revenue-overview', { params: apiParams }),
+          axios.get('http://localhost:5000/api/revenue-by-day', { params: apiParams }),
+          axios.get('http://localhost:5000/api/revenue-by-region', { params: apiParams }),
+          axios.get('http://localhost:5000/api/revenue-by-service', { params: apiParams }),
+          axios.get('http://localhost:5000/api/payments', { params: { page: 1, limit: 10 } }),
+          axios.get('http://localhost:5000/api/fees'),
+          axios.get('http://localhost:5000/api/alerts')
         ]);
 
         // Kiểm tra dữ liệu trước khi đặt trạng thái

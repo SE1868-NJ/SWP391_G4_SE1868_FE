@@ -25,7 +25,7 @@ const Revenue = () => {
     const fetchAllOrders = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/get-all-my-delivery-orders/" + id
+          "http://localhost:5000/api/get-all-my-delivery-orders/" + id
         );
         setOrders(response.data.orders);
 

@@ -1,0 +1,544 @@
+/* Reset và General Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  color: #2c3e50;
+  line-height: 1.6;
+}
+
+/* Header cố định */
+.FinancialManagement-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: linear-gradient(to right, #3498db, #2980b9);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Container chính */
+.FinancialManagement-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.FinancialManagement-main {
+  flex: 1;
+  padding: 100px 20px 80px;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  position: relative;
+}
+
+.FinancialManagement-finance-management {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #e74c3c;
+  /* Màu đỏ nổi bật */
+  text-align: center;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #3498db;
+  /* Màu xanh dương */
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2ecc71;
+  /* Màu xanh lá */
+  margin-bottom: 15px;
+}
+
+/* Tabs */
+.FinancialManagement-tabs {
+  display: flex;
+  justify-content: center;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 30px;
+  background: linear-gradient(to right, #3498db, #e74c3c);
+  /* Gradient cho tabs */
+  border-radius: 8px 8px 0 0;
+  overflow-x: auto;
+}
+
+.FinancialManagement-tab {
+  padding: 15px 35px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.FinancialManagement-tab:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.FinancialManagement-tab.active {
+  font-weight: 700;
+  background: #fff;
+  color: #2ecc71;
+  border-radius: 8px 8px 0 0;
+  box-shadow: inset 0 -2px 0 #e74c3c;
+}
+
+.FinancialManagement-tab-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Content Container */
+.FinancialManagement-content-container {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.FinancialManagement-main-content {
+  flex: 2;
+  min-width: 0;
+}
+
+.FinancialManagement-withdrawal-form,
+.FinancialManagement-deposit-form {
+  background: linear-gradient(145deg, #ffffff, #f9f9f9);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.FinancialManagement-withdrawal-form:hover,
+.FinancialManagement-history-section:hover,
+.FinancialManagement-deposit-form:hover {
+  transform: translateY(-5px);
+}
+
+.FinancialManagement-account-summary {
+  flex: 1;
+  background: #f7f9fc;
+  color: #333;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+.FinancialManagement-account-summary h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c3e50; 
+  margin-bottom: 15px;
+}
+.FinancialManagement-account-summary p {
+  font-size: 14px;
+  color: #666; 
+  margin-bottom: 20px;
+}
+.FinancialManagement-account-summary:hover {
+  transform: translateY(-5px);
+}
+/* Form Styles */
+.FinancialManagement-form-group {
+  margin-bottom: 30px;
+}
+
+.FinancialManagement-form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #34495e;
+}
+
+.FinancialManagement-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.FinancialManagement-input-wrapper:focus-within {
+  border-color: #e74c3c;
+}
+
+.FinancialManagement-currency-symbol {
+  padding: 0 15px;
+  font-size: 20px;
+  color: #2ecc71;
+}
+
+.FinancialManagement-amount-input {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+  background: transparent;
+}
+
+/* Payment Methods */
+.FinancialManagement-payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.FinancialManagement-payment-method {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9; 
+  color: #34495e; 
+  font-weight: 500;
+}
+.FinancialManagement-payment-method label {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+.FinancialManagement-bank-info-display {
+  margin-top: 15px;
+}
+.FinancialManagement-bank-info-display h3 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+.FinancialManagement-bank-info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+.FinancialManagement-bank-info-label {
+  font-weight: 500;
+  color: #444;
+}
+
+.FinancialManagement-bank-info-value {
+  color: #2c3e50;
+}
+
+.FinancialManagement-bank-info-warning {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+
+/* Buttons */
+.FinancialManagement-withdraw-button,
+.FinancialManagement-confirm-button,
+.FinancialManagement-ok-button {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(to right, #2ecc71, #2ecc71);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.FinancialManagement-withdraw-button:hover,
+.FinancialManagement-confirm-button:hover,
+.FinancialManagement-ok-button:hover {
+  background: linear-gradient(to right, #3498db, #3498db);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+
+.FinancialManagement-withdraw-button:disabled,
+.FinancialManagement-confirm-button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.FinancialManagement-cancel-button {
+  width: 100%;
+  padding: 16px;
+  background: #ecf0f1;
+  color: #7f8c8d;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.FinancialManagement-cancel-button:hover:not(:disabled) {
+  background: #dfe6e9;
+  border-color: #3498db;
+}
+
+/* Account Summary */
+.FinancialManagement-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0; 
+  border-bottom: 1px solid #e0e4e8; 
+}
+.FinancialManagement-summary-label {
+  color: #444; 
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.FinancialManagement-summary-value {
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+
+/* Error & Success Messages */
+.FinancialManagement-error-message {
+  background: #ffebee;
+  color: #e74c3c;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e74c3c;
+  font-weight: 500;
+}
+
+.FinancialManagement-success-message {
+  text-align: center;
+  padding: 25px;
+  background: #e8f5e9;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+}
+
+.FinancialManagement-success-icon {
+  font-size: 60px;
+  color: #2ecc71;
+  margin-bottom: 20px;
+}
+
+/* Deposit Options */
+.FinancialManagement-deposit-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.FinancialManagement-deposit-option {
+  padding: 14px;
+  border: 2px solid #2ecc71;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.FinancialManagement-deposit-option:hover:not(:disabled) {
+  background: #2ecc71;
+  color: #fff;
+  border-color: #2ecc71;
+}
+
+.FinancialManagement-deposit-option.selected {
+  background: #2ecc71;
+  color: #fff;
+  border-color: #27ae60;
+}
+
+/* Transaction History */
+.FinancialManagement-history-section {
+  background: #ffffff; 
+  border-radius: 12px;
+  padding: 25px; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+  transition: transform 0.3s ease;
+}
+.FinancialManagement-history-section:hover {
+  transform: translateY(-5px); 
+}
+.FinancialManagement-history-section h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c3e50; 
+  margin-bottom: 10px;
+}
+.FinancialManagement-history-section p {
+  font-size: 15px;
+  color: #666; 
+  margin-bottom: 20px;
+}
+.FinancialManagement-transaction-table-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e0e4e8;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.FinancialManagement-transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.FinancialManagement-transaction-table th {
+  background: #3498db;
+  color: #fff;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.FinancialManagement-transaction-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eef2f7;
+  color: #34495e;
+}
+
+.FinancialManagement-transaction-row:hover {
+  background: #f7f9fc;
+  transition: background 0.2s ease;
+}
+.FinancialManagement-transaction-type {
+  font-weight: 500;
+  display: inline;
+}
+.FinancialManagement-transaction-type.deposit {
+  color: #2ecc71;
+}
+
+.FinancialManagement-transaction-type.withdraw {
+  color: #e74c3c;
+}
+.FinancialManagement-transaction-type.order {
+  color: #f1c40f;
+}
+.FinancialManagement-transaction-status {
+  font-weight: 500;
+  display: inline;
+}
+.FinancialManagement-transaction-status.success {
+  color: #2ecc71;
+}
+
+.FinancialManagement-transaction-status.pending {
+  color: #f39c12;
+}
+
+.FinancialManagement-transaction-status.failed {
+  color: #e74c3c;
+}
+.FinancialManagement-transaction-row.highlight {
+  background: #e8f5e9; 
+  animation: highlightFade 3s ease forwards; 
+}
+/* Back Button */
+.FinancialManagement-back-to-wallet-button {
+  position: absolute; 
+  bottom: 20px; 
+  left: 40px;  
+  z-index: 1000; 
+  padding: 12px 25px;
+  background: linear-gradient(to right, #3498db, #2980b9);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+.FinancialManagement-back-to-wallet-button:hover {
+  background: linear-gradient(to right, #2980b9, #3498db);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.6);
+}
+@keyframes highlightFade {
+  0% {
+    background: #e8f5e9;
+  }
+  100% {
+    background: transparent;
+  }
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .FinancialManagement-content-container {
+    flex-direction: column;
+  }
+
+  .FinancialManagement-tabs {
+    flex-direction: column;
+    border-radius: 8px;
+  }
+
+  .FinancialManagement-tab {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .FinancialManagement-tab:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  .FinancialManagement-deposit-options {
+    grid-template-columns: 1fr;
+  }
+
+  .FinancialManagement-transaction-table th,
+  .FinancialManagement-transaction-table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
