@@ -44,6 +44,8 @@ import ShipperDashboard from "./components/pages/Shipper/ShipperDashboard";
 import ReportIssue from "./components/pages/ReportIssue";
 import AdminReportHandling from "./components/pages/AdminReportHandling";
 import CustomerReportTracking from "./components/pages/CustomerReportTracking";
+import WithdrawPage from "./components/pages/withdraw";
+
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -79,6 +81,8 @@ root.render(
         path="/history-delivery-order"
         element={<Navigate to="/dashboard/history" />}
       />
+      <Route path="/withdraw" element={<WithdrawPage />} />
+   
 
       {/* Route cho shipper dashboard */}
       <Route path="/dashboard" element={<ShipperDashboard />} />
@@ -96,7 +100,7 @@ root.render(
         }
       />
       <Route path="/orderdetail/:id" element={<OrderDetails />} />
-      <Route path="/shipper-dashboard" element={<Navigate to="/dashboard" />} />
+  
 
       {/* ** Trang ShipperAccount** */}
       <Route

@@ -1,0 +1,539 @@
+/* General Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+.finance-management {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 15px 30px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background-color: #f9f9f9;
+}
+
+.tab.active {
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2px solid #333;
+}
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+/* Content Container */
+.content-container {
+  display: flex;
+  gap: 20px;
+}
+
+.main-content {
+  flex: 2;
+}
+
+.withdrawal-form,
+.history-section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.account-summary {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.currency-symbol {
+  padding: 0 15px;
+  font-size: 18px;
+  color: #666;
+}
+
+.amount-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
+
+.min-amount {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Payment Methods */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.payment-method {
+  position: relative;
+}
+
+.payment-method input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.payment-method label {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.payment-method input[type="radio"]:checked + label {
+  border-color: #333;
+  background-color: #f9f9f9;
+}
+
+.radio-custom {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #999;
+  border-radius: 50%;
+  margin-right: 10px;
+  position: relative;
+}
+
+.payment-method input[type="radio"]:checked + label .radio-custom::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  background-color: #333;
+  border-radius: 50%;
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Button */
+.withdraw-button,
+.confirm-button,
+.ok-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #000 
+} .confirm-button, .ok-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 10px;
+}
+
+.withdraw-button:hover,
+.confirm-button:hover,
+.ok-button:hover {
+  background-color: #333;
+}
+
+.withdraw-button:disabled,
+.confirm-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+/* Account Summary */
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-label {
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.summary-value {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.time-icon {
+  margin-right: 5px;
+}
+
+/* Error Message */
+.error-message {
+  background-color: #ffebee;
+  color: #e53935;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #ffcdd2;
+}
+
+/* Loading */
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+/* Deposit Options */
+.deposit-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.deposit-option {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.deposit-option:hover:not(:disabled) {
+  border-color: #333;
+  background-color: #f0f0f0;
+}
+
+.deposit-option.selected {
+  border-color: #333;
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+.deposit-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Success Message */
+.success-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.success-icon {
+  font-size: 50px;
+  color: #4caf50;
+  margin-bottom: 15px;
+}
+
+.success-message h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.success-message p {
+  margin-bottom: 15px;
+  color: #666;
+}
+
+/* Beneficiary Info */
+.beneficiary-info {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.beneficiary-details p {
+  margin-bottom: 10px;
+}
+
+/* Confirmation Section */
+.confirmation-section {
+  padding: 15px 0;
+}
+
+.confirmation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Thêm style cho phần hiển thị thông tin ngân hàng */
+.bank-info-display {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.bank-info-display h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.bank-info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.bank-info-item:last-child {
+  border-bottom: none;
+}
+
+.bank-info-label {
+  font-weight: 500;
+  color: #666;
+}
+
+.bank-info-value {
+  font-weight: 600;
+}
+
+.bank-info-warning {
+  margin-top: 10px;
+  color: #e53935;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Transaction History Styles */
+.transaction-history {
+  margin-top: 20px;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transaction-table th {
+  background-color: #f5f5f5;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+.transaction-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-row {
+  transition: background-color 0.2s;
+}
+
+.transaction-row:hover {
+  background-color: #f9f9f9;
+}
+
+.transaction-type {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.transaction-type.withdraw {
+  background-color: #ffebee;
+  color: #e53935;
+}
+
+.transaction-type.deposit {
+  background-color: #e8f5e9;
+  color: #43a047;
+}
+
+.transaction-amount {
+  font-weight: 600;
+}
+
+.transaction-amount.withdraw {
+  color: #e53935;
+}
+
+.transaction-amount.deposit {
+  color: #43a047;
+}
+
+.transaction-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.transaction-status.success {
+  background-color: #e8f5e9;
+  color: #43a047;
+}
+
+.transaction-status.pending {
+  background-color: #fff8e1;
+  color: #ffa000;
+}
+
+.transaction-status.failed {
+  background-color: #ffebee;
+  color: #e53935;
+}
+
+.empty-history {
+  padding: 30px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .tab {
+    padding: 15px 20px;
+  }
+
+  .deposit-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .transaction-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .deposit-options {
+    grid-template-columns: 1fr;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
