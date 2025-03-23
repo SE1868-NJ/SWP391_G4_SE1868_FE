@@ -142,3 +142,13 @@
   border: none;
   cursor: pointer;
 }
+
+
+.login-message {
+  background-color: #28c51a;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+}
