@@ -21,8 +21,8 @@ const ShipperDetail = () => {
   const [selectedShipper, setSelectedShipper] = useState(null);
   const [verificationStatus, setVerificationStatus] = useState({
     personalInfo: false,
-    bankInfo: false,
     vehicleInfo: false,
+    bankInfo: false,
     documents: false
   });
   const [tabVerificationStatus, setTabVerificationStatus] = useState({
@@ -150,7 +150,42 @@ useEffect(() => {
       [section]: !prev[section]
     }));
   };
-
+  const NotificationPopup = ({ isOpen, message, type, onClose }) => {
+    if (!isOpen) return null;
+  
+    return (
+      <div className="ShipperDetail-notification-overlay">
+        <div className={`ShipperDetail-notification-popup ShipperDetail-${type}`}>
+          <div className="ShipperDetail-notification-content">
+            <div className="ShipperDetail-notification-icon">
+              {type === 'success' ? (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#E8F5E9"/>
+                  <path d="M10 16L6 12L7.41 10.59L10 13.17L16.59 6.58L18 8L10 16Z" fill="#4CAF50"/>
+                </svg>
+              ) : (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#FFEBEE"/>
+                  <path d="M15.59 17L12 13.41L8.41 17L7 15.59L10.59 12L7 8.41L8.41 7L12 10.59L15.59 7L17 8.41L13.41 12L17 15.59L15.59 17Z" fill="#F44336"/>
+                </svg>
+              )}
+            </div>
+            <div className="ShipperDetail-notification-message">{message}</div>
+          </div>
+          <button className="ShipperDetail-notification-close-button" onClick={onClose}>
+            Đóng
+          </button>
+        </div>
+      </div>
+    );
+  };
+  
+  // Thêm state để quản lý thông báo
+  const [notification, setNotification] = useState({
+    isOpen: false,
+    message: '',
+    type: 'success'
+  });
   // Lấy chi tiết shipper
   const handleShipperClick = (id) => {
     axios.get(`http://localhost:4000/api/shippers/${id}`)
@@ -177,14 +212,26 @@ useEffect(() => {
         );
         setShippersList(updatedList);
         setSelectedShipper(null);
-        alert('Đã từ chối đăng ký shipper thành công');
+        // Hiển thị thông báo thành công
+         // Hiển thị popup thông báo thành công
+      setNotification({
+        isOpen: true,
+        message: 'Đã từ chối đăng ký shipper thành công',
+        type: 'error'
+      });
+      
+      // Tự động reload sau khi đóng thông báo
+      setTimeout(() => {
+        setNotification(prev => ({ ...prev, isOpen: false }));
         window.location.reload();
+      }, 3000);
       }
     } catch (error) {
       console.error('Lỗi khi từ chối shipper:', error);
       alert('Có lỗi xảy ra khi từ chối đăng ký shipper');
     }
   };
+  
   const handleApproveShipper = async () => {
     if (!selectedShipper) {
       alert('Vui lòng chọn một shipper trước khi duyệt');
@@ -204,18 +251,20 @@ useEffect(() => {
         });
         setShippersList(updatedList);
         setSelectedShipper({ ...selectedShipper, Status: 'Active' });
-  
-        // Thêm thông báo khi duyệt thành công
-        // const notification = addAdminNotification(
-          // 'Duyệt Shipper Thành Công',
-          // `Shipper ${selectedShipper.FullName} (ID: ${selectedShipper.ShipperID}) đã được duyệt.`,
-          // 'success'
-        // );
-        // await axios.post('http://localhost:4000/api/admin-notifications', notification);
-  
-        alert('Đã duyệt đăng ký shipper thành công');
-        window.location.reload();
+        setNotification({
+          isOpen: true,
+          message: 'Đã duyệt đăng ký shipper thành công',
+          type: 'success'
+        });
+        
+        // Tự động reload sau khi đóng thông báo
+        setTimeout(() => {
+          setNotification(prev => ({ ...prev, isOpen: false }));
+          window.location.reload();
+        }, 3000);
       }
+        window.location.reload();
+      
     } catch (error) {
       console.error('Lỗi khi duyệt shipper:', error);
       alert('Có lỗi xảy ra khi duyệt đăng ký shipper');
@@ -611,26 +660,27 @@ useEffect(() => {
                     ))}
                   </div>
                 </Card>
-
+                
                 {/* Action Buttons */}
                 <div className="shipper-actions">
-                    <Button 
-                      variant="outline" 
-                      className="shipper-reject-button"
-                      onClick={handleRejectShipper}
-                    >
-                      Từ Chối Đơn Đăng Ký
-                    </Button>
-                    <Button
-                      variant="default"
-                      disabled={!allSectionsVerified}
-                      className={`shipper-approve-button ${!allSectionsVerified ? 'shipper-button-disabled' : ''}`}
-                      onClick={handleApproveShipper}
-                      styles={{ backgroundColor: '#3e8e41', color: 'white' }}
-                    >
-                      Duyệt Đơn Đăng Ký
-                    </Button>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="shipper-reject-button"
+                    onClick={handleRejectShipper}
+                  >
+                    Từ Chối Đơn Đăng Ký
+                  </Button>
+                  <Button
+                    variant="default"
+                    disabled={!allSectionsVerified}
+                    className={`shipper-approve-button ${!allSectionsVerified ? 'shipper-button-disabled' : ''}`}
+                    onClick={handleApproveShipper}
+                    styles={{ backgroundColor: '#3e8e41', color: 'white' }}
+                  >
+                    Duyệt Đơn Đăng Ký
+                  </Button>
+                  
+                </div>
               </>
             ) : (
               <Card className="shipper-empty-state">
@@ -642,6 +692,17 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      <NotificationPopup 
+                    isOpen={notification.isOpen}
+                    message={notification.message}
+                    type={notification.type}
+                    onClose={() => {
+                      setNotification(prev => ({ ...prev, isOpen: false }));
+                      if (notification.type === 'success' || notification.type === 'error') {
+                        window.location.reload();
+                      }
+                    }}
+                  />
     </div>
   );
 };

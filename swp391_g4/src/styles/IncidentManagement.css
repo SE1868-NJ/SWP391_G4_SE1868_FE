@@ -394,3 +394,117 @@
       grid-template-columns: 1fr;
     }
   }
+  /* Export Popup Styles */
+.incident_management_export-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: incident_management_fade-in 0.3s ease;
+}
+
+.incident_management_export-popup {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+  overflow: hidden;
+  animation: incident_management_slide-up 0.3s ease;
+}
+
+.incident_management_export-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.incident_management_export-popup-icon {
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.incident_management_export-popup-icon.success {
+  background-color: rgba(0, 196, 159, 0.1);
+  color: #00C49F;
+}
+
+.incident_management_export-popup-icon.error {
+  background-color: rgba(255, 87, 87, 0.1);
+  color: #FF5757;
+}
+
+.incident_management_export-popup-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.incident_management_export-popup-close:hover {
+  background-color: #f0f0f0;
+}
+
+.incident_management_export-popup-content {
+  padding: 20px;
+}
+
+.incident_management_export-popup-content h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.incident_management_export-popup-content p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+.incident_management_export-popup-footer {
+  padding: 10px 20px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.incident_management_export-popup-button {
+  background-color: #0088FE;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.incident_management_export-popup-button:hover {
+  background-color: #006fd1;
+}
+
+@keyframes incident_management_fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes incident_management_slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
