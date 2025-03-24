@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import '../../../styles/IncidentManagement.css';
 import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Search, Download, FileText, Filter, CheckCircle, Clock, AlertTriangle, Users } from 'lucide-react';
-import axios from 'axios'; // Make sure axios is installed
+import axios from 'axios';
+import IncidentManagementExportPopup from '../Operator/IncidenManagementExportPopup';
 
 const IncidentManagement = () => {
   // State for incidents data
@@ -14,6 +15,12 @@ const IncidentManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(10);
+  
+  // State for popup
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupType, setPopupType] = useState('success');
+  const [popupMessage, setPopupMessage] = useState('');
+  const [isExporting, setIsExporting] = useState(false);
 
   // State for statistics
   const [summaryStats, setSummaryStats] = useState({
@@ -71,7 +78,7 @@ const IncidentManagement = () => {
       setTotalPages(response.data.pagination.totalPages);
     } catch (error) {
       console.error('Error fetching incidents:', error);
-      alert('Đã xảy ra lỗi khi lấy danh sách sự cố');
+      showExportPopup('error', 'Đã xảy ra lỗi khi lấy danh sách sự cố');
     }
   };
 
@@ -82,7 +89,7 @@ const IncidentManagement = () => {
       setSummaryStats(response.data);
     } catch (error) {
       console.error('Error fetching summary stats:', error);
-      alert('Đã xảy ra lỗi khi lấy số liệu thống kê');
+      showExportPopup('error', 'Đã xảy ra lỗi khi lấy số liệu thống kê');
     }
   };
 
@@ -120,14 +127,28 @@ const IncidentManagement = () => {
     }
   };
 
+  // Show export popup
+  const showExportPopup = (type, message) => {
+    setPopupType(type);
+    setPopupMessage(message);
+    setShowPopup(true);
+  };
+
+  // Close export popup
+  const closeExportPopup = () => {
+    setShowPopup(false);
+  };
+
   // Load data on initial render and when filters change
   useEffect(() => {
     fetchIncidents();
     fetchSummaryStats();
   }, [statusFilter, searchTerm, currentPage, limit]);
+  
   useEffect(() => {
     fetchSummaryStats();
   }, []);
+  
   // Load statistics when tab changes
   useEffect(() => {
     if (activeTab === 'stats') {
@@ -153,22 +174,64 @@ const IncidentManagement = () => {
   };
 
   const handleExport = async (format) => {
+    if (isExporting) return; // Prevent multiple export requests
+    
+    setIsExporting(true);
+    showExportPopup('success', `Đang xuất báo cáo dạng ${format.toUpperCase()}. Vui lòng đợi...`);
+    
     try {
-      const response = await axios.get('http://localhost:5000/api/export-report', {
-        params: { format },
-        responseType: format === 'json' ? 'json' : 'blob'
+      // Lấy dữ liệu thống kê cần thiết cho báo cáo
+      const incidentsResponse = await axios.get('http://localhost:5000/api/incidents', {
+        params: {
+          limit: 1000 // Lấy số lượng lớn bản ghi để xuất báo cáo đầy đủ
+        }
       });
-
-      if (format === 'json') {
-        // Just display a success message for JSON
-        alert('Xuất báo cáo dạng JSON thành công');
-      } else {
-        // For Excel/PDF, handle file download
-        alert(`Tính năng xuất ${format.toUpperCase()} đang được phát triển`);
-      }
+      
+      const statsResponse = await axios.get('http://localhost:5000/api/incidents/summary-stats');
+      const typeStatsResponse = await axios.get('http://localhost:5000/api/incidents/type-stats');
+      const timeStatsResponse = await axios.get('http://localhost:5000/api/incidents/time-stats', {
+        params: { days: 30 } // Lấy dữ liệu 30 ngày gần nhất cho báo cáo
+      });
+      
+      // Gửi request xuất báo cáo
+      const response = await axios.post(
+        `http://localhost:5000/api/export-report/${format}`,
+        {
+          incidents: incidentsResponse.data.incidents,
+          summaryStats: statsResponse.data,
+          typeStats: typeStatsResponse.data,
+          timeStats: timeStatsResponse.data,
+          exportDate: new Date().toISOString(),
+          exportedBy: 'Admin' // Hoặc lấy từ thông tin đăng nhập
+        },
+        { responseType: 'blob' }
+      );
+      
+      // Tạo URL cho file blob và tải xuống
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Đặt tên file
+      const date = new Date().toISOString().split('T')[0];
+      link.setAttribute('download', `bao-cao-su-co-${date}.${format}`);
+      
+      // Thêm vào DOM, kích hoạt sự kiện click và xóa
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      // Giải phóng URL đã tạo
+      window.URL.revokeObjectURL(url);
+      
+      // Hiển thị thông báo thành công
+      showExportPopup('success', `Xuất báo cáo dạng ${format.toUpperCase()} thành công!`);
     } catch (error) {
       console.error(`Error exporting as ${format}:`, error);
-      alert(`Đã xảy ra lỗi khi xuất báo cáo dạng ${format}`);
+      // Hiển thị thông báo lỗi
+      showExportPopup('error', `Đã xảy ra lỗi khi xuất báo cáo dạng ${format}. Chi tiết: ${error.message}`);
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -388,11 +451,19 @@ const IncidentManagement = () => {
           <div className="incident_management_stats-header">
             <h2>Báo cáo & Thống kê</h2>
             <div className="incident_management_export-buttons">
-              <button className="incident_management_export-btn" onClick={() => handleExport('excel')}>
+              <button 
+                className="incident_management_export-btn" 
+                onClick={() => handleExport('xlsx')}
+                disabled={isExporting}
+              >
                 <Download size={16} />
                 Xuất Excel
               </button>
-              <button className="incident_management_export-btn" onClick={() => handleExport('pdf')}>
+              <button 
+                className="incident_management_export-btn" 
+                onClick={() => handleExport('pdf')}
+                disabled={isExporting}
+              >
                 <Download size={16} />
                 Xuất PDF
               </button>
@@ -446,22 +517,6 @@ const IncidentManagement = () => {
             </div>
 
             <div className="incident_management_chart-wrapper">
-              <h3>Sự cố theo thời gian</h3>
-              <div className="incident_management_chart-inner">
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={timeChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 8 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="incident_management_chart-wrapper">
               <h3>Sự cố theo shipper</h3>
               <div className="incident_management_chart-inner">
                 <ResponsiveContainer width="100%" height={300}>
@@ -478,6 +533,15 @@ const IncidentManagement = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Export Popup */}
+      {showPopup && (
+        <IncidentManagementExportPopup 
+          type={popupType} 
+          message={popupMessage} 
+          onClose={closeExportPopup} 
+        />
       )}
     </div>
   );

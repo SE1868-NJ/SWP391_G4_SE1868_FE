@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // Đảm bảo đã cài đặt jwt-decode
+import { jwtDecode } from "jwt-decode";
 import "../../../styles/Login.css";
 
 const Login = ({ isPopup = false, onClose }) => {
@@ -21,7 +21,6 @@ const Login = ({ isPopup = false, onClose }) => {
       try {
         const decodedToken = jwtDecode(token);
         
-        // Kiểm tra token còn hạn không
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
           if (decodedToken.Status === "PendingDepositEscrow") {
@@ -31,7 +30,6 @@ const Login = ({ isPopup = false, onClose }) => {
           }
         }
       } catch (decodeError) {
-        // Nếu token không hợp lệ, xóa token
         localStorage.removeItem("token");
         localStorage.removeItem("shipperId");
         localStorage.removeItem("shipperName");
@@ -63,8 +61,6 @@ const Login = ({ isPopup = false, onClose }) => {
       );
       
       if (response.data.success) {
-        // Kiểm tra trạng thái trong backend thay vì frontend
-        // Lưu thông tin shipper
         localStorage.setItem("token", response.data.token);
         localStorage.setItem('shipperName', response.data.shipper.FullName);
         localStorage.setItem('shipperId', response.data.shipper.ShipperID);

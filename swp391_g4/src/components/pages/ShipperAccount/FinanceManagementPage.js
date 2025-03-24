@@ -18,6 +18,7 @@ export default function FinanceManagementPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [shipperData, setShipperData] = useState(null)
+
   // State cho nạp tiền
   const [showDepositPopup, setShowDepositPopup] = useState(false);
   const [depositAmount, setDepositAmount] = useState("");
@@ -30,7 +31,7 @@ export default function FinanceManagementPage() {
   const [showWithdrawConfirmation, setShowWithdrawConfirmation] = useState(false)
   const [showWithdrawSuccess, setShowWithdrawSuccess] = useState(false)
   // State cho tab và lịch sử giao dịch
-  const [activeTab, setActiveTab] = useState("withdraw") // "withdraw" hoặc "history"
+  const [activeTab, setActiveTab] = useState("deposit")
   const [transactionHistory, setTransactionHistory] = useState([])
   const [historyLoading, setHistoryLoading] = useState(false)
   const [lastTransactionId, setLastTransactionId] = useState(null)
@@ -43,6 +44,8 @@ export default function FinanceManagementPage() {
     { text: "Tin tức", path: "/news" },
     { text: "Liên hệ", path: "/shipper-contact" },
   ];
+
+  
   // Cập nhật useEffect để lấy dữ liệu ví và thông tin shipper
   useEffect(() => {
     const fetchWalletData = async () => {

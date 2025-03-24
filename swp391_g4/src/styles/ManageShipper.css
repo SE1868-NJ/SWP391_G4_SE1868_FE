@@ -4,7 +4,6 @@
   margin: auto;
   text-align: center;
   font-family: "Arial", sans-serif;
-  background-color: rgb(36, 174, 110); /* Nền xanh lá cây */
   padding: 20px;
   border-radius: 10px;
 }
@@ -93,16 +92,15 @@
   margin: auto;
   text-align: center;
   font-family: "Arial", sans-serif;
-  background-color: rgb(36, 174, 110); /* Nền xanh lá cây */
   padding: 20px;
   border-radius: 10px;
+  margin-top: -20px;
 }
 
 /* Tiêu đề */
 .manage-shipper-container h2 {
   font-size: 1.8rem;
   margin: 20px 0;
-  color: white;
   text-transform: uppercase;
 }
 
@@ -269,3 +267,11 @@
 .manage-shipper-confirm-button:hover {
   background-color: #2c6e2f !important;
 }
+
+
+
+/* css biểu tượng chuông */
+.manage-shipper-container {
+  position: relative;
+}
+

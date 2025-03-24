@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const checkPhoneExists = async (phoneNumber) => {
   try {
-    const response = await axios.get(`http://localhost:5000/api/check-phone/${phoneNumber}`);
+    const response = await axios.get(`http://localhost:/api/check-phone/${phoneNumber}`);
     return response.data.exists;
   } catch (error) {
     console.error('Error checking phone:', error);
@@ -19,7 +19,7 @@ const checkPhoneExists = async (phoneNumber) => {
 const checkEmailExists = async (email) => {
   if (!email) return false;
   try {
-    const response = await axios.get(`http://localhost:5000/api/check-email/${email}`);
+    const response = await axios.get(`http://localhost:/api/check-email/${email}`);
     return response.data.exists;
   } catch (error) {
     console.error('Error checking email:', error);
@@ -172,7 +172,7 @@ const UpdateShipperInfo = () => {
           return imagePath;
         };
 
-        const response = await axios.get(`http://localhost:5000/api/shippers-auth/${shipperId}`, {
+        const response = await axios.get(`http://localhost:/api/shippers-auth/${shipperId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -382,11 +382,11 @@ const UpdateShipperInfo = () => {
         return;
       }
 
-      console.log("Sending update to:", `http://localhost:5000/api/shippers/${shipperId}/update`);
+      console.log("Sending update to:", `http://localhost:/api/shippers/${shipperId}/update`);
       console.log("Update data:", dataToUpdate);
 
       const response = await axios.put(
-        `http://localhost:5000/api/shippers/${shipperId}/update`,
+        `http://localhost:/api/shippers/${shipperId}/update`,
         dataToUpdate,
         {
           headers: {
