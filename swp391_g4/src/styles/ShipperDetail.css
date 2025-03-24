@@ -627,3 +627,80 @@
   background-color: #10B981;
   color: white;
 }
+/* CSS cho popup thông báo */
+.ShipperDetail-notification-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.ShipperDetail-notification-popup {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: ShipperDetailFadeIn 0.3s ease-in-out;
+}
+
+@keyframes ShipperDetailFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ShipperDetail-notification-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ShipperDetail-notification-icon {
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.ShipperDetail-notification-message {
+  font-size: 16px;
+  color: #333333;
+  flex-grow: 1;
+}
+
+.ShipperDetail-notification-close-button {
+  align-self: flex-end;
+  background-color: #f0f0f0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.ShipperDetail-notification-close-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Các kiểu cho loại thông báo */
+.ShipperDetail-success {
+  border-left: 4px solid #4CAF50;
+}
+
+.ShipperDetail-error {
+  border-left: 4px solid #F44336;
+}

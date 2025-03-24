@@ -1175,17 +1175,7 @@ function App() {
   return (
     <div className="RevenueDashboard-container">
       <Header onSearch={handleSearch} />
-      <Filters filters={filters} onChange={handleFilterChange} />
-      
-      {/* Sử dụng component AlertsContainer mới với đầy đủ thông tin dữ liệu */}
-      <AlertsContainer 
-        data={data.totals} 
-        revenueByDay={data.revenueByDay} 
-        revenueByRegion={data.revenueByRegion} 
-        revenueByService={data.revenueByService} 
-        alerts={data.alerts} 
-      />
-      
+      <Filters filters={filters} onChange={handleFilterChange} />      
       <OverviewPanel data={data.totals} revenueByDay={data.revenueByDay} />
       <OrdersPanel filters={filters} /> 
       <RegionRevenuePanel revenueByRegion={data.revenueByRegion} />
