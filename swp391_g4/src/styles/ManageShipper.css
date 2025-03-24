@@ -4,7 +4,6 @@
   margin: auto;
   text-align: center;
   font-family: "Arial", sans-serif;
-  background-color: rgb(36, 174, 110); /* Nền xanh lá cây */
   padding: 20px;
   border-radius: 10px;
 }
@@ -93,16 +92,15 @@
   margin: auto;
   text-align: center;
   font-family: "Arial", sans-serif;
-  background-color: rgb(36, 174, 110); /* Nền xanh lá cây */
   padding: 20px;
   border-radius: 10px;
+  margin-top: -20px;
 }
 
 /* Tiêu đề */
 .manage-shipper-container h2 {
   font-size: 1.8rem;
   margin: 20px 0;
-  color: white;
   text-transform: uppercase;
 }
 
@@ -276,29 +274,4 @@
 .manage-shipper-container {
   position: relative;
 }
-
-.manage-shipper-header {
-  display: flex;
-  justify-content: center; /* Căn giữa tiêu đề */
-  align-items: center; /* Căn giữa theo chiều dọc */
-  position: relative; /* Đảm bảo chuông có thể căn chỉnh chính xác */
-  margin-bottom: 20px;
-}
-
-.manage-shipper-header h2 {
-  font-size: 1.8rem;
-  color: white;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.manage-shipper-header .notification-bell {
-  position: absolute;
-  right: 10px; /* Điều chỉnh khoảng cách với mép phải */
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-
-
 

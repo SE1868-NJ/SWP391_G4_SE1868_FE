@@ -4,7 +4,8 @@ import "../../../styles/ManageShipper.css";
 import moment from "moment";
 import BackButton from "../../buttons/BackButton";
 import { useNavigate } from "react-router-dom";
-import NotificationBell from './NotificationBell';
+import NotificationBell from "./NotificationBell";
+import HeaderOperator from "./HeaderOperator";
 
 const ManageShipper = () => {
   const navigate = useNavigate();
@@ -48,7 +49,8 @@ const ManageShipper = () => {
         console.error("Error fetching canceling shippers:", error)
       );
 
-    axios.get("http://localhost:4000/api/shippers")
+    axios
+      .get("http://localhost:4000/api/shippers")
 
       .then((response) => setApprovedShippers(response.data))
       .catch((error) =>
@@ -122,8 +124,12 @@ const ManageShipper = () => {
         });
 
         // Thêm thông báo khi thay đổi trạng thái
-        const shipper = [...pendingRegisterShippers, ...updatingShippers, ...cancelingShippers, ...approvedShippers]
-          .find(s => s.ShipperID === id);
+        const shipper = [
+          ...pendingRegisterShippers,
+          ...updatingShippers,
+          ...cancelingShippers,
+          ...approvedShippers,
+        ].find((s) => s.ShipperID === id);
 
         // Tạo object thông báo
         const notification = {
@@ -133,7 +139,10 @@ const ManageShipper = () => {
         };
 
         // Gửi thông báo lên server
-        await axios.post("http://localhost:4000/api/admin-notifications", notification);
+        await axios.post(
+          "http://localhost:4000/api/admin-notifications",
+          notification
+        );
 
         fetchShippers();
       } catch (error) {
@@ -182,13 +191,19 @@ const ManageShipper = () => {
         Type: "success",
       };
 
-      await axios.post("http://localhost:4000/api/admin-notifications", notification);
+      await axios.post(
+        "http://localhost:4000/api/admin-notifications",
+        notification
+      );
 
       setShowUpdatePopup(false);
       setShipperUpdateDetails(null);
       fetchShippers();
     } catch (error) {
-      console.error("Error updating shipper account or sending notification:", error);
+      console.error(
+        "Error updating shipper account or sending notification:",
+        error
+      );
     }
   };
 
@@ -204,11 +219,11 @@ const ManageShipper = () => {
   };
 
   const handleRevenueDashboard = () => {
-    navigate('/revenue-dashboard');
+    navigate("/revenue-dashboard");
   };
 
   const handleReportHandling = () => {
-    navigate('/admin-report-handling');
+    navigate("/admin-report-handling");
   };
 
   // Function to highlight changes
@@ -221,35 +236,43 @@ const ManageShipper = () => {
 
   return (
     <div>
+      <div className="manage-shipper-header">
+        <HeaderOperator />
+      </div>
+      <div className="manage-shipper-namepage" style={{marginTop: "30px", color: "#2c6e2f"}}>
+        <h1>Quản lý danh sách Shipper</h1>
+      </div>
       <div className="manage-shipper-container">
-        <div className="manage-shipper-header">
-          <h2>Quản lý Shipper</h2>
-          <NotificationBell />
-        </div>
-        <input
-          type="text"
-          placeholder="Tìm kiếm theo tên, số điện thoại, email..."
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="manage-shipper-search-bar"
-        />
-
         {/* Main navigation buttons */}
-        <div style={{ textAlign: "center", marginTop: "20px", display: "flex", justifyContent: "center", gap: "20px" }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
           <button
-            className={`manage-shipper-detail-button ${activeTable === "pending" ? "active" : ""}`}
+            className={`manage-shipper-detail-button ${
+              activeTable === "pending" ? "active" : ""
+            }`}
             onClick={() => setActiveTable("pending")}
           >
             Danh sách đăng ký chờ duyệt
           </button>
           <button
-            className={`manage-shipper-detail-button ${activeTable === "updating" ? "active" : ""}`}
+            className={`manage-shipper-detail-button ${
+              activeTable === "updating" ? "active" : ""
+            }`}
             onClick={() => setActiveTable("updating")}
           >
             Danh sách chờ cập nhật
           </button>
           <button
-            className={`manage-shipper-detail-button ${activeTable === "approved" ? "active" : ""}`}
+            className={`manage-shipper-detail-button ${
+              activeTable === "approved" ? "active" : ""
+            }`}
             onClick={() => setActiveTable("approved")}
           >
             Danh sách đã duyệt
@@ -296,7 +319,9 @@ const ManageShipper = () => {
                           )
                         }
                       >
-                        <option value="PendingRegister">Pending Register</option>
+                        <option value="PendingRegister">
+                          Pending Register
+                        </option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                       </select>
@@ -462,10 +487,18 @@ const ManageShipper = () => {
         )}
 
         {/* Additional action buttons */}
-        <div style={{ textAlign: "center", marginTop: "20px", display: "flex", justifyContent: "center", gap: "12px" }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "center",
+            gap: "12px",
+          }}
+        >
           <button
             className="manage-shipper-detail-button"
-            onClick={() => navigate('/shipper-detail')}
+            onClick={() => navigate("/shipper-detail")}
           >
             Duyệt chi tiết
           </button>
@@ -697,9 +730,9 @@ const ManageShipper = () => {
                         {moment(
                           shipperUpdateDetails.TempRegistrationVehicle
                         ).format("DD-MM-YYYY") ||
-                          moment(shipperUpdateDetails.RegistrationVehicle).format(
-                            "DD-MM-YYYY"
-                          )}
+                          moment(
+                            shipperUpdateDetails.RegistrationVehicle
+                          ).format("DD-MM-YYYY")}
                       </td>
                     </tr>
                     <tr>

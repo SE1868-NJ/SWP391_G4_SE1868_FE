@@ -448,11 +448,6 @@
   align-items: center;
 }
 
-/* Add some margin-top to avoid overlap with the fixed header */
-.report-container-wrapper {
-  margin-top: 80px; /* Adjust this value as needed */
-}
-
 /* Position notification bell to the right */
 .notification-wrapper {
   margin-left: auto; /* Pushes the bell to the right */
@@ -466,15 +461,10 @@
 }
 
 .report-tabs {
-  margin-top: 80px; /* Adjust this value based on the height of your header */
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
   gap: 20px;
-}
-
-.report-container-wrapper {
-  padding-top: 80px; /* This ensures the top padding of the container doesn't get hidden */
 }
 
 .admin-header h1 {

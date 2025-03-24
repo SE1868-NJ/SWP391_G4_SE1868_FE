@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // Đảm bảo đã cài đặt jwt-decode
+import { jwtDecode } from "jwt-decode";
 import "../../../styles/Login.css";
 
 const Login = ({ isPopup = false, onClose }) => {
@@ -13,7 +13,6 @@ const Login = ({ isPopup = false, onClose }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Kiểm tra token khi component mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     
@@ -21,14 +20,11 @@ const Login = ({ isPopup = false, onClose }) => {
       try {
         const decodedToken = jwtDecode(token);
         
-        // Kiểm tra token còn hạn không
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
-          // Token còn hạn, chuyển thẳng sang trang shipper
           navigate("/dashboard");
         }
       } catch (decodeError) {
-        // Nếu token không hợp lệ, xóa token
         localStorage.removeItem("token");
         localStorage.removeItem("shipperId");
         localStorage.removeItem("shipperName");
@@ -50,7 +46,7 @@ const Login = ({ isPopup = false, onClose }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/login",  // Đã sửa cổng thành 4000
+        "http://localhost:4000/api/login",
         formData,
         {
           headers: {
@@ -60,18 +56,14 @@ const Login = ({ isPopup = false, onClose }) => {
       );
       
       if (response.data.success) {
-        // Kiểm tra trạng thái trong backend thay vì frontend
-        // Lưu thông tin shipper
         localStorage.setItem("token", response.data.token);
         localStorage.setItem('shipperName', response.data.shipper.FullName);
         localStorage.setItem('shipperId', response.data.shipper.ShipperID);
         
-        // Nếu là popup thì đóng popup
         if (isPopup && onClose) {
           onClose();
         }
         
-        // Chuyển hướng đến trang shipper
         navigate("/dashboard");
       } else {
         setError(response.data.message || "Đăng nhập thất bại");

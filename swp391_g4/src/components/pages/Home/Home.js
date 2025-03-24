@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+
+// Styles and Components
 import "../../../styles/Home.css";
 import Footer from "../../footer/Footer";
 import Header from "../../header/Header";
 import Login from "../Login/Login";
-import { useNavigate } from "react-router-dom";
-
 import ChatPopup from "../Home/ChatPopup";
 
-
 const Home = () => {
-  // Navigation Items
+  // Navigation Configuration
   const homeNavigationItems = [
     { text: "Trang chủ", path: "/home", isActive: true },
     { text: "Về chúng tôi", path: "/about" },
@@ -17,58 +19,24 @@ const Home = () => {
     { text: "Liên hệ", path: "/shipper-contact" },
   ];
 
-  // Banner Data
+  // Static Data
   const bannerData = [
     {
-      image:
-        "https://useless-gold-stingray.myfilebase.com/ipfs/QmeU64hjvd6f4sGADM92sYVUC3m9scfTfVk48aeBkpqbGf",
+      image: "https://useless-gold-stingray.myfilebase.com/ipfs/QmeU64hjvd6f4sGADM92sYVUC3m9scfTfVk48aeBkpqbGf",
       title: "EcoShipper Cùng Quỹ Hy Vọng Xây Cầu Tại Đồng Tháp",
       subtitle: "Cán mốc 400 cây cầu được xây dựng",
     },
     {
-      image:
-        "https://useless-gold-stingray.myfilebase.com/ipfs/QmQUTBK6HSgGfvduZ4aSrqkVDNckhiFZsS2E5EbjN5qJcg",
+      image: "https://useless-gold-stingray.myfilebase.com/ipfs/QmQUTBK6HSgGfvduZ4aSrqkVDNckhiFZsS2E5EbjN5qJcg",
       title: "Dịch Vụ Vận Chuyển Chuyên Nghiệp",
       subtitle: "Đảm bảo an toàn và uy tín cho mọi đơn hàng",
     },
     {
-      image:
-        "https://useless-gold-stingray.myfilebase.com/ipfs/QmaGUSB9pARbkDWMAipkkWA7LZQp4JdHkWrX9wUz61fy4f",
+      image: "https://useless-gold-stingray.myfilebase.com/ipfs/QmaGUSB9pARbkDWMAipkkWA7LZQp4JdHkWrX9wUz61fy4f",
       title: "Phủ Sóng Toàn Quốc",
       subtitle: "Kết nối mọi miền, vận chuyển mọi nơi",
     },
   ];
-
-  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-  const [direction, setDirection] = useState("left");
-
-  // Auto-sliding Effect
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setDirection("left");
-      setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-    }, 4000); // Change banner every 5 seconds
-
-    return () => clearInterval(intervalId);
-  }, [bannerData.length]);
-
-  // Manual Navigation Functions
-  const nextBanner = () => {
-    setDirection("left");
-    setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-  };
-
-  const prevBanner = () => {
-    setDirection("right");
-    setCurrentBannerIndex(
-      (prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length
-    );
-  };
-
-  const goToBanner = (index) => {
-    setDirection(index > currentBannerIndex ? "left" : "right");
-    setCurrentBannerIndex(index);
-  };
 
   const servicesData = [
     {
@@ -88,7 +56,6 @@ const Home = () => {
     },
   ];
 
-  // Job Roles Data
   const jobRolesData = [
     {
       id: "nhan-vien-van-phong",
@@ -116,6 +83,79 @@ const Home = () => {
     },
   ];
 
+  // State Management
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  const [direction, setDirection] = useState("left");
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Token Interceptor
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          const token = localStorage.getItem('token');
+          if (token) {
+            try {
+              const decodedToken = jwtDecode(token);
+              const currentTime = Date.now() / 1000;
+
+              if (decodedToken.exp < currentTime) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('shipperId');
+                localStorage.removeItem('shipperName');
+                
+                setIsLoginPopupOpen(true);
+              }
+            } catch (decodeError) {
+              console.error('Token decode error:', decodeError);
+              localStorage.removeItem('token');
+              localStorage.removeItem('shipperId');
+              localStorage.removeItem('shipperName');
+              
+              setIsLoginPopupOpen(true);
+            }
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, [navigate]);
+
+  // Banner Auto-sliding Effect
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDirection("left");
+      setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
+    }, 4000);
+
+    return () => clearInterval(intervalId);
+  }, [bannerData.length]);
+
+  // Banner Navigation Methods
+  const nextBanner = () => {
+    setDirection("left");
+    setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
+  };
+
+  const prevBanner = () => {
+    setDirection("right");
+    setCurrentBannerIndex(
+      (prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length
+    );
+  };
+
+  const goToBanner = (index) => {
+    setDirection(index > currentBannerIndex ? "left" : "right");
+    setCurrentBannerIndex(index);
+  };
+
+  // Popup Methods
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
   };
@@ -124,19 +164,14 @@ const Home = () => {
     setIsLoginPopupOpen(false);
   };
 
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-  const navigate = useNavigate();
-
-  
-
   return (
     <div className="home">
       <div className="header">
-      <Header
-        navigationItems={homeNavigationItems}
-        showLoginButton={true}
-        onLoginClick={openLoginPopup}
-      />
+        <Header
+          navigationItems={homeNavigationItems}
+          showLoginButton={true}
+          onLoginClick={openLoginPopup}
+        />
       </div>
 
       {/* Banner Section */}
@@ -308,12 +343,19 @@ const Home = () => {
             <button className="popup-close" onClick={closeLoginPopup}>
               &times;
             </button>
-            <Login isPopup={true} onClose={closeLoginPopup} />
+            <Login 
+              isPopup={true} 
+              onClose={closeLoginPopup} 
+              message="Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại."
+            />
           </div>
         </div>
       )}
       <ChatPopup />
-      <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
+      <Footer 
+        showAccountSection={true} 
+        onLoginClick={openLoginPopup} 
+      />
     </div>
   );
 };

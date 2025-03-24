@@ -42,7 +42,7 @@ const HistoryDeliveryOrder = () => {
         const selectedStatus = event.target.value;
         console.log(selectedStatus);
         setStatus(selectedStatus);
-        setCurrentPage(1); // Reset to first page when changing status
+        setCurrentPage(1);
     };
   
     const handleSearchChange = (event) => {
@@ -74,9 +74,9 @@ const HistoryDeliveryOrder = () => {
                             <option value="Cancelled">Đã Hủy</option>
                         </select>
                     </div>
-                    <div className="d-flex w-50">
+                    <div className="d-flex w-50" >
                       <input type="search" className="form-control rounded" placeholder="Tên, điện thoại hoặc email"
-                            aria-label="Tìm Kiếm" aria-describedby="search-addon" onChange={handleSearchChange} />
+                            aria-label="Tìm Kiếm" aria-describedby="search-addon" onChange={handleSearchChange } style={{width: '60%'}}/>
                       <button type="button" className="btn btn-outline-primary" onClick={handleSearch} >Tìm Kiếm</button>
                     </div>
                   </div>
@@ -113,11 +113,11 @@ const HistoryDeliveryOrder = () => {
                         <td className="py-2 align-content-center">{format(new Date(order.ActualDeliveryTime), 'dd/MM/yyyy HH:mm:ss')}</td>
                         <td className="py-2 align-content-center">
                             {order.OrderStatus === 'Delivered' && (
-                                <span className="badge bg-success">Đã Giao</span>
+                                <span className="badge bg-success">Hoàn thành</span>
                             )}
 
                             {order.OrderStatus === 'Cancelled' && (
-                                <span className="badge bg-danger">Đã Hủy</span>
+                                <span className="badge bg-danger">Không hoàn thành</span>
                             )}
                         </td>   
                       </tr>

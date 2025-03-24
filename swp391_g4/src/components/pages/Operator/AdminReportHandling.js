@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/AdminReportHandling.css";
 import NotificationBell from './NotificationBell';
+import HeaderOperator from "./HeaderOperator";
 
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);
@@ -56,13 +57,8 @@ const AdminReportHandling = () => {
 
   return (
     <div className="admin-report-page">
-      <div className="admin-header">
-        <div className="header-content">
-          <h1>Quản Lý Báo Cáo</h1>
-          <div className="notification-wrapper">
-            <NotificationBell />
-          </div>
-        </div>
+      <div className="admin-report-header">
+        <HeaderOperator/>
       </div>
 
       <div className="report-container-wrapper">

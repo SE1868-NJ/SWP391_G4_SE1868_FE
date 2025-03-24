@@ -9,6 +9,7 @@ import { exportToExcel, exportMultipleSheets, formatDataForExport } from './Expo
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import NotificationBell from './NotificationBell';
+import HeaderOperator from './HeaderOperator';
 
 // Utility function
 const formatCurrency = (amount) => {
@@ -28,10 +29,8 @@ function Header({ onSearch }) {
   };
 
   return (
-    <header className="RevenueDashboard-header">
-      <div className="RevenueDashboard-logo">
-        <h1>Xem doanh thu của hệ thống</h1>
-      </div>
+    <div className="RevenueDashboard-header">
+      <HeaderOperator />
       <div className="RevenueDashboard-search-bar">
         <input 
           type="text" 
@@ -40,11 +39,8 @@ function Header({ onSearch }) {
           placeholder="Tìm theo mã shipper..." 
         />
         <button onClick={handleSubmit}>Tìm kiếm</button>
-        <div className="shipper-notification-container">
-          <NotificationBell />
-        </div>
       </div>
-    </header>
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../../styles/ReportIssue.css";
 import axios from "axios";
 import { Header } from "../../header/Header";
@@ -8,8 +8,9 @@ import Footer from "../../footer/Footer";
 const ReportIssue = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [shipperId, setShipperId] = useState(null);
-  const [reportType, setReportType] = useState(""); // Loại báo cáo: order hoặc shipper
+  const [reportType, setReportType] = useState(""); 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [report, setReport] = useState({
     orderId: "",
@@ -25,13 +26,17 @@ const ReportIssue = () => {
     }
   }, []);
 
+  // Kiểm tra và điền OrderID từ state navigate
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const idFromURL = queryParams.get("ID");
-    if (idFromURL) {
-      setShipperId(idFromURL);
+    // Kiểm tra xem có OrderID được truyền từ trang OrderDetails không
+    if (location.state && location.state.orderId) {
+      setReport(prevReport => ({
+        ...prevReport,
+        orderId: location.state.orderId
+      }));
+      setReportType("order"); // Tự động chọn báo cáo đơn hàng
     }
-  }, [location]);
+  }, [location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,27 +45,39 @@ const ReportIssue = () => {
 
   const handleReportTypeChange = (e) => {
     setReportType(e.target.value);
-    setReport({ orderId: "", incidentCategory: "", description: "" }); // Reset form khi đổi loại báo cáo
+    setReport({ orderId: "", incidentCategory: "", description: "" }); 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (reportType === "order") {
-        const response = await axios.post("http://localhost:4000/api/reports/order", { ...report, shipperId });
+        const response = await axios.post("http://localhost:4000/api/reports/order", { 
+          ...report, 
+          shipperId 
+        });
         if (response.data.success) {
           setIsSubmitted(true);
-          setTimeout(() => setIsSubmitted(false), 3000);
+          setTimeout(() => {
+            setIsSubmitted(false);
+            navigate('/dashboard'); // Chuyển về dashboard sau khi gửi báo cáo thành công
+          }, 3000);
         }
       } else if (reportType === "shipper") {
         if (!shipperId) {
           console.error("Không thể gửi báo cáo do thiếu shipperId");
           return;
         }
-        const response = await axios.post("http://localhost:4000/api/reports/shipper", { ...report, shipperId });
+        const response = await axios.post("http://localhost:4000/api/reports/shipper", { 
+          ...report, 
+          shipperId 
+        });
         if (response.data.success) {
           setIsSubmitted(true);
-          setTimeout(() => setIsSubmitted(false), 3000);
+          setTimeout(() => {
+            setIsSubmitted(false);
+            navigate('/dashboard');
+          }, 3000);
         }
       }
     } catch (error) {
@@ -100,10 +117,13 @@ const ReportIssue = () => {
                     onChange={handleChange}
                     required
                     placeholder="Nhập mã đơn hàng"
+                    // Nếu đã có OrderID từ OrderDetails thì không cho sửa
+                    readOnly={location.state && location.state.orderId}
                   />
                 </>
               )}
 
+              {/* Phần còn lại giữ nguyên */}
               <label>Danh mục sự cố:</label>
               <select
                 name="incidentCategory"
