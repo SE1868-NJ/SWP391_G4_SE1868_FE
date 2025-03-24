@@ -12,7 +12,7 @@ const Login = ({ isPopup = false, onClose }) => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [showEscrowNotice, setShowEscrowNotice] = useState(false);
   // Kiểm tra token khi component mount
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -24,8 +24,11 @@ const Login = ({ isPopup = false, onClose }) => {
         // Kiểm tra token còn hạn không
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
-          // Token còn hạn, chuyển thẳng sang trang shipper
-          navigate("/dashboard");
+          if (decodedToken.Status === "PendingDepositEscrow") {
+            navigate("/escrow-deposit");
+          } else if (decodedToken.Status === "Active") {
+            navigate("/dashboard");
+          }
         }
       } catch (decodeError) {
         // Nếu token không hợp lệ, xóa token
@@ -50,7 +53,7 @@ const Login = ({ isPopup = false, onClose }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/login",  // Đã sửa cổng thành 4000
+        "http://localhost:5000/api/login",  
         formData,
         {
           headers: {
@@ -66,13 +69,12 @@ const Login = ({ isPopup = false, onClose }) => {
         localStorage.setItem('shipperName', response.data.shipper.FullName);
         localStorage.setItem('shipperId', response.data.shipper.ShipperID);
         
-        // Nếu là popup thì đóng popup
-        if (isPopup && onClose) {
-          onClose();
+        if (response.data.redirectToEscrow) {
+          setShowEscrowNotice(true);
+        } else {
+          if (isPopup && onClose) onClose();
+          navigate("/dashboard");
         }
-        
-        // Chuyển hướng đến trang shipper
-        navigate("/dashboard");
       } else {
         setError(response.data.message || "Đăng nhập thất bại");
       }
@@ -92,7 +94,10 @@ const Login = ({ isPopup = false, onClose }) => {
       setLoading(false);
     }
   };
-
+  const handleEscrowNoticeOk = () => {
+    setShowEscrowNotice(false);
+    navigate("/escrow-deposit");
+  };
   return (
     <div className={`login-container ${isPopup ? 'popup-mode' : ''}`}>
       <h1 className="login-title">Đăng Nhập</h1>
@@ -125,6 +130,14 @@ const Login = ({ isPopup = false, onClose }) => {
         </button>
       </form>
       {error && <p className="login-error">{error}</p>}
+      {showEscrowNotice && (
+      <div className="login-escrow-notice">
+        <p>Bạn phải nạp tiền vào ví ký quỹ để có thể hoạt động.</p>
+        <button className="login-escrow-notice-ok" onClick={handleEscrowNoticeOk}>
+          Nạp tiền
+        </button>
+      </div>
+    )}
       <div className="login-links">
         <button
           className="login-transparent-button"

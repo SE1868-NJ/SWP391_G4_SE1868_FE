@@ -25,7 +25,7 @@ import Login from "./components/pages/Login/Login";
 import ForgotPassword from "./components/pages/Login/ForgotPassword";
 import ResetPassword from "./components/pages/Login/ResetPassword";
 import ShipperRegister from "./components/pages/Login/ShipperRegister";
-
+import EscrowDeposit from "./components/pages/Login/EscrowDeposit";
 //Trang Operator
 import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
@@ -74,7 +74,7 @@ root.render(
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/register" element={<ShipperRegister />} />
-
+      <Route path="/escrow-deposit" element={<EscrowDeposit />} />
       {/* ** Trang Shipper** */}
       <Route
         path="/history-delivery-order"

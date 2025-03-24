@@ -52,7 +52,6 @@ h1 {
   font-size: 32px;
   font-weight: 700;
   color: #e74c3c;
-  /* Màu đỏ nổi bật */
   text-align: center;
   margin-bottom: 25px;
   text-transform: uppercase;
@@ -62,7 +61,6 @@ h2 {
   font-size: 24px;
   font-weight: 600;
   color: #3498db;
-  /* Màu xanh dương */
   margin-bottom: 15px;
 }
 
