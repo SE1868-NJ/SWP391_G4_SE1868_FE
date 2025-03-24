@@ -6,8 +6,11 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
 import ChatPopup from "./ChatPopup";
+
 function ShipperContact() {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
@@ -15,6 +18,10 @@ function ShipperContact() {
 
   const closeLoginPopup = () => {
     setIsLoginPopupOpen(false);
+  };
+
+  const closeSuccessPopup = () => {
+    setShowSuccessPopup(false);
   };
   
   const {
@@ -26,7 +33,7 @@ function ShipperContact() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("http://localhost:5000/api/contact/submit", {
+      const response = await fetch("http://localhost:4000/api/contact/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -37,7 +44,8 @@ function ShipperContact() {
         throw new Error(result.message || "Có lỗi xảy ra, vui lòng thử lại.");
       }
 
-      alert(result.message || `Cảm ơn, ${data.name}! Chúng tôi sẽ liên hệ sớm nhất.`);
+      setSuccessMessage(`Cảm ơn, ${data.name}! Chúng tôi sẽ liên hệ sớm nhất.`);
+      setShowSuccessPopup(true);
       reset();
     } catch (error) {
       alert(`Lỗi: ${error.message}`);
@@ -68,7 +76,7 @@ function ShipperContact() {
                   required: "Vui lòng nhập họ và tên.",
                   minLength: { value: 3, message: "Tên phải có ít nhất 3 ký tự." },
                   maxLength: { value: 64, message: "Tên không được vượt quá 64 ký tự." },
-                  pattern: { value: /^[a-zA-Z\s]+$/, message: "Tên chỉ chứa chữ cái và khoảng trắng." }
+                  // pattern: { value: /^[a-zA-Z\s]+$/, message: "Tên chỉ chứa chữ cái và khoảng trắng." }
                 })}
                 className="shippercontact-form-group"
               />
@@ -130,6 +138,25 @@ function ShipperContact() {
           </div>
         </div>
       )}
+
+      {showSuccessPopup && (
+        <div className="shippercontact-popup-overlay">
+          <div className="shippercontact-popup-content success-popup">
+            <button className="shippercontact-popup-close" onClick={closeSuccessPopup}>
+              &times;
+            </button>
+            <div className="success-icon">
+              <i className="fas fa-check-circle"></i>
+            </div>
+            <h3 className="success-title">Gửi thành công!</h3>
+            <p className="success-message">{successMessage}</p>
+            <button className="shippercontact-button" onClick={closeSuccessPopup}>
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
+
       <ChatPopup/>
       <Footer showAccountSection={true} onLoginClick={openLoginPopup} />
     </div>
