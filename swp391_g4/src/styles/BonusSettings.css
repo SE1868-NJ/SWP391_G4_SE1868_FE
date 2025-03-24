@@ -1,0 +1,170 @@
+:root {
+  --primary: #4CAF50;
+  --primary-dark: #388E3C;
+  --primary-light: #C8E6C9;
+  --accent: #FF9800;
+  --text: #212121;
+  --secondary-text: #757575;
+  --divider: #BDBDBD;
+  --background: #F5F5F5;
+  --card: #FFFFFF;
+  --error: #F44336;
+}
+
+.BonusSetting-header {
+  background-color: var(--primary);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.BonusSetting-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.BonusSetting-nav-list {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.BonusSetting-nav-list li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.BonusSetting-nav-list li a:hover,
+.BonusSetting-nav-list li a.active {
+  background-color: var(--primary-dark);
+}
+
+.BonusSetting-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--background);
+}
+
+.BonusSetting-settings-container {
+  background-color: var(--card);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.BonusSetting-settings-container h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.BonusSetting-settings-container p {
+  color: var(--secondary-text);
+  margin-bottom: 2rem;
+}
+
+.BonusSetting-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.BonusSetting-form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.BonusSetting-form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.BonusSetting-form-group input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.BonusSetting-form-group small {
+  display: block;
+  color: var(--secondary-text);
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.BonusSetting-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.BonusSetting-save,
+.BonusSetting-reset {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.BonusSetting-save {
+  background-color: var(--primary);
+  color: white;
+}
+
+.BonusSetting-save:hover {
+  background-color: var(--primary-dark);
+}
+
+.BonusSetting-reset {
+  background-color: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.BonusSetting-reset:hover {
+  background-color: var(--primary-light);
+}
+
+@media (max-width: 768px) {
+  .BonusSetting-main {
+    padding: 1rem;
+  }
+
+  .BonusSetting-settings-container {
+    padding: 1.5rem;
+  }
+
+  .BonusSetting-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .BonusSetting-save,
+  .BonusSetting-reset {
+    width: 100%;
+    justify-content: center;
+  }
+}
