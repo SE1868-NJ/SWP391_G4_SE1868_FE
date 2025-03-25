@@ -10,6 +10,7 @@ const BonusSettings = () => {
     rating4And5Bonus: 5000,
     otherBonus: 2000,
   });
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const fetchSettings = async () => {
     try {

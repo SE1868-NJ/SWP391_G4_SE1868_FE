@@ -31,7 +31,8 @@ import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
 import IncidentManagement from "./components/pages/Operator/IncidentManagement";
-
+import BonusSettings from "./components/pages/Operator/BonusSettings";
+import ShipperBonusList from "./components/pages/Operator/ShipperBonusList";
 //Trang Shipper Account
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
 import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperInfo";
@@ -116,6 +117,8 @@ root.render(
       <Route path="/shipper-detail" element={<ShipperDetail />} />
       <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
       <Route path="/incident-management" element={<IncidentManagement />} />
+      <Route path="/bonus-settings" element={<BonusSettings />} />
+      <Route path="/shipper-bonus-list" element={<ShipperBonusList />} />
       {/* ** Phan bao cao su co** */}
       <Route path="/report-issue" element={<ReportIssue />} />
       <Route path="/admin-report-handling" element={<AdminReportHandling />} />
