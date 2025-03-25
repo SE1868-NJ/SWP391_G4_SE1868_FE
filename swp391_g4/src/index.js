@@ -45,6 +45,8 @@ import CustomerReportTracking from "./components/pages/CustomerReportTracking";
 // Import controllers
 import ShipperRanking from "./components/pages/Shipper/ShipperRanking";
 
+import DeliveredOrderDetails from "./components/pages/Shipper/DeliveredOrderDetail";
+
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
 
@@ -153,6 +155,10 @@ root.render(
         <Route
           path="/shipper-dashboard"
           element={<Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/delivered-order/:id"
+          element={<DeliveredOrderDetails />}
         />
 
         {/* ** Trang ShipperAccount** */}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import {
   Table,
@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom'; 
 
 // Components
 import MapBox from '../../common/mapbox';
@@ -24,7 +23,7 @@ const OrderDetails = () => {
   const shipperID = localStorage.getItem('shipperId');
   const navigate = useNavigate();
 
-  // State management
+  // Quản lý trạng thái
   const [orderData, setOrderData] = useState({
     order: {},
     shop: {},
@@ -36,23 +35,23 @@ const OrderDetails = () => {
   const [duration, setDuration] = useState(0);
   const [shipperBalance, setShipperBalance] = useState(null);
 
-  // Currency formatter
+  // Định dạng tiền tệ
   const formatCurrency = (value) =>
     new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
-      minimumFractionDigits: 0, // Không hiển thị phần thập phân thừa
+      minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(value || 0);
 
-  // Fetch order details
+  // Lấy chi tiết đơn hàng
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/api/getOrderDetails/${id}`
         );
-        console.log('Order Details Response:', response.data);
+        console.log('Chi tiết đơn hàng:', response.data);
 
         const { order, shop, customer, products } = response.data;
 
@@ -69,13 +68,15 @@ const OrderDetails = () => {
         }
       } catch (error) {
         console.error('Lỗi khi tải thông tin đơn hàng:', error);
+        // Chuyển hướng nếu không tìm thấy đơn hàng
+        navigate('/dashboard');
       }
     };
 
     fetchOrderDetails();
-  }, [id, shipperID]);
+  }, [id, shipperID, navigate]);
 
-  // Fetch shipper balance
+  // Lấy số dư của shipper
   const fetchShipperBalance = async (shipperID) => {
     try {
       const token = localStorage.getItem('token');
@@ -94,21 +95,17 @@ const OrderDetails = () => {
       setShipperBalance(response.data.balance || 0);
     } catch (error) {
       console.error('Lỗi lấy số dư:', error);
-      if (error.response?.status === 401) {
-        console.warn('Token không hợp lệ, cần đăng nhập lại');
-      }
       setShipperBalance(0);
     }
   };
 
-  // Hàm tính ShippingFee (dùng để cập nhật nếu cần)
+  // Tính phí vận chuyển
   const calculateShippingFee = () => {
     const fee = Math.round((14000 + distance * 1000) / 10) * 10;
-    console.log('Calculated ShippingFee:', fee, 'Distance:', distance);
     return fee;
   };
 
-  // Cập nhật ShippingFee lên server khi distance thay đổi
+  // Cập nhật phí vận chuyển khi khoảng cách thay đổi
   useEffect(() => {
     const updateShippingFee = async () => {
       if (distance > 0 && orderData.order.OrderID) {
@@ -122,9 +119,8 @@ const OrderDetails = () => {
             ...prevData,
             order: { ...prevData.order, ShippingFee: shippingFee }
           }));
-          console.log('Updated ShippingFee to DB:', shippingFee);
         } catch (error) {
-          console.error('Lỗi khi cập nhật ShippingFee:', error);
+          console.error('Lỗi khi cập nhật phí vận chuyển:', error);
         }
       }
     };
@@ -132,33 +128,7 @@ const OrderDetails = () => {
     updateShippingFee();
   }, [distance, orderData.order.OrderID]);
 
-  // Utility methods
-  const getPaymentAmount = () => {
-    const totalAmount = orderData.order.TotalAmount || 0;
-    const shippingFee = orderData.order.ShippingFee || calculateShippingFee();
-  
-    // Nhân ShippingFee và TotalAmount với 1000 để loại bỏ sai số thập phân, rồi chia lại
-    const multiplier = 1000;
-    const adjustedTotalAmount = totalAmount * multiplier;
-    const adjustedShippingFee = shippingFee * multiplier;
-    const result = (adjustedTotalAmount + adjustedShippingFee) / multiplier;
-  
-    console.log('Payment Amount Calc:', {
-      PaymentStatus: orderData.order.PaymentStatus,
-      TotalAmount: totalAmount,
-      ShippingFee: shippingFee,
-      AdjustedTotalAmount: adjustedTotalAmount,
-      AdjustedShippingFee: adjustedShippingFee,
-      Result: result
-    });
-  
-    return orderData.order.PaymentStatus === 'PrePaid' ? 0 : result;
-  };
-
-  const getPaymentStatusLabel = () =>
-    orderData.order.PaymentStatus === 'PrePaid' ? 'Trả trước' : 'Trả sau';
-
-  // Order handling methods
+  // Xác nhận lấy đơn
   const pickOrder = async () => {
     try {
       if (shipperBalance === null) {
@@ -221,6 +191,7 @@ const OrderDetails = () => {
     }
   };
 
+  // Xác nhận giao hàng
   const confirmOrder = async (status) => {
     try {
       if (status === 'Cancelled') {
@@ -231,35 +202,15 @@ const OrderDetails = () => {
           } 
         });
       } else {
-        const response = await axios.put('http://localhost:4000/api/confirm-delivery-order', {
+        await axios.put('http://localhost:4000/api/confirm-delivery-order', {
           OrderID: id,
           Status: status
         });
   
-        // Lấy lại thông tin đơn hàng để tính toán
-        const orderResponse = await axios.get(`http://localhost:4000/api/getOrderDetails/${id}`);
-        const { order } = orderResponse.data;
-  
-        // Tính toán tổng thanh toán
-        const totalAmount = order.TotalAmount || 0;
-        const shippingFee = order.ShippingFee || 0;
-        const multiplier = 1000;
-        const adjustedTotalAmount = totalAmount * multiplier;
-        const adjustedShippingFee = shippingFee * multiplier;
-        const paymentAmount = (adjustedTotalAmount + adjustedShippingFee) / multiplier;
-  
-        // Lấy thông tin deposit từ response
-        const deposit = response.data.deposit || 0;
-        const addedShippingFee = response.data.shippingFee || 0;
-  
         Swal.fire({
           icon: 'success',
-          title: 'Giao Hàng Thành Công',
-          html: `
-            <p>Tổng giá trị đơn hàng: <strong>${formatCurrency(paymentAmount)}</strong></p>
-            <p>Tiền cọc: <strong>${formatCurrency(deposit)}</strong> đã được hoàn</p>
-            <p>Phí vận chuyển: <strong>${formatCurrency(addedShippingFee)}</strong> đã được cộng vào tài khoản</p>
-          `,
+          title: 'Xác Nhận Đơn Hàng',
+          text: 'Đơn hàng đã được cập nhật thành công',
           confirmButtonText: 'Xác Nhận'
         }).then(() => {
           window.location.href = '/dashboard';
@@ -275,10 +226,11 @@ const OrderDetails = () => {
     }
   };
 
-  // Render methods
+  // Hiển thị các nút hành động cho đơn hàng
   const renderOrderActions = () => {
     const { order } = orderData;
 
+    // Xác nhận lấy đơn (Pending)
     if (order.OrderStatus === 'Pending') {
       const predictedBalance = (shipperBalance - (order.Deposit || 0));
       return (
@@ -301,11 +253,12 @@ const OrderDetails = () => {
             });
           }}
         >
-          Xác Nhận
+          Xác Nhận Lấy Đơn
         </Button>
       );
     }
 
+    // Xác nhận giao hàng (InProgress)
     if (order.OrderStatus === 'InProgress') {
       return (
         <div className="d-flex gap-2">
@@ -314,7 +267,7 @@ const OrderDetails = () => {
             size="lg"
             onClick={() => {
               Swal.fire({
-                title: 'Xác nhận đơn hàng này?',
+                title: 'Xác nhận giao hàng thành công?',
                 showCancelButton: true,
                 confirmButtonText: 'Xác nhận',
                 cancelButtonText: 'Hủy',
@@ -333,7 +286,7 @@ const OrderDetails = () => {
             size="lg"
             onClick={() => {
               Swal.fire({
-                title: 'Xác nhận đơn hàng này?',
+                title: 'Xác nhận giao hàng thất bại?',
                 showCancelButton: true,
                 confirmButtonText: 'Xác nhận',
                 cancelButtonText: 'Hủy',
@@ -351,22 +304,7 @@ const OrderDetails = () => {
       );
     }
 
-    if (order.OrderStatus === 'Delivered') {
-      return (
-        <span className="me-2 fs-4 fw-bold text-success">
-          Đã Giao Hàng Thành Công
-        </span>
-      );
-    }
-
-    if (order.OrderStatus === 'Cancelled') {
-      return (
-        <span className="me-2 fs-4 fw-bold text-danger">
-          Giao Hàng Thất Bại
-        </span>
-      );
-    }
-
+    // Không hiển thị nút hành động cho các trạng thái khác
     return null;
   };
 
@@ -381,30 +319,10 @@ const OrderDetails = () => {
           paddingTop: '120px'
         }}
       >
-        <h2 className="text-center mb-5">Thông Tin Đơn Hàng</h2>
+        <h2 className="text-center mb-5">Thông Tin Chi Tiết Đơn Hàng</h2>
 
-        {/* Payment Status Badge */}
-        {orderData.order.PaymentStatus && (
-          <div className="text-center mb-3">
-            <span
-              className={`badge ${orderData.order.PaymentStatus === 'PrePaid'
-                ? 'bg-primary'
-                : 'bg-warning text-dark'
-                } fs-6 px-3 py-2`}
-            >
-              <i
-                className={`fa-solid ${orderData.order.PaymentStatus === 'PrePaid'
-                  ? 'fa-credit-card'
-                  : 'fa-money-bill-wave'
-                  } me-2`}
-              ></i>
-              Phương thức thanh toán: {getPaymentStatusLabel()}
-            </span>
-          </div>
-        )}
-
-        {/* Address Information */}
-        <div className="d-flex">
+        {/* Thông Tin Địa Chỉ */}
+        <div className="d-flex mb-4">
           <div
             className="w-100 p-5 d-flex justify-content-between rounded-start-4"
             style={{ background: '#88f3c1' }}
@@ -429,7 +347,7 @@ const OrderDetails = () => {
           </div>
         </div>
 
-        {/* Order Details */}
+        {/* Chi Tiết Đơn Hàng */}
         <div
           className="w-100 p-5 rounded-4 my-4 shadow-2"
           style={{ background: '#caf4e0' }}
@@ -438,15 +356,15 @@ const OrderDetails = () => {
           <h6>Khoảng cách: {distance} Km</h6>
           <h6>Thời gian vận chuyển dự tính: {duration} giờ</h6>
 
-          {/* Product Table */}
+          {/* Bảng Sản Phẩm */}
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell className="fw-bold fs-5">STT</TableCell>
                 <TableCell className="fw-bold fs-5">Sản phẩm</TableCell>
-                <TableCell className="fw-bold fs-5">Số lượng</TableCell>
+                <TableCell className="fw-bold fs-5 text-center">Số lượng</TableCell>
                 <TableCell className="fw-bold fs-5 text-center">Đơn giá</TableCell>
-                <TableCell className="fw-bold fs-5 text-center">Tổng tiền</TableCell>
+                <TableCell className="fw-bold fs-5 text-end">Tổng tiền</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -455,54 +373,54 @@ const OrderDetails = () => {
                   <TableCell className="col-1 border-black">{index + 1}</TableCell>
                   <TableCell className="col-6 border-black">{product.ProductName}</TableCell>
                   <TableCell className="col-1 text-center border-black">{product.Quantity}</TableCell>
-                  <TableCell className="col-2 text-end border-black">
-                    <span className="me-4">{formatCurrency(product.Price)}</span>
+                  <TableCell className="col-2 text-center border-black">
+                    {formatCurrency(product.Price)}
                   </TableCell>
                   <TableCell className="col-2 text-end border-black">
-                    <span className="me-4">{formatCurrency(product.Total)}</span>
+                    {formatCurrency(product.Total)}
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
 
-          {/* Price Breakdown */}
+          {/* Bảng Tổng Quan Tài Chính */}
           <Table>
             <TableBody>
               <TableRow>
                 <TableCell className="fw-bold fs-5 text-end border-black">Tổng tiền hàng:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">{formatCurrency(orderData.order.TotalAmount)}</span>
+                  {formatCurrency(orderData.order.TotalAmount)}
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="fw-bold fs-5 text-end border-black">Phí vận chuyển:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">{formatCurrency(orderData.order.ShippingFee || calculateShippingFee())}</span>
+                  {formatCurrency(orderData.order.ShippingFee || calculateShippingFee())}
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="fw-bold fs-5 text-end border-black">Tiền cọc yêu cầu:</TableCell>
+                <TableCell className="fw-bold fs-5 text-end border-black">Tiền cọc:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">{formatCurrency(orderData.order.Deposit || 0)}</span>
+                  {formatCurrency(orderData.order.Deposit || 0)}
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="fw-bold fs-4 text-end border-black">
-                  Tổng thanh toán (
-                  {orderData.order.PaymentStatus === 'PrePaid' ? 'Đã thanh toán trước' : 'Thu từ khách hàng'}):
+                  Tổng thanh toán:
                 </TableCell>
                 <TableCell className="fw-bold fs-5 text-end col-2 border-black">
-                  <span className={`me-4 ${orderData.order.PaymentStatus === 'PrePaid' ? 'text-success' : ''}`}>
-                    {formatCurrency(getPaymentAmount())}
-                  </span>
+                  {formatCurrency(
+                    (orderData.order.TotalAmount || 0) + 
+                    (orderData.order.ShippingFee || calculateShippingFee())
+                  )}
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
 
-        {/* Action Buttons */}
+        {/* Nút Hành Động */}
         <div
           className="w-100 p-5 rounded-4 d-flex justify-content-between"
           style={{ background: '#caf4e0' }}
@@ -511,7 +429,7 @@ const OrderDetails = () => {
           {renderOrderActions()}
         </div>
 
-        {/* Map */}
+        {/* Bản Đồ */}
         <div className="mt-4">
           <MapBox
             addressData={orderData.addresses}

@@ -52,6 +52,7 @@
     "source-map-loader": "^5.0.0",
     "sweetalert2": "^11.17.2",
     "tailwind-merge": "^3.0.1",
+    "ui": "^0.2.4",
     "web-vitals": "^4.2.4",
     "webpack-dev-server": "^5.2.0",
     "xlsx": "^0.18.5"
@@ -82,8 +83,11 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.26.8",
+    "@craco/craco": "^7.1.0",
+    "@types/node": "^22.13.13",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
-    "eslint-plugin-react": "^7.37.4"
+    "eslint-plugin-react": "^7.37.4",
+    "module-alias": "^2.2.3"
   }
 }
