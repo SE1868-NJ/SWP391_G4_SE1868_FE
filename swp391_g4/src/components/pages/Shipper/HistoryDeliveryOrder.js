@@ -15,9 +15,12 @@ const HistoryDeliveryOrder = () => {
     const [status, setStatus] = useState('All');
     const shipperID = localStorage.getItem('shipperId');
     const orderStatus = ["Pending", "InProgress", "Delivered", "Cancelled"];
+    const [searchDate, setSearchDate] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
   
     const FetchOrders = () => {
-      axios.get(`http://localhost:4000/api/get-history-delivery-order?shipperId=${shipperID}&status=${status}&search=${searchTerm}&limit=${currentLimit}&page=${currentPage}`)
+      axios.get(`http://localhost:4000/api/get-history-delivery-order?shipperId=${shipperID}&status=${status}&search=${searchTerm}&startDate=${startDate}&endDate=${endDate}&limit=${currentLimit}&page=${currentPage}`)
       .then((response) => {
         console.log(response);
   
@@ -49,18 +52,50 @@ const HistoryDeliveryOrder = () => {
       setSearchTerm(event.target.value);
     }
   
+    const handleDateChange = (event) => {
+      setSearchDate(event.target.value);
+    };
+  
     const handleSearch = (event) => {
         console.log(status);
-      FetchOrders();
+        console.log(searchDate);
+        FetchOrders();
     }
+  
+    const handleStartDateChange = (event) => {
+      setStartDate(event.target.value);
+    };
+  
+    const handleEndDateChange = (event) => {
+      setEndDate(event.target.value);
+    };
   
       return (
           <div className="form shipper">
             <main className="mx-md-5">
               <h2 className="text-center mt-5">Lịch Sử Đơn Hàng Đã Giao</h2>
               <div className="row">
-                <div className='col-6 align-content-end'>
-                  <h5>Tổng Số Đơn Hàng: {totalOrders}</h5> 
+                <div className='col-6 align-content-end d-flex align-items-center'>
+                  <h5 className="me-3 mb-0">Tổng Số Đơn Hàng: {totalOrders}</h5>
+                  <div className="d-flex align-items-center gap-2">
+                    <input 
+                      type="date" 
+                      className="form-control" 
+                      value={startDate}
+                      onChange={handleStartDateChange}
+                      placeholder="Từ ngày"
+                      style={{width: '150px'}}
+                    />
+                    <span>-</span>
+                    <input 
+                      type="date" 
+                      className="form-control" 
+                      value={endDate}
+                      onChange={handleEndDateChange}
+                      placeholder="Đến ngày"
+                      style={{width: '150px'}}
+                    />
+                  </div>
                 </div>
                 <div className='col-6' >
                   <div className='d-flex justify-content-end my-2'>

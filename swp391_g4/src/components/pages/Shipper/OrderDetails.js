@@ -12,6 +12,8 @@ import {
 import { Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom'; 
+import Rating from '@mui/material/Rating';
+import { format } from 'date-fns';
 
 // Components
 import MapBox from '../../common/mapbox';
@@ -35,6 +37,8 @@ const OrderDetails = () => {
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
   const [shipperBalance, setShipperBalance] = useState(null);
+  const [rating, setRating] = useState(null);
+  const [feedback, setFeedback] = useState(null);
 
   // Currency formatter
   const formatCurrency = (value) =>
@@ -275,6 +279,50 @@ const OrderDetails = () => {
     }
   };
 
+  // Thêm hàm tính tổng tiền hàng
+  const calculateTotal = () => {
+    if (!orderData.products.length) return { subtotal: 0, shippingFee: 0, total: 0 };
+    
+    const subtotal = orderData.products.reduce((total, item) => {
+      return total + (item.Price * item.Quantity);
+    }, 0);
+
+    const shippingFee = orderData.order.ShippingFee || calculateShippingFee();
+    const total = subtotal + shippingFee;
+
+    return {
+      subtotal,
+      shippingFee,
+      total
+    };
+  };
+
+  // Thêm hàm fetch rating
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        // Chỉ fetch rating nếu đơn hàng đã giao thành công
+        if (orderData.order?.OrderStatus === 'Delivered') {
+          const response = await axios.get(`http://localhost:4000/api/getRating/${id}`);
+          console.log('Rating data:', response.data);
+          
+          if (response.data && response.data.rating) {
+            setRating(response.data.rating);
+          } else {
+            setRating(null);
+          }
+        } else {
+          setRating(null);
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy đánh giá:', error);
+        setRating(null);
+      }
+    };
+
+    fetchRating();
+  }, [id, orderData.order?.OrderStatus]); // Thêm OrderStatus vào dependencies
+
   // Render methods
   const renderOrderActions = () => {
     const { order } = orderData;
@@ -369,6 +417,113 @@ const OrderDetails = () => {
 
     return null;
   };
+
+  // Thêm component hiển thị đánh giá
+  const renderRating = () => {
+    // Chỉ hiển thị phần rating nếu đơn hàng đã giao thành công
+    if (orderData.order?.OrderStatus !== 'Delivered') {
+      return null; // Không hiển thị gì nếu không phải đơn hàng đã giao thành công
+    }
+
+    return (
+      <div className="w-100 p-5 rounded-4 mt-4" style={{ background: '#caf4e0' }}>
+        <h3 className="mb-4">
+          <i className="fa-solid fa-star text-warning"></i> Đánh Giá Từ Khách Hàng
+        </h3>
+        {rating ? (
+          <div>
+            <div className="d-flex align-items-center mb-3">
+              <div className="rating-stars me-3">
+                <Rating 
+                  value={Number(rating.Stars)} 
+                  readOnly 
+                  size="large"
+                  precision={0.5}
+                />
+                <span className="ms-2">({rating.Stars}/5)</span>
+              </div>
+              <div className="rating-info">
+                <div className="customer-name mb-1">
+                  <strong>Khách hàng: {rating.CustomerName || 'Ẩn danh'}</strong>
+                </div>
+                <div className="rating-date text-muted">
+                  Thời gian: {format(new Date(rating.CreatedAt), 'dd/MM/yyyy HH:mm')}
+                </div>
+              </div>
+            </div>
+            {rating.Comment && (
+              <div className="rating-comment p-4 bg-white rounded-3">
+                <h5 className="mb-2">Nhận xét:</h5>
+                <p className="mb-0 fst-italic">"{rating.Comment}"</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-4">
+            <div className="no-rating-icon mb-3">
+              <i className="fa-regular fa-star fa-2x text-muted"></i>
+            </div>
+            <p className="text-muted mb-0">
+              Chưa có đánh giá từ khách hàng
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Thêm styles cho phần rating
+  const styles = `
+    .rating-stars .MuiRating-root {
+      font-size: 2rem;
+    }
+
+    .rating-stars .MuiRating-iconFilled {
+      color: #ffc107;
+    }
+
+    .rating-info {
+      border-left: 2px solid #dee2e6;
+      padding-left: 1rem;
+    }
+
+    .customer-name {
+      font-size: 1.1rem;
+      color: #2c3e50;
+    }
+
+    .rating-date {
+      font-size: 0.9rem;
+    }
+
+    .rating-comment {
+      background-color: #f8f9fa;
+      border-left: 4px solid #4CAF50;
+    }
+
+    .no-rating-icon {
+      color: #adb5bd;
+    }
+
+    .no-rating-message {
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      .rating-stars .MuiRating-root {
+        font-size: 1.5rem;
+      }
+
+      .rating-info {
+        padding-left: 0.75rem;
+      }
+
+      .customer-name {
+        font-size: 1rem;
+      }
+    }
+  `;
 
   return (
     <div>
@@ -472,13 +627,13 @@ const OrderDetails = () => {
               <TableRow>
                 <TableCell className="fw-bold fs-5 text-end border-black">Tổng tiền hàng:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">{formatCurrency(orderData.order.TotalAmount)}</span>
+                  <span className="me-4">{formatCurrency(calculateTotal().subtotal)}</span>
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="fw-bold fs-5 text-end border-black">Phí vận chuyển:</TableCell>
                 <TableCell className="fw-bold fs-6 text-end col-2 border-black">
-                  <span className="me-4">{formatCurrency(orderData.order.ShippingFee || calculateShippingFee())}</span>
+                  <span className="me-4">{formatCurrency(calculateTotal().shippingFee)}</span>
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -511,6 +666,9 @@ const OrderDetails = () => {
           {renderOrderActions()}
         </div>
 
+        {/* Chỉ render phần rating nếu đơn hàng đã giao thành công */}
+        {orderData.order?.OrderStatus === 'Delivered' && renderRating()}
+
         {/* Map */}
         <div className="mt-4">
           <MapBox
@@ -521,6 +679,7 @@ const OrderDetails = () => {
         </div>
       </div>
       <Footer />
+      <style>{styles}</style>
     </div>
   );
 };

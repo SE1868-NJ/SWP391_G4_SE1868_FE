@@ -21,6 +21,9 @@ body {
   max-width: 600px;
   width: 100%;
   text-align: center;
+  border: 2px solid #cecaca; /* Màu xám nhạt */
+  border-radius: 8px; /* Bo góc */
+  padding: 20px;
 }
 
 .shippercontact-title {
