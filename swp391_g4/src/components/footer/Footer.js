@@ -94,6 +94,9 @@ export const Footer = (props) => {
                       <a href="/manage-shipper" className={styles.subLink}>
                         Admin
                       </a>
+                      <a href="/customer/login" className={styles.subLink}>
+                        Customer
+                      </a>
                     </nav>
                   </div>
                 </div>
