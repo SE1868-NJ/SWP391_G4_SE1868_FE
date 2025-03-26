@@ -1,0 +1,171 @@
+.order-tracking-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f5f5f5; /* Màu nền nhẹ để làm nổi bật các thành phần */
+}
+
+/* Header */
+.order-tracking-header {
+  position: relative; /* Để đặt nút đăng xuất ở góc phải */
+  margin-bottom: 20px;
+}
+
+.order-tracking-title {
+  font-size: 2rem;
+  color: #155724; /* Màu xanh lá rất đậm cho tiêu đề */
+  text-align: center;
+}
+
+.order-tracking-welcome {
+  font-size: 1.2rem;
+  color: #28A745; /* Màu xanh lá chủ đạo cho lời chào */
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.order-tracking-signout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #FF4D4F; /* Giữ màu đỏ cho nút đăng xuất để nổi bật */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.order-tracking-signout:hover {
+  background-color: #D9363E; /* Màu đỏ đậm hơn khi hover */
+}
+
+/* Tabs */
+.order-tracking-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.order-tab {
+  padding: 10px 20px;
+  border: none;
+  background-color: #E0E0E0; /* Màu xám nhạt cho tab không được chọn */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+}
+
+.order-tab.active {
+  background-color: #28A745; /* Màu xanh lá chủ đạo cho tab được chọn */
+  color: white;
+}
+
+/* Thông báo */
+.order-tracking-loading,
+.order-tracking-error,
+.order-tracking-empty {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #28A745; /* Màu xanh lá chủ đạo cho thông báo */
+}
+
+/* Danh sách đơn hàng */
+.order-tracking-list {
+  display: grid;
+  gap: 20px;
+}
+
+.order-card {
+  background-color: #fff;
+  border: 1px solid #D4EDDA; /* Viền màu xanh lá rất nhạt */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.order-card-title {
+  font-size: 1.5rem;
+  color: #155724; /* Màu xanh lá rất đậm cho tiêu đề đơn hàng */
+}
+
+.order-status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.status-delivered {
+  background-color: #28A745; /* Xanh lá chủ đạo cho trạng thái Đã Giao */
+  color: white;
+}
+
+.status-pending {
+  background-color: #FFD700; /* Vàng nhạt cho trạng thái Đang Chờ */
+  color: #333;
+}
+
+.status-inprogress {
+  background-color: #87CEEB; /* Xanh dương nhạt cho trạng thái Đang Xử Lý */
+  color: #333;
+}
+
+.status-cancelled {
+  background-color: #FF4D4F; /* Đỏ cho trạng thái Đã Hủy */
+  color: white;
+}
+
+.order-card-date,
+.order-card-address,
+.order-card-products,
+.order-card-fee {
+  font-size: 1rem;
+  color: #28A745; /* Màu xanh lá chủ đạo cho nội dung */
+  margin-bottom: 10px;
+}
+
+.order-card-products span {
+  color: #155724; /* Màu xanh lá rất đậm cho tên sản phẩm */
+  font-weight: 500;
+}
+
+.order-card-details {
+  background-color: #28A745; /* Màu xanh lá chủ đạo cho nút Xem Chi Tiết */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.order-card-details:hover {
+  background-color: #218838; /* Màu xanh lá đậm hơn khi hover */
+}
+
+
+
+.order-tracking-button {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.order-tracking-button:hover {
+  background-color: #0056b3;
+}

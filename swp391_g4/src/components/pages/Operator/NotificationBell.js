@@ -9,7 +9,7 @@ const NotificationBell = () => {
   const [unreadCount, setUnreadCount] = useState(0);
 
 useEffect(() => {
-    const interval = setInterval(fetchNotifications, 5000); // Gọi API mỗi 5 giây
+    const interval = setInterval(fetchNotifications, 2000); // Gọi API mỗi 5 giây
     return () => clearInterval(interval); // Xóa interval khi component unmount
   }, []);
 

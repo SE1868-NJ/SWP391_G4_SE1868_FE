@@ -43,7 +43,12 @@ import ShipperDashboard from "./components/pages/Shipper/ShipperDashboard";
 //Report
 import ReportIssue from "./components/pages/Shipper/ReportIssue";
 import AdminReportHandling from "./components/pages/Operator/AdminReportHandling";
-import CustomerReportTracking from "./components/pages/CustomerReportTracking";
+import CustomerReportTracking from "./components/pages/Customer/CustomerReportTracking";
+
+//Trang Customer
+import CustomerLogin from "./components/pages/Customer/CustomerLogin";
+import CustomerOrderTracking from "./components/pages/Customer/CustomerOrderTracking";
+import CustomerOrderDetail from "./components/pages/Customer/CustomerOrderDetail";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -122,6 +127,18 @@ root.render(
         path="/customer-report-tracking"
         element={<CustomerReportTracking />}
       />
+
+        {/* Trang Customer */}
+        <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route
+        path="/customer/orders"
+        element={
+          <PrivateRoute>
+            <CustomerOrderTracking />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/customer/order/:orderId" element={<CustomerOrderDetail />} />
     </Routes>
   </Router>
 );
