@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/AdminReportHandling.css";
-import NotificationBell from './NotificationBell';
 import HeaderOperator from "./HeaderOperator";
 
 const AdminReportHandling = () => {

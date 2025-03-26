@@ -25,7 +25,6 @@ import {
 } from "./ExportExcel_Revenue";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import NotificationBell from "./NotificationBell";
 import HeaderOperator from "./HeaderOperator";
 
 // Utility function
@@ -1214,7 +1213,7 @@ function FeesPanel({ fees }) {
 // Footer Component
 function Footer() {
   return (
-    <footer style={{color:"black"}}>
+    <footer style={{ color: "black" }}>
       © 2025 View Revenue System | <a href="#">Trợ giúp</a> |{" "}
       <a href="#">Liên hệ</a>
     </footer>
@@ -1378,7 +1377,7 @@ function App() {
   return (
     <div>
       <HeaderOperator />
-      <div style={{padding: '35px'}}>
+      <div style={{ padding: "35px" }}>
         <div className="RevenueDashboard-subheader">
           <div className="RevenueDashboard-title">
             <h1 style={{ color: "#2e7d32" }}>Báo cáo doanh thu</h1>
