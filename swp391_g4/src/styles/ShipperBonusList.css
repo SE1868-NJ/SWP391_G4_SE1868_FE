@@ -1,7 +1,7 @@
 :root {
-  --primary: #4CAF50;
-  --primary-dark: #388E3C;
-  --primary-light: #C8E6C9;
+  --primary: #2c9d32; /* Updated to new primary color */
+  --primary-dark: #267d29; /* Darker shade of #2c9d32 */
+  --primary-light: #c2e5c4; /* Lighter shade of #2c9d32 */
   --accent: #FF9800;
   --text: #212121;
   --secondary-text: #757575;
@@ -23,135 +23,121 @@ body {
   color: var(--text);
 }
 
-.ShipperBonusList-header {
+/* Removed .ShipperBonusList-header since it's replaced by HeaderOperator */
+
+/* Navigation buttons */
+.shipper-bonuslist-nav-button {
   background-color: var(--primary);
   color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.ShipperBonusList-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.ShipperBonusList-header nav ul {
-  display: flex;
-  list-style: none;
-  gap: 1.5rem;
-}
-
-.ShipperBonusList-header nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 0.5rem 0.8rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
   border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
   transition: background-color 0.3s;
 }
 
-.ShipperBonusList-header nav ul li a:hover,
-.ShipperBonusList-header nav ul li a.ShipperBonusList-active {
+.shipper-bonuslist-nav-button:hover,
+.shipper-bonuslist-nav-button.active {
   background-color: var(--primary-dark);
 }
 
-.ShipperBonusList-main {
+.shipper-bonuslist-main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-.ShipperBonusList-dashboard {
+.shipper-bonuslist-dashboard {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
-.ShipperBonusList-card {
+.shipper-bonuslist-card {
   background-color: var(--card);
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.ShipperBonusList-card h3 {
+.shipper-bonuslist-card h3 {
   margin-bottom: 0.5rem;
   color: var(--secondary-text);
   font-size: 0.9rem;
   text-transform: uppercase;
 }
 
-.ShipperBonusList-value {
+.shipper-bonuslist-value {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
-.ShipperBonusList-change {
+.shipper-bonuslist-change {
   display: flex;
   align-items: center;
   font-size: 0.9rem;
   color: var(--secondary-text);
 }
 
-.ShipperBonusList-change.ShipperBonusList-positive {
+.shipper-bonuslist-change.shipper-bonuslist-positive {
   color: var(--primary);
 }
 
-.ShipperBonusList-change.ShipperBonusList-negative {
+.shipper-bonuslist-change.shipper-bonuslist-negative {
   color: var(--error);
 }
 
-.ShipperBonusList-tools {
+.shipper-bonuslist-tools {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1.5rem;
   align-items: center;
 }
 
-.ShipperBonusList-filters {
+.shipper-bonuslist-filters {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.ShipperBonusList-filters select,
-.ShipperBonusList-tools button,
-.ShipperBonusList-filters input {
+.shipper-bonuslist-filters select,
+.shipper-bonuslist-tools button,
+.shipper-bonuslist-filters input {
   padding: 0.5rem 1rem;
   border-radius: 4px;
   border: 1px solid var(--divider);
   background-color: var(--card);
-  min-width: 200px; /* Đảm bảo chiều rộng tối thiểu */
-  transition: all 0.3s ease; /* Thêm hiệu ứng mượt mà */
+  transition: all 0.3s ease;
 }
-.ShipperBonusList-filters input:hover {
+
+.shipper-bonuslist-filters input:hover {
   border-color: var(--primary);
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.2); /* Thêm hiệu ứng bóng nhẹ */
+  box-shadow: 0 0 5px rgba(44, 157, 50, 0.2); /* Updated to match #2c9d32 */
 }
-.ShipperBonusList-filters input:focus {
+
+.shipper-bonuslist-filters input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 5px rgba(44, 157, 50, 0.3); /* Updated to match #2c9d32 */
 }
-.ShipperBonusList-filters input::placeholder {
+
+.shipper-bonuslist-filters input::placeholder {
   color: var(--secondary-text);
   opacity: 0.7;
 }
+
 @media (max-width: 768px) {
-  .ShipperBonusList-filters input {
-    width: 100%; /* Chiếm toàn bộ chiều rộng trên mobile */
+  .shipper-bonuslist-filters input {
+    width: 100%;
     min-width: unset;
   }
 }
-.ShipperBonusList-tools button {
+
+.shipper-bonuslist-tools button {
   background-color: var(--primary);
   color: white;
   border: none;
@@ -162,37 +148,37 @@ body {
   transition: background-color 0.3s;
 }
 
-.ShipperBonusList-tools button:hover {
+.shipper-bonuslist-tools button:hover {
   background-color: var(--primary-dark);
 }
 
-.ShipperBonusList-tools button.ShipperBonusList-secondary {
+.shipper-bonuslist-tools button.shipper-bonuslist-secondary {
   background-color: white;
   color: var(--primary);
   border: 1px solid var(--primary);
 }
 
-.ShipperBonusList-tools button.ShipperBonusList-secondary:hover {
+.shipper-bonuslist-tools button.shipper-bonuslist-secondary:hover {
   background-color: var(--primary-light);
 }
 
-.ShipperBonusList-data-container {
+.shipper-bonuslist-data-container {
   margin-top: 2rem;
 }
 
-.ShipperBonusList-data-header {
+.shipper-bonuslist-data-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 }
 
-.ShipperBonusList-actions {
+.shipper-bonuslist-actions {
   display: flex;
   gap: 0.5rem;
 }
 
-.ShipperBonusList-table {
+.shipper-bonuslist-table {
   width: 100%;
   border-collapse: collapse;
   background-color: var(--card);
@@ -201,56 +187,56 @@ body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.ShipperBonusList-table thead {
+.shipper-bonuslist-table thead {
   background-color: var(--primary-light);
 }
 
-.ShipperBonusList-table th,
-.ShipperBonusList-table td {
+.shipper-bonuslist-table th,
+.shipper-bonuslist-table td {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid var(--divider);
 }
 
-.ShipperBonusList-table th {
+.shipper-bonuslist-table th {
   font-weight: 600;
   color: var(--text);
 }
 
-.ShipperBonusList-table tbody tr:hover {
+.shipper-bonuslist-table tbody tr:hover {
   background-color: rgba(0,0,0,0.02);
 }
 
-.ShipperBonusList-status-badge {
+.shipper-bonuslist-status-badge {
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 500;
 }
 
-.ShipperBonusList-status-badge.ShipperBonusList-high {
-  background-color: rgba(76, 175, 80, 0.1);
+.shipper-bonuslist-status-badge.shipper-bonuslist-high {
+  background-color: rgba(44, 157, 50, 0.1); /* Updated to match #2c9d32 */
   color: var(--primary);
 }
 
-.ShipperBonusList-status-badge.ShipperBonusList-medium {
+.shipper-bonuslist-status-badge.shipper-bonuslist-medium {
   background-color: rgba(255, 152, 0, 0.1);
   color: var(--accent);
 }
 
-.ShipperBonusList-status-badge.ShipperBonusList-low {
+.shipper-bonuslist-status-badge.shipper-bonuslist-low {
   background-color: rgba(244, 67, 54, 0.1);
   color: var(--error);
 }
 
-.ShipperBonusList-pagination {
+.shipper-bonuslist-pagination {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 1rem;
 }
 
-.ShipperBonusList-pagination button {
+.shipper-bonuslist-pagination button {
   width: 36px;
   height: 36px;
   display: flex;
@@ -259,49 +245,50 @@ body {
   padding: 0;
 }
 
-.ShipperBonusList-charts-container {
+.shipper-bonuslist-charts-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   margin-top: 2rem;
 }
 
-.ShipperBonusList-chart-card {
+.shipper-bonuslist-chart-card {
   padding: 1.5rem;
   background-color: var(--card);
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.ShipperBonusList-chart-card h3 {
+.shipper-bonuslist-chart-card h3 {
   margin-bottom: 1rem;
   color: var(--text);
 }
 
 @media (max-width: 992px) {
-  .ShipperBonusList-dashboard {
+  .shipper-bonuslist-dashboard {
     grid-template-columns: repeat(2, 1fr);
   }
-  .ShipperBonusList-charts-container {
+  .shipper-bonuslist-charts-container {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
-  .ShipperBonusList-dashboard {
+  .shipper-bonuslist-dashboard {
     grid-template-columns: 1fr;
   }
-  .ShipperBonusList-tools {
+  .shipper-bonuslist-tools {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
   }
-  .ShipperBonusList-filters {
+  .shipper-bonuslist-filters {
     flex-wrap: wrap;
   }
 }
-.ShipperBonusList-pay-btn {
-  background-color: #4CAF50;
+
+.shipper-bonuslist-pay-btn {
+  background-color: var(--primary);
   color: white;
   border: none;
   padding: 6px 12px;
@@ -310,19 +297,20 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.ShipperBonusList-pay-btn:hover {
-  background-color: #45a049;
+.shipper-bonuslist-pay-btn:hover {
+  background-color: var(--primary-dark);
 }
 
-.ShipperBonusList-paid-status {
-  color: #4CAF50;
+.shipper-bonuslist-paid-status {
+  color: var(--primary);
   font-weight: bold;
 }
 
-.ShipperBonusList-pay-btn:disabled {
+.shipper-bonuslist-pay-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
+
 .payment-success-modal,
 .payment-error-modal {
   position: fixed;
@@ -348,11 +336,11 @@ body {
 }
 
 .payment-success-modal .modal-content {
-  border: 2px solid #4CAF50;
+  border: 2px solid var(--primary); /* Updated to use new primary color */
 }
 
 .payment-error-modal .modal-content {
-  border: 2px solid #F44336;
+  border: 2px solid var(--error);
 }
 
 .payment-success-modal button,
@@ -365,7 +353,8 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
-.ShipperBonusList-confirmation-modal {
+
+.shipper-bonuslist-confirmation-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -378,7 +367,7 @@ body {
   z-index: 1000;
 }
 
-.ShipperBonusList-confirmation-modal-content {
+.shipper-bonuslist-confirmation-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -387,7 +376,7 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.ShipperBonusList-payment-details {
+.shipper-bonuslist-payment-details {
   margin: 15px 0;
   text-align: left;
   background-color: #f4f4f4;
@@ -395,14 +384,14 @@ body {
   border-radius: 4px;
 }
 
-.ShipperBonusList-confirmation-modal-actions {
+.shipper-bonuslist-confirmation-modal-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.ShipperBonusList-confirm-btn, 
-.ShipperBonusList-cancel-btn {
+.shipper-bonuslist-confirm-btn, 
+.shipper-bonuslist-cancel-btn {
   flex: 1;
   margin: 0 10px;
   padding: 10px;
@@ -412,12 +401,13 @@ body {
   font-weight: bold;
 }
 
-.ShipperBonusList-confirm-btn {
-  background-color: #4CAF50;
+.shipper-bonuslist-confirm-btn {
+  background-color: var(--primary);
   color: white;
 }
 
-.ShipperBonusList-cancel-btn {
-  background-color: #f44336;
+.shipper-bonuslist-cancel-btn {
+  background-color: var(--error);
   color: white;
 }
+

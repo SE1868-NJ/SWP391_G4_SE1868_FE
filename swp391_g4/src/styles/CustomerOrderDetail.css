@@ -1,5 +1,5 @@
 /* CustomerOrderDetail.css */
-.customer-order-detail-container {
+.customer-orderdetail-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -8,12 +8,12 @@
 }
 
 /* Định nghĩa cỡ chữ toàn cục cho các phần tử chính */
-h1 {
+.customer-orderdetail-h1 {
   font-size: 24px; /* Tiêu đề chính */
   color: #28a745; /* Xanh lá */
 }
 
-h2 {
+.customer-orderdetail-h2 {
   font-size: 18px; /* Tiêu đề phụ */
   color: #28a745; /* Xanh lá */
   font-weight: bold;
@@ -26,7 +26,7 @@ p {
 }
 
 /* Header */
-.customer-order-detail-header {
+.customer-orderdetail-header {
   display: flex;
   align-items: center;
   border-bottom: 2px solid #28a745; /* Viền xanh lá */
@@ -34,7 +34,7 @@ p {
   margin-bottom: 20px;
 }
 
-.back-button {
+.customer-orderdetail-back-button {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -51,68 +51,68 @@ p {
   margin-right: 40px;
 }
 
-.back-button:hover {
+.customer-orderdetail-back-button:hover {
   background-color: #218838; /* Xanh đậm hơn khi hover */
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-.back-button i {
+.customer-orderdetail-back-button i {
   font-size: 14px;
   color: white;
 }
 
-.header-content {
+.customer-orderdetail-header-content {
   flex-grow: 1;
   text-align: left;
 }
 
-.order-status {
+.customer-orderdetail-order-status {
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 14px; /* Đồng bộ cỡ chữ */
   font-weight: bold;
 }
 
-.order-status.pending {
+.customer-orderdetail-order-status.pending {
   background-color: #ffeaa7;
   color: #d63031;
 }
 
-.order-status.inprogress {
+.customer-orderdetail-order-status.inprogress {
   background-color: #74b9ff;
   color: #fff;
 }
 
-.order-status.delivered {
+.customer-orderdetail-order-status.delivered {
   background-color: #d4edda; /* Xanh lá nhạt */
   color: #155724;
 }
 
-.order-status.cancelled {
+.customer-orderdetail-order-status.cancelled {
   background-color: #ff7675;
   color: #fff;
 }
 
 /* Main Content */
-.main-content {
+.customer-orderdetail-main-content {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 20px;
 }
 
-.left-column,
-.right-column {
+.customer-orderdetail-left-column,
+.customer-orderdetail-right-column {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.order-status-section,
-.order-items-section,
-.delivery-info-section,
-.shipper-info-section,
-.payment-summary-section,
-.rating-section {
+.customer-orderdetail-order-status-section,
+.customer-orderdetail-order-items-section,
+.customer-orderdetail-delivery-info-section,
+.customer-orderdetail-shipper-info-section,
+.customer-orderdetail-payment-summary-section,
+.customer-orderdetail-rating-section {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 15px;
@@ -121,53 +121,53 @@ p {
 }
 
 /* Trạng thái đơn hàng */
-.status-timeline {
+.customer-orderdetail-status-timeline {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.status-item {
+.customer-orderdetail-status-item {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.status-item.completed {
+.customer-orderdetail-status-item.customer-orderdetail-completed {
   color: #28a745; /* Xanh lá cho trạng thái hoàn thành */
 }
 
 /* Sản phẩm đặt hàng */
-.order-item {
+.customer-orderdetail-order-item {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
 }
 
-.order-item-details p {
+.customer-orderdetail-order-item-details p {
   font-size: 14px; /* Đồng bộ cỡ chữ */
 }
 
-.order-item-details p:first-child {
+.customer-orderdetail-order-item-details p:first-child {
   font-weight: bold;
 }
 
-.order-item-total {
+.customer-orderdetail-order-item-total {
   font-size: 14px; /* Đồng bộ cỡ chữ */
   font-weight: bold;
   color: #28a745; /* Xanh lá */
 }
 
 /* Tổng thanh toán */
-.payment-summary-item {
+.customer-orderdetail-payment-summary-item {
   display: flex;
   justify-content: space-between;
   padding: 5px 0;
   font-size: 14px; /* Đồng bộ cỡ chữ */
 }
 
-.payment-summary-item.total {
+.customer-orderdetail-payment-summary-item.customer-orderdetail-total {
   font-weight: bold;
   border-top: 2px solid #28a745; /* Viền xanh lá */
   padding-top: 10px;
@@ -176,35 +176,35 @@ p {
 }
 
 /* Thông tin giao hàng và shipper */
-.delivery-info-section p,
-.shipper-info-section p {
+.customer-orderdetail-delivery-info-section p,
+.customer-orderdetail-shipper-info-section p {
   font-size: 14px; /* Đồng bộ cỡ chữ */
 }
 
 /* Đánh giá đơn hàng */
-.rating-section {
+.customer-orderdetail-rating-section {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 15px;
 }
 
-.star-rating {
+.customer-orderdetail-star-rating {
   display: flex;
   gap: 5px;
   margin-bottom: 10px;
 }
 
-.star {
+.customer-orderdetail-star {
   font-size: 20px;
   color: #ddd;
   cursor: pointer;
 }
 
-.star.filled {
+.customer-orderdetail-star.customer-orderdetail-filled {
   color: #f1c40f; /* Vàng cho sao được chọn */
 }
 
-.rating-form textarea {
+.customer-orderdetail-rating-form textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #28a745; /* Viền xanh lá */
@@ -216,12 +216,12 @@ p {
   font-family: Arial, sans-serif;
 }
 
-.rating-form textarea::placeholder {
+.customer-orderdetail-rating-form textarea::placeholder {
   color: #555;
   font-size: 14px;
 }
 
-.submit-rating-button {
+.customer-orderdetail-submit-rating-button {
   background-color: #28a745; /* Nút xanh lá */
   color: white;
   border: none;
@@ -235,29 +235,29 @@ p {
   font-weight: 500;
 }
 
-.submit-rating-button:hover {
+.customer-orderdetail-submit-rating-button:hover {
   background-color: #218838; /* Xanh đậm hơn khi hover */
 }
 
-.existing-rating p {
+.customer-orderdetail-existing-rating p {
   font-size: 14px; /* Đồng bộ cỡ chữ */
 }
 
-.existing-rating p strong {
+.customer-orderdetail-existing-rating p strong {
   font-weight: bold;
 }
 
-.existing-rating p .feedback-text {
+.customer-orderdetail-existing-rating p .customer-orderdetail-feedback-text {
   font-weight: normal;
 }
 
-.existing-rating p .star-rating {
+.customer-orderdetail-existing-rating p .customer-orderdetail-star-rating {
   display: inline-flex;
   gap: 5px;
   vertical-align: middle;
 }
 
-.error-message {
+.customer-orderdetail-error-message {
   color: #dc3545;
   text-align: center;
   font-size: 14px; /* Đồng bộ cỡ chữ */

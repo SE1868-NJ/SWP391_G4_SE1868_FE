@@ -98,16 +98,11 @@
     border: none;
     color: white;
     font-size: 1rem;
-    font-family: "Inter, -apple-system, Roboto, Helvetica, sans-serif";
     font-weight: 500;
     cursor: pointer;
     padding: 10px 15px;
     transition: background 0.3s;
-  }
-  
-  .nav-item:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
+    font-weight: bold;
   }
   
   .nav-item:disabled {

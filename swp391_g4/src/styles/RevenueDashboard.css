@@ -42,7 +42,7 @@
 
 .RevenueDashboard-search-bar button {
   padding: 8px 12px;
-  background-color: #3498db;
+  background-color:  rgb(47, 149, 76);
   color: white;
   border: none;
   border-radius: 4px;
@@ -51,7 +51,7 @@
 }
 
 .RevenueDashboard-search-bar button:hover {
-  background-color: rgb(47, 149, 76);
+  background-color:rgb(44, 110, 47);
 }
 
 .RevenueDashboard-filters {
@@ -160,7 +160,7 @@
 
 .RevenueDashboard-panel-actions button {
   padding: 6px 12px;
-  background-color: #18d04d;
+  background-color: rgb(47, 149, 76);
   color: white;
   border: none;
   border-radius: 4px;

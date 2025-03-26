@@ -31,6 +31,8 @@ import ShipperDetail from "./components/pages/Operator/ShipperDetail";
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
 import ContactManagement from "./components/pages/Operator/ContactManagement";
 import IncidentManagement from "./components/pages/Operator/IncidentManagement";
+import ShipperBonusList from "./components/pages/Operator/ShipperBonusList";
+import BonusSetting from "./components/pages/Operator/BonusSettings";
 
 //Trang Shipper Account
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
@@ -219,6 +221,8 @@ root.render(
         }
       />
       <Route path="/customer/order/:orderId" element={<CustomerOrderDetail />} />
+      <Route path="/shipper-bonus-list" element={< ShipperBonusList/>}/>
+      <Route path="/bonus-settings" element={<BonusSetting/>}/>
     </Routes>
   </Router>
   </React.StrictMode>

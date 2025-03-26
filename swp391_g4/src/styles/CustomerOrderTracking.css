@@ -157,7 +157,7 @@
 
 
 .order-tracking-button {
-  background-color: #007bff;
+  background-color: #24ae6e;
   color: white;
   padding: 8px 16px;
   border: none;
@@ -167,5 +167,5 @@
 }
 
 .order-tracking-button:hover {
-  background-color: #0056b3;
+  background-color: #218838;
 }

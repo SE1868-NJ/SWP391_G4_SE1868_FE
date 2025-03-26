@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar, Legend, Area, AreaChart
 } from 'recharts';
@@ -12,9 +12,9 @@ import { saveAs } from 'file-saver';
 
 // Utility function
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('vi-VN', { 
-    style: 'currency', 
-    currency: 'VND' 
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
   }).format(amount);
 };
 
@@ -40,15 +40,15 @@ function Filters({ filters, onChange }) {
       alert('End date must be after start date');
       onChange('endDate', filters.startDate);
     }
-  };  
+  };
 
   return (
     <div className="RevenueDashboard-filters">
       <div className="RevenueDashboard-filter-row">
         <div className="RevenueDashboard-filter-group">
           <label htmlFor="time-period">Thời gian</label>
-          <select 
-            id="time-period" 
+          <select
+            id="time-period"
             value={filters.timePeriod}
             onChange={(e) => handleTimePeriodChange(e.target.value)}
           >
@@ -61,8 +61,8 @@ function Filters({ filters, onChange }) {
         </div>
         <div className="RevenueDashboard-filter-group">
           <label htmlFor="region">Khu vực</label>
-          <select 
-            id="region" 
+          <select
+            id="region"
             value={filters.region}
             onChange={(e) => onChange('region', e.target.value)}
           >
@@ -74,8 +74,8 @@ function Filters({ filters, onChange }) {
         </div>
         <div className="RevenueDashboard-filter-group">
           <label htmlFor="service-type">Dịch vụ</label>
-          <select 
-            id="service-type" 
+          <select
+            id="service-type"
             value={filters.serviceType}
             onChange={(e) => onChange('serviceType', e.target.value)}
           >
@@ -86,13 +86,13 @@ function Filters({ filters, onChange }) {
           </select>
         </div>
       </div>
-      
+
       {showDatePickers && (
         <div className="RevenueDashboard-date-range">
           <div className="RevenueDashboard-filter-group">
             <label htmlFor="start-date">Từ ngày</label>
-            <input 
-              type="date" 
+            <input
+              type="date"
               id="start-date"
               value={filters.startDate || ''}
               onChange={(e) => handleDateChange('startDate', e.target.value)}
@@ -100,8 +100,8 @@ function Filters({ filters, onChange }) {
           </div>
           <div className="RevenueDashboard-filter-group">
             <label htmlFor="end-date">Đến ngày</label>
-            <input 
-              type="date" 
+            <input
+              type="date"
               id="end-date"
               value={filters.endDate || ''}
               onChange={(e) => handleDateChange('endDate', e.target.value)}
@@ -163,8 +163,8 @@ function OverviewPanel({ data, revenueByDay }) {
             <Tooltip formatter={(value) => formatCurrency(value)} />
             <defs>
               <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3498db" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#3498db" stopOpacity={0.1}/>
+                <stop offset="5%" stopColor="#3498db" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#3498db" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <Area
@@ -193,15 +193,15 @@ function OrdersPanel({ filters }) {
   const [exportLoading, setExportLoading] = useState(false);
   const [error, setError] = useState(null);
   const itemsPerPage = 10;
-  
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:4000/api/orders', { 
-          params: { ...filters, page: currentPage, limit: itemsPerPage } 
+        const response = await axios.get('http://localhost:4000/api/orders', {
+          params: { ...filters, page: currentPage, limit: itemsPerPage }
         });
-        
+
         if (response.data && response.data.orders) {
           setOrdersData(response.data.orders);
           setTotalOrders(response.data.totalCount);
@@ -223,20 +223,20 @@ function OrdersPanel({ filters }) {
     };
     fetchOrders();
   }, [currentPage, filters, itemsPerPage]);
-  
+
   const handleExport = async () => {
     try {
       setExportLoading(true);
-      const response = await axios.get('http://localhost:4000/api/orders', { 
-        params: { ...filters, limit: 1000 } 
+      const response = await axios.get('http://localhost:4000/api/orders', {
+        params: { ...filters, limit: 1000 }
       });
-      
+
       let ordersToExport = response.data.orders || (Array.isArray(response.data) ? response.data : []);
-      
+
       const statusText = { 'success': 'Đã giao', 'pending': 'Đang giao', 'error': 'Lỗi giao' };
       const serviceText = { 'Standard': 'Tiêu chuẩn', 'Express': 'Nhanh', 'Scheduled': 'Hẹn giờ' };
       const regionText = { 'mid_zone': 'Quanh trung tâm', 'central': 'Trung tâm', 'outer_zone': 'Rìa trung tâm' };
-      
+
       const formattedData = ordersToExport.map(order => ({
         'Mã đơn hàng': order.id,
         'Ngày giao': order.date,
@@ -245,7 +245,7 @@ function OrdersPanel({ filters }) {
         'Trạng thái': statusText[order.status] || order.status,
         'Doanh thu': order.revenue
       }));
-      
+
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.json_to_sheet(formattedData);
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Đơn hàng');
@@ -265,9 +265,9 @@ function OrdersPanel({ filters }) {
   const statusText = { 'success': 'Đã giao', 'pending': 'Đang giao', 'error': 'Lỗi giao' };
   const serviceText = { 'Standard': 'Tiêu chuẩn', 'Express': 'Nhanh', 'Scheduled': 'Hẹn giờ' };
   const regionText = { 'mid_zone': 'Quanh trung tâm', 'central': 'Trung tâm', 'outer_zone': 'Rìa trung tâm' };
-  
+
   const totalPages = Math.ceil(totalOrders / itemsPerPage);
-  
+
   const getPageNumbers = () => {
     const pageNumbers = [];
     if (totalPages <= 5) {
@@ -283,17 +283,17 @@ function OrdersPanel({ filters }) {
     }
     return pageNumbers;
   };
-  
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     const tableElement = document.querySelector('.RevenueDashboard-table-responsive');
     if (tableElement) tableElement.scrollTop = 0;
   };
-  
+
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-  
+
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
@@ -633,21 +633,23 @@ function App() {
   return (
     <>
       <HeaderOperator />
-      <div className="RevenueDashboard-search-bar">
-        <input 
-          type="text" 
-          value={filters.shipperCode}
-          onChange={(e) => handleSearch(e.target.value)}
-          placeholder="Tìm theo mã shipper..." 
-        />
-        <button onClick={() => handleSearch(filters.shipperCode)}>Tìm kiếm</button>
-      </div>
-      <Filters filters={filters} onChange={handleFilterChange} />
-      <OverviewPanel data={data.totals} revenueByDay={data.revenueByDay} />
-      <OrdersPanel filters={filters} />
-      <RegionRevenuePanel revenueByRegion={data.revenueByRegion} />
-      <ServiceRevenuePanel revenueByService={data.revenueByService} />
-      <PaymentsPanel payments={data.payments} />
+      <div style={{padding:"25px"}}>
+        <div className="RevenueDashboard-search-bar">
+          <input
+            type="text"
+            value={filters.shipperCode}
+            onChange={(e) => handleSearch(e.target.value)}
+            placeholder="Tìm theo mã shipper..."
+          />
+          <button onClick={() => handleSearch(filters.shipperCode)}>Tìm kiếm</button>
+        </div>
+        <Filters filters={filters} onChange={handleFilterChange} />
+        <OverviewPanel data={data.totals} revenueByDay={data.revenueByDay} />
+        <OrdersPanel filters={filters} />
+        <RegionRevenuePanel revenueByRegion={data.revenueByRegion} />
+        <ServiceRevenuePanel revenueByService={data.revenueByService} />
+        <PaymentsPanel payments={data.payments} />
+        </div>
       <Footer />
     </>
   );

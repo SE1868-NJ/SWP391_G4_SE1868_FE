@@ -30,7 +30,7 @@
   }
   
   .contact-management-table th {
-    background-color: #2c6e2f;
+    background-color: #2c9d32;
     color: white;
     font-weight: bold;
   }
@@ -46,7 +46,7 @@
   /* Style cho button */
   .contact-management-detail-button {
     padding: 8px 16px;
-    background-color: #2c6e2f;
+    background-color: #2c9d32;
     color: white;
     border: none;
     border-radius: 5px;
@@ -56,7 +56,7 @@
   }
   
   .contact-management-detail-button:hover {
-    background-color: #245c27;
+    background-color: #2c9d32;
   }
   
   .contact-management-detail-button.active {
@@ -69,7 +69,7 @@
   }
   
   .contact-management-confirm-button:hover {
-    background-color: #2e7232;
+    background-color: #2c9d32;
   }
   
   /* Style cho button hủy (màu đỏ) */

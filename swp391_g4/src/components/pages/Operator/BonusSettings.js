@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Snackbar, Alert } from '@mui/material';
 import '../../../styles/BonusSettings.css';
+import HeaderOperator from './HeaderOperator'; // Assuming this is the correct import path
 
 const BonusSettings = () => {
   const navigate = useNavigate();
@@ -32,7 +33,6 @@ const BonusSettings = () => {
 
   const handleSave = async () => {
     try {
-      // Lưu cài đặt mới
       await axios.put('http://localhost:4000/api/bonus/update-settings', {
         rating5Threshold: parseFloat(settings.rating5Threshold),
         rating5Bonus: parseFloat(settings.rating5Bonus),
@@ -41,19 +41,16 @@ const BonusSettings = () => {
         otherBonus: parseFloat(settings.otherBonus),
       });
   
-      // Gọi API tính lại bonus
       await axios.post('http://localhost:4000/api/bonus/recalculate', {
-        month: new Date().toISOString().slice(0, 7) // Lấy tháng hiện tại
+        month: new Date().toISOString().slice(0, 7),
       });
   
-      // Hiển thị Snackbar thành công
       setSnackbar({
         open: true,
         message: 'Cài đặt và tiền thưởng đã được cập nhật thành công!',
         severity: 'success',
       });
 
-      // Chuyển hướng sang trang danh sách thưởng sau 1.5 giây
       setTimeout(() => {
         navigate('/shipper-bonus-list');
       }, 1500);
@@ -68,7 +65,6 @@ const BonusSettings = () => {
   };
 
   const handleReset = () => {
-    // Đặt lại về giá trị mặc định
     const defaultSettings = {
       rating5Threshold: 60,
       rating5Bonus: 10000,
@@ -79,13 +75,13 @@ const BonusSettings = () => {
 
     setSettings(defaultSettings);
 
-    // Hiển thị Snackbar thông báo khôi phục
     setSnackbar({
       open: true,
       message: 'Đã khôi phục về cài đặt mặc định!',
       severity: 'info',
     });
   };
+
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -104,25 +100,28 @@ const BonusSettings = () => {
 
   return (
     <div>
-      <header className="BonusSetting-header">
-        <div className="BonusSetting-logo">
-          
-          <span>Quản Lý Tiền Thưởng của Shipper</span>
-        </div>
-        <nav>
-          <ul className="BonusSetting-nav-list">
-            <li><a href="http://localhost:3000/shipper-bonus-list">Danh sách thưởng</a></li>
-            <li><a href="#" className="active">Cài đặt</a></li>
-          </ul>
-        </nav>
-      </header>
+      <HeaderOperator />
+      <div style={{ textAlign: 'center', margin: '20px 0' }}>
+        <button 
+          className="bonus-settings-nav-button" 
+          onClick={() => window.location.href = "http://localhost:3000/shipper-bonus-list"}
+        >
+          Danh sách thưởng
+        </button>
+        <button 
+          className="bonus-settings-nav-button active" 
+          onClick={() => window.location.href = "http://localhost:3000/bonus-settings"}
+        >
+          Cài đặt
+        </button>
+      </div>
 
-      <main className="BonusSetting-main">
-        <div className="BonusSetting-settings-container">
+      <main className="bonus-settings-main">
+        <div className="bonus-settings-container">
           <h1>Cài Đặt Thưởng Shipper</h1>
           <p>Thiết lập các quy tắc tính tiền thưởng dựa trên đánh giá của shipper</p>
 
-          <div className="BonusSetting-form-group">
+          <div className="bonus-settings-form-group">
             <label htmlFor="rating5Threshold">Ngưỡng Rating 5 sao (%):</label>
             <input
               type="number"
@@ -136,7 +135,7 @@ const BonusSettings = () => {
             <small>Tỷ lệ đơn hàng đạt 5 sao để nhận mức thưởng cao nhất</small>
           </div>
 
-          <div className="BonusSetting-form-group">
+          <div className="bonus-settings-form-group">
             <label htmlFor="rating4And5Threshold">Ngưỡng Rating 4 + 5 sao (%):</label>
             <input
               type="number"
@@ -150,7 +149,7 @@ const BonusSettings = () => {
             <small>Tỷ lệ đơn hàng đạt 4 hoặc 5 sao để nhận mức thưởng trung bình</small>
           </div>
 
-          <div className="BonusSetting-form-group">
+          <div className="bonus-settings-form-group">
             <label htmlFor="rating5Bonus">Thưởng cho Rating 5 sao (VNĐ/đơn):</label>
             <input
               type="number"
@@ -163,7 +162,7 @@ const BonusSettings = () => {
             <small>Số tiền thưởng mỗi đơn nếu đạt ngưỡng Rating 5 sao</small>
           </div>
 
-          <div className="BonusSetting-form-group">
+          <div className="bonus-settings-form-group">
             <label htmlFor="rating4And5Bonus">Thưởng cho Rating 4 + 5 sao (VNĐ/đơn):</label>
             <input
               type="number"
@@ -176,7 +175,7 @@ const BonusSettings = () => {
             <small>Số tiền thưởng mỗi đơn nếu đạt ngưỡng Rating 4 + 5 sao</small>
           </div>
 
-          <div className="BonusSetting-form-group">
+          <div className="bonus-settings-form-group">
             <label htmlFor="otherBonus">Thưởng mặc định (VNĐ/đơn):</label>
             <input
               type="number"
@@ -189,18 +188,18 @@ const BonusSettings = () => {
             <small>Số tiền thưởng mỗi đơn nếu không đạt các ngưỡng trên</small>
           </div>
 
-          <div className="BonusSetting-actions">
-            <button className="BonusSetting-save" onClick={handleSave}>
+          <div className="bonus-settings-actions">
+            <button className="bonus-settings-save" onClick={handleSave}>
               <i className="fas fa-save"></i> Lưu cài đặt
             </button>
-            <button className="BonusSetting-reset" onClick={handleReset}>
+            <button className="bonus-settings-reset" onClick={handleReset}>
               <i className="fas fa-undo"></i> Khôi phục mặc định
             </button>
           </div>
         </div>
       </main>
-       {/* Snackbar thông báo */}
-       <Snackbar 
+
+      <Snackbar 
         open={snackbar.open} 
         autoHideDuration={3000} 
         onClose={handleCloseSnackbar}
@@ -214,7 +213,6 @@ const BonusSettings = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    
     </div>
   );
 };

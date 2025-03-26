@@ -26,7 +26,6 @@ const ManageShipper = () => {
   }, []);
 
   const fetchShippers = () => {
-    // Fetch data for each category
     axios
       .get("http://localhost:4000/api/pending-register-shippers")
       .then((response) => setPendingRegisterShippers(response.data))
@@ -50,7 +49,6 @@ const ManageShipper = () => {
 
     axios
       .get("http://localhost:4000/api/shippers")
-
       .then((response) => setApprovedShippers(response.data))
       .catch((error) =>
         console.error("Error fetching approved shippers:", error)
@@ -61,7 +59,7 @@ const ManageShipper = () => {
     setSearchQuery(query);
 
     if (query.trim() === "") {
-      fetchShippers(); // If search is empty, fetch all shippers
+      fetchShippers();
       return;
     }
 
@@ -188,7 +186,6 @@ const ManageShipper = () => {
     navigate("/admin-report-handling");
   };
 
-  // Function to highlight changes
   const highlightChange = (oldValue, newValue) => {
     if (oldValue !== newValue && newValue) {
       return { color: "#388e3c", fontWeight: "bold" };
@@ -452,35 +449,24 @@ const ManageShipper = () => {
         {/* Additional action buttons */}
         <div
           style={{
-            textAlign: "center",
             marginTop: "20px",
             display: "flex",
-            justifyContent: "center",
-            gap: "12px",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 20px",
           }}
         >
-          <button
-            className="manage-shipper-detail-button"
-            onClick={() => navigate("/shipper-detail")}
-          >
-            Duyệt chi tiết
-          </button>
-          <button
-            className="manage-shipper-detail-button"
-            onClick={handleRevenueDashboard}
-          >
-            Doanh thu
-          </button>
-          <button
-            className="manage-shipper-detail-button"
-            onClick={handleReportHandling}
-          >
-            Báo cáo sự cố
-          </button>
-        </div>
-
-        <div>
-          <BackButton />
+          <div style={{ flex: "0 0 auto" }}>
+            <BackButton />
+          </div>
+          <div style={{ flex: "1", textAlign: "center" }}>
+            <button
+              className="manage-shipper-detail-button"
+              onClick={() => navigate("/shipper-detail")}
+            >
+              Duyệt chi tiết
+            </button>
+          </div>
         </div>
 
         {/* Cancel Confirmation Popup */}

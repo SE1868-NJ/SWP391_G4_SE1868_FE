@@ -3,6 +3,13 @@ import axios from "axios";
 import HeaderOperator from "./HeaderOperator";
 import "../../../styles/ContactManagement.css";
 
+function Footer() {
+  return (
+    <footer className="RevenueDashboard-footer">
+      © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
+    </footer>
+  );
+}
 const ContactManagement = () => {
   const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
@@ -334,6 +341,7 @@ const ContactManagement = () => {
           </div>
         )}
       </div>
+      <Footer/>
     </div>
   );
 };

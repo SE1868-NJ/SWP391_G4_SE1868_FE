@@ -95,7 +95,7 @@ const HeaderOperator = () => {
         </button>
         <button
           className="nav-item"
-          onClick={() => handleNavigate("/admin-report-handling")}
+          onClick={() => handleNavigate("/incident-management")}
         >
           Sự cố
         </button>
@@ -107,13 +107,13 @@ const HeaderOperator = () => {
         </button>
         <button
           className="nav-item"
-          onClick={() => handleNavigate("/contact-manager")}
+          onClick={() => handleNavigate("/contact-management")}
         >
           Liên hệ
         </button>
         <button
           className="nav-item"
-          onClick={() => handleNavigate("/contact-management")}
+          onClick={() => handleNavigate("/shipper-bonus-list")}
         >
           Tài chính
         </button>

@@ -84,11 +84,8 @@ const CustomerOrderDetail = () => {
   };
 
   const formatCurrency = (amount) => {
-    // Chuyển đổi amount thành số nguyên để loại bỏ phần thập phân không cần thiết
     const roundedAmount = Math.floor(amount || 0);
-    // Định dạng số với dấu chấm phân cách hàng nghìn
     const formattedAmount = roundedAmount.toLocaleString("vi-VN");
-    // Thêm ký hiệu "đ" để đảm bảo hiển thị đúng
     return `${formattedAmount}đ`;
   };
 
@@ -128,12 +125,11 @@ const CustomerOrderDetail = () => {
     }
   };
 
-  // Hàm để hiển thị số lượng sao bằng biểu tượng
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <span
         key={index}
-        className={`star ${index < rating ? "filled" : ""}`}
+        className={`customer-orderdetail-star ${index < rating ? "customer-orderdetail-filled" : ""}`}
       >
         ★
       </span>
@@ -141,20 +137,20 @@ const CustomerOrderDetail = () => {
   };
 
   if (loading) return <p>Đang tải...</p>;
-  if (error) return <p className="error-message">{error}</p>;
+  if (error) return <p className="customer-orderdetail-error-message">{error}</p>;
   if (!order) return <p>Không tìm thấy đơn hàng.</p>;
 
   return (
-    <div className="customer-order-detail-container">
-      <div className="customer-order-detail-header">
-        <button className="back-button" onClick={() => navigate("/customer/orders")}>
+    <div className="customer-orderdetail-container">
+      <div className="customer-orderdetail-header">
+        <button className="customer-orderdetail-back-button" onClick={() => navigate("/customer/orders")}>
           <i className="fas fa-arrow-left"></i> Quay lại Đơn Hàng
         </button>
-        <div className="header-content">
+        <div className="customer-orderdetail-header-content">
           <h1>Đơn Hàng #{order.orderId}</h1>
           <p>
             <span role="img" aria-label="calendar">🗓️</span> Đặt hàng vào {formatDate(order.orderDate)} •{" "}
-            <span className={`order-status ${order.orderStatus.toLowerCase()}`}>
+            <span className={`customer-orderdetail-order-status ${order.orderStatus.toLowerCase()}`}>
               {order.orderStatus === "Pending"
                 ? "Đang Chờ"
                 : order.orderStatus === "InProgress"
@@ -167,41 +163,39 @@ const CustomerOrderDetail = () => {
         </div>
       </div>
 
-      <div className="main-content">
-        <div className="left-column">
-          {/* Trạng thái đơn hàng */}
-          <div className="order-status-section">
+      <div className="customer-orderdetail-main-content">
+        <div className="customer-orderdetail-left-column">
+          <div className="customer-orderdetail-order-status-section">
             <h2>Trạng Thái Đơn Hàng</h2>
-            <div className="status-timeline">
-              <div className={`status-item ${order.orderStatus !== "Cancelled" ? "completed" : ""}`}>
+            <div className="customer-orderdetail-status-timeline">
+              <div className={`customer-orderdetail-status-item ${order.orderStatus !== "Cancelled" ? "customer-orderdetail-completed" : ""}`}>
                 <span role="img" aria-label="box">📦</span>
                 <p>Đơn Hàng Đặt: {formatDate(order.orderDate)}</p>
               </div>
-              <div className={`status-item ${order.orderStatus === "InProgress" || order.orderStatus === "Delivered" ? "completed" : ""}`}>
+              <div className={`customer-orderdetail-status-item ${order.orderStatus === "InProgress" || order.orderStatus === "Delivered" ? "customer-orderdetail-completed" : ""}`}>
                 <span role="img" aria-label="truck">🚚</span>
                 <p>Đang Giao: {order.estimatedDeliveryTime ? formatDate(order.estimatedDeliveryTime) : "Chưa xác định"}</p>
               </div>
-              <div className={`status-item ${order.orderStatus === "Delivered" ? "completed" : ""}`}>
+              <div className={`customer-orderdetail-status-item ${order.orderStatus === "Delivered" ? "customer-orderdetail-completed" : ""}`}>
                 <span role="img" aria-label="check">✅</span>
                 <p>Đã Giao: {order.actualDeliveryTime ? formatDate(order.actualDeliveryTime) : "Đang chờ giao"}</p>
               </div>
             </div>
           </div>
 
-          {/* Danh sách sản phẩm */}
-          <div className="order-items-section">
+          <div className="customer-orderdetail-order-items-section">
             <h2>Sản Phẩm Đặt Hàng</h2>
             {Array.isArray(order.products) && order.products.length > 0 ? (
               order.products.map((product, index) => (
-                <div key={index} className="order-item">
-                  <div className="order-item-details">
+                <div key={index} className="customer-orderdetail-order-item">
+                  <div className="customer-orderdetail-order-item-details">
                     <p>
                       <span role="img" aria-label="package">📦</span> {product.ProductName || "Không có tên sản phẩm"}
                     </p>
                     <p>Số lượng: {product.Quantity || 0}</p>
                     <p>{formatCurrency(product.Price)}</p>
                   </div>
-                  <div className="order-item-total">
+                  <div className="customer-orderdetail-order-item-total">
                     <p>{formatCurrency((product.Quantity || 0) * (product.Price || 0))}</p>
                   </div>
                 </div>
@@ -211,8 +205,7 @@ const CustomerOrderDetail = () => {
             )}
           </div>
 
-          {/* Thông tin giao hàng */}
-          <div className="delivery-info-section">
+          <div className="customer-orderdetail-delivery-info-section">
             <h2>Thông Tin Giao Hàng</h2>
             <p>
               <span role="img" aria-label="location">📍</span> Địa Chỉ Giao Hàng: {order.deliveryAddress}
@@ -223,10 +216,9 @@ const CustomerOrderDetail = () => {
           </div>
         </div>
 
-        <div className="right-column">
-          {/* Thông tin shipper */}
+        <div className="customer-orderdetail-right-column">
           {(order.orderStatus === "InProgress" || order.orderStatus === "Delivered") && order.shipper && (
-            <div className="shipper-info-section">
+            <div className="customer-orderdetail-shipper-info-section">
               <h2>Thông Tin Shipper</h2>
               <p>
                 <span role="img" aria-label="person">👤</span> Tên: {order.shipper.FullName}
@@ -240,65 +232,63 @@ const CustomerOrderDetail = () => {
             </div>
           )}
 
-          {/* Tổng thanh toán */}
-          <div className="payment-summary-section">
+          <div className="customer-orderdetail-payment-summary-section">
             <h2>Tổng Thanh Toán</h2>
-            <div className="payment-summary-item">
+            <div className="customer-orderdetail-payment-summary-item">
               <p>Tổng Tiền Hàng</p>
               <p>{formatCurrency(order.subtotal)}</p>
             </div>
-            <div className="payment-summary-item">
+            <div className="customer-orderdetail-payment-summary-item">
               <p>Phí Vận Chuyển</p>
               <p>{formatCurrency(order.shippingFee)}</p>
             </div>
-            <div className="payment-summary-item total">
+            <div className="customer-orderdetail-payment-summary-item customer-orderdetail-total">
               <p><strong>TỔNG CỘNG</strong></p>
               <p><strong>{formatCurrency(order.totalAmount)}</strong></p>
             </div>
           </div>
 
-          {/* Phần đánh giá (hiển thị nếu đơn hàng đã giao) */}
           {order.orderStatus === "Delivered" && (
-            <div className="rating-section">
+            <div className="customer-orderdetail-rating-section">
               <h2>Đánh Giá Shipper</h2>
               {existingRating ? (
-                <div className="existing-rating">
+                <div className="customer-orderdetail-existing-rating">
                   <p>
                     <strong>Đánh giá của bạn:</strong>{" "}
-                    <span className="star-rating">{renderStars(existingRating.rating)}</span>
+                    <span className="customer-orderdetail-star-rating">{renderStars(existingRating.rating)}</span>
                   </p>
                   {existingRating.feedback && (
                     <p>
                       <strong>Nhận xét:</strong>{" "}
-                      <span className="feedback-text">{existingRating.feedback}</span>
+                      <span className="customer-orderdetail-feedback-text">{existingRating.feedback}</span>
                     </p>
                   )}
                   <p>
                     <strong>Thời gian đánh giá:</strong>{" "}
-                    <span className="feedback-text">{formatDate(existingRating.createdAt)}</span>
+                    <span className="customer-orderdetail-feedback-text">{formatDate(existingRating.createdAt)}</span>
                   </p>
                 </div>
               ) : (
-                <div className="rating-form">
-                  <div className="star-rating">
+                <div className="customer-orderdetail-rating-form">
+                  <div className="customer-orderdetail-star-rating">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span
                         key={star}
-                        className={`star ${rating >= star ? "filled" : ""}`}
+                        className={`customer-orderdetail-star ${rating >= star ? "customer-orderdetail-filled" : ""}`}
                         onClick={() => handleRatingChange(star)}
                       >
                         ★
                       </span>
                     ))}
                   </div>
-                  {ratingError && <p className="error-message">{ratingError}</p>}
+                  {ratingError && <p className="customer-orderdetail-error-message">{ratingError}</p>}
                   <textarea
                     placeholder="Nhập nhận xét của bạn (không bắt buộc)"
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
                     rows="3"
                   />
-                  <button className="submit-rating-button" onClick={handleSubmitRating}>
+                  <button className="customer-orderdetail-submit-rating-button" onClick={handleSubmitRating}>
                     Gửi Đánh Giá
                   </button>
                 </div>

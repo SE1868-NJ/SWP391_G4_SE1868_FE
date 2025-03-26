@@ -4,6 +4,17 @@ import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { Search, Download, FileText, Filter, CheckCircle, Clock, AlertTriangle, Users } from 'lucide-react';
 import axios from 'axios';
 import IncidentManagementExportPopup from '../Operator/IncidenManagementExportPopup';
+import HeaderOperator from './HeaderOperator';
+
+
+function Footer() {
+  return (
+    <footer className="RevenueDashboard-footer">
+      © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
+    </footer>
+  );
+}
+
 
 const IncidentManagement = () => {
   // State for incidents data
@@ -15,7 +26,7 @@ const IncidentManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(10);
-  
+
   // State for popup
   const [showPopup, setShowPopup] = useState(false);
   const [popupType, setPopupType] = useState('success');
@@ -144,11 +155,11 @@ const IncidentManagement = () => {
     fetchIncidents();
     fetchSummaryStats();
   }, [statusFilter, searchTerm, currentPage, limit]);
-  
+
   useEffect(() => {
     fetchSummaryStats();
   }, []);
-  
+
   // Load statistics when tab changes
   useEffect(() => {
     if (activeTab === 'stats') {
@@ -175,10 +186,10 @@ const IncidentManagement = () => {
 
   const handleExport = async (format) => {
     if (isExporting) return; // Prevent multiple export requests
-    
+
     setIsExporting(true);
     showExportPopup('success', `Đang xuất báo cáo dạng ${format.toUpperCase()}. Vui lòng đợi...`);
-    
+
     try {
       // Lấy dữ liệu thống kê cần thiết cho báo cáo
       const incidentsResponse = await axios.get('http://localhost:4000/api/incidents', {
@@ -186,13 +197,13 @@ const IncidentManagement = () => {
           limit: 1000 // Lấy số lượng lớn bản ghi để xuất báo cáo đầy đủ
         }
       });
-      
+
       const statsResponse = await axios.get('http://localhost:4000/api/incidents/summary-stats');
       const typeStatsResponse = await axios.get('http://localhost:4000/api/incidents/type-stats');
       const timeStatsResponse = await axios.get('http://localhost:4000/api/incidents/time-stats', {
         params: { days: 30 } // Lấy dữ liệu 30 ngày gần nhất cho báo cáo
       });
-      
+
       // Gửi request xuất báo cáo
       const response = await axios.post(
         `http://localhost:4000/api/export-report/${format}`,
@@ -206,24 +217,24 @@ const IncidentManagement = () => {
         },
         { responseType: 'blob' }
       );
-      
+
       // Tạo URL cho file blob và tải xuống
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      
+
       // Đặt tên file
       const date = new Date().toISOString().split('T')[0];
       link.setAttribute('download', `bao-cao-su-co-${date}.${format}`);
-      
+
       // Thêm vào DOM, kích hoạt sự kiện click và xóa
       document.body.appendChild(link);
       link.click();
       link.remove();
-      
+
       // Giải phóng URL đã tạo
       window.URL.revokeObjectURL(url);
-      
+
       // Hiển thị thông báo thành công
       showExportPopup('success', `Xuất báo cáo dạng ${format.toUpperCase()} thành công!`);
     } catch (error) {
@@ -246,303 +257,301 @@ const IncidentManagement = () => {
   };
 
   return (
-    <div className="incident_management">
-      <header className="incident_management_header">
-        <h1>Quản lý Báo Cáo Sự Cố</h1>
-        <div className="incident_management_user-info">
-          <span>Operator: Admin</span>
-          <div className="incident_management_avatar"></div>
+    <div>
+      <HeaderOperator />
+      <div style={{padding:"25px"}}>
+        <h1 style={{ marginTop: "20px", color:"rgb(44, 110, 47)" }}>Quản lý Báo Cáo Sự Cố</h1>
+        <div className="incident_management_tabs">
+
+          <button
+            className={`incident_management_tab ${activeTab === 'list' ? 'active' : ''}`}
+            onClick={() => handleTabChange('list')}
+          >
+            <AlertTriangle size={16} />
+            Danh sách sự cố
+          </button>
+          <button
+            className={`incident_management_tab ${activeTab === 'stats' ? 'active' : ''}`}
+            onClick={() => handleTabChange('stats')}
+          >
+            <FileText size={16} />
+            Báo cáo & Thống kê
+          </button>
         </div>
-      </header>
 
-      <div className="incident_management_tabs">
-        <button
-          className={`incident_management_tab ${activeTab === 'list' ? 'active' : ''}`}
-          onClick={() => handleTabChange('list')}
-        >
-          <AlertTriangle size={16} />
-          Danh sách sự cố
-        </button>
-        <button
-          className={`incident_management_tab ${activeTab === 'stats' ? 'active' : ''}`}
-          onClick={() => handleTabChange('stats')}
-        >
-          <FileText size={16} />
-          Báo cáo & Thống kê
-        </button>
-      </div>
-
-      {activeTab === 'list' && (
-        <div className="incident_management_list-container">
-          <div className="incident_management_filters">
-            <div className="incident_management_search-bar">
-              <Search size={18} />
-              <input
-                type="text"
-                placeholder="Tìm kiếm theo tên shipper..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-            </div>
-            <div className="incident_management_status-filters">
-              <Filter size={18} />
-              <button
-                className={statusFilter === 'Tất cả' ? 'active' : ''}
-                onClick={() => handleStatusFilterChange('Tất cả')}
-              >
-                Tất cả
-              </button>
-              <button
-                className={statusFilter === 'Chưa xử lý' ? 'active' : ''}
-                onClick={() => handleStatusFilterChange('Chưa xử lý')}
-              >
-                Chưa xử lý
-              </button>
-              <button
-                className={statusFilter === 'Đang xử lý' ? 'active' : ''}
-                onClick={() => handleStatusFilterChange('Đang xử lý')}
-              >
-                Đang xử lý
-              </button>
-              <button
-                className={statusFilter === 'Đã xử lý' ? 'active' : ''}
-                onClick={() => handleStatusFilterChange('Đã xử lý')}
-              >
-                Đã xử lý
-              </button>
-              <button
-                className={statusFilter === 'Từ chối' ? 'active' : ''}
-                onClick={() => handleStatusFilterChange('Từ chối')}
-              >
-                Từ chối
-              </button>
-            </div>
-          </div>
-
-          <div className="incident_management_summary">
-            <div className="incident_management_summary-card">
-              <div className="incident_management_summary-icon total">
-                <AlertTriangle size={24} />
+        {activeTab === 'list' && (
+          <div className="incident_management_list-container">
+            <div className="incident_management_filters">
+              <div className="incident_management_search-bar">
+                <Search size={18} />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm theo tên shipper..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
               </div>
-              <div className="incident_management_summary-content">
-                <h3>Tổng số sự cố</h3>
-                <p>{summaryStats.totalIncidents}</p>
-              </div>
-            </div>
-            <div className="incident_management_summary-card">
-              <div className="incident_management_summary-icon pending">
-                <Clock size={24} />
-              </div>
-              <div className="incident_management_summary-content">
-                <h3>Đang xử lý</h3>
-                <p>{summaryStats.inProgressCount}</p>
-              </div>
-            </div>
-            <div className="incident_management_summary-card">
-              <div className="incident_management_summary-icon resolved">
-                <CheckCircle size={24} />
-              </div>
-              <div className="incident_management_summary-content">
-                <h3>Đã xử lý</h3>
-                <p>{summaryStats.resolvedCount}</p>
-              </div>
-            </div>
-            <div className="incident_management_summary-card">
-              <div className="incident_management_summary-icon shippers">
-                <Users size={24} />
-              </div>
-              <div className="incident_management_summary-content">
-                <h3>Shipper liên quan</h3>
-                <p>{summaryStats.totalShippers}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="incident_management_table-container">
-            <table className="incident_management_table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Shipper</th>
-                  <th>Loại sự cố</th>
-                  <th>Trạng thái</th>
-                  <th>Ngày báo cáo</th>
-                  <th>Người báo cáo</th>
-                  <th>Mức độ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredIncidents.map(incident => (
-                  <tr key={incident.id}>
-                    <td>#{incident.id}</td>
-                    <td>{incident.shipper}</td>
-                    <td>{incident.type}</td>
-                    <td>
-                      <span className={`incident_management_status-badge ${incident.status.replace(/\s+/g, '-').toLowerCase()}`}>
-                        {incident.status}
-                      </span>
-                    </td>
-                    <td>{incident.date}</td>
-                    <td>{incident.reportedBy}</td>
-                    <td>{incident.severity}</td>
-                  </tr>
-                ))}
-                {filteredIncidents.length === 0 && (
-                  <tr>
-                    <td colSpan="8" className="incident_management_no-data">Không có dữ liệu</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          <div className="incident_management_actions">
-            <button
-              className="incident_management_action-btn"
-              onClick={() => handleViewDetails()}
-            >
-              Chi tiết & Điều chỉnh sự cố
-            </button>
-          </div>
-          <div className="incident_management_pagination">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              &laquo;
-            </button>
-
-            {/* Generate page buttons */}
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              // Show pages around current page
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
-
-              return (
+              <div className="incident_management_status-filters">
+                <Filter size={18} />
                 <button
-                  key={pageNum}
-                  className={currentPage === pageNum ? 'active' : ''}
-                  onClick={() => handlePageChange(pageNum)}
+                  className={statusFilter === 'Tất cả' ? 'active' : ''}
+                  onClick={() => handleStatusFilterChange('Tất cả')}
                 >
-                  {pageNum}
+                  Tất cả
                 </button>
-              );
-            })}
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              &raquo;
-            </button>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'stats' && (
-        <div className="incident_management_stats-container">
-          <div className="incident_management_stats-header">
-            <h2>Báo cáo & Thống kê</h2>
-            <div className="incident_management_export-buttons">
-              <button 
-                className="incident_management_export-btn" 
-                onClick={() => handleExport('xlsx')}
-                disabled={isExporting}
-              >
-                <Download size={16} />
-                Xuất Excel
-              </button>
-              <button 
-                className="incident_management_export-btn" 
-                onClick={() => handleExport('pdf')}
-                disabled={isExporting}
-              >
-                <Download size={16} />
-                Xuất PDF
-              </button>
-            </div>
-          </div>
-
-          <div className="incident_management_stats-summary">
-            <div className="incident_management_stats-card">
-              <h3>Tỷ lệ xử lý thành công</h3>
-              <p className="incident_management_stats-value">{summaryStats.successRate}%</p>
-            </div>
-            <div className="incident_management_stats-card">
-              <h3>Thời gian xử lý trung bình</h3>
-              <p className="incident_management_stats-value">{summaryStats.avgResolutionDays} ngày</p>
-            </div>
-            <div className="incident_management_stats-card">
-              <h3>Sự cố nghiêm trọng</h3>
-              <p className="incident_management_stats-value">{summaryStats.severeCases}</p>
-            </div>
-            <div className="incident_management_stats-card">
-              <h3>Shipper có nhiều sự cố</h3>
-              <p className="incident_management_stats-value">{summaryStats.topShipper}</p>
-            </div>
-          </div>
-
-          <div className="incident_management_charts-container">
-            <div className="incident_management_chart-wrapper">
-              <h3>Sự cố theo loại</h3>
-              <div className="incident_management_chart-inner">
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={typeChartData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {typeChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+                <button
+                  className={statusFilter === 'Chưa xử lý' ? 'active' : ''}
+                  onClick={() => handleStatusFilterChange('Chưa xử lý')}
+                >
+                  Chưa xử lý
+                </button>
+                <button
+                  className={statusFilter === 'Đang xử lý' ? 'active' : ''}
+                  onClick={() => handleStatusFilterChange('Đang xử lý')}
+                >
+                  Đang xử lý
+                </button>
+                <button
+                  className={statusFilter === 'Đã xử lý' ? 'active' : ''}
+                  onClick={() => handleStatusFilterChange('Đã xử lý')}
+                >
+                  Đã xử lý
+                </button>
+                <button
+                  className={statusFilter === 'Từ chối' ? 'active' : ''}
+                  onClick={() => handleStatusFilterChange('Từ chối')}
+                >
+                  Từ chối
+                </button>
               </div>
             </div>
 
-            <div className="incident_management_chart-wrapper">
-              <h3>Sự cố theo shipper</h3>
-              <div className="incident_management_chart-inner">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={shipperChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="count" fill="#82ca9d" />
-                  </BarChart>
-                </ResponsiveContainer>
+            <div className="incident_management_summary">
+              <div className="incident_management_summary-card">
+                <div className="incident_management_summary-icon total">
+                  <AlertTriangle size={24} />
+                </div>
+                <div className="incident_management_summary-content">
+                  <h3>Tổng số sự cố</h3>
+                  <p>{summaryStats.totalIncidents}</p>
+                </div>
+              </div>
+              <div className="incident_management_summary-card">
+                <div className="incident_management_summary-icon pending">
+                  <Clock size={24} />
+                </div>
+                <div className="incident_management_summary-content">
+                  <h3>Đang xử lý</h3>
+                  <p>{summaryStats.inProgressCount}</p>
+                </div>
+              </div>
+              <div className="incident_management_summary-card">
+                <div className="incident_management_summary-icon resolved">
+                  <CheckCircle size={24} />
+                </div>
+                <div className="incident_management_summary-content">
+                  <h3>Đã xử lý</h3>
+                  <p>{summaryStats.resolvedCount}</p>
+                </div>
+              </div>
+              <div className="incident_management_summary-card">
+                <div className="incident_management_summary-icon shippers">
+                  <Users size={24} />
+                </div>
+                <div className="incident_management_summary-content">
+                  <h3>Shipper liên quan</h3>
+                  <p>{summaryStats.totalShippers}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="incident_management_table-container">
+              <table className="incident_management_table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Shipper</th>
+                    <th>Loại sự cố</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày báo cáo</th>
+                    <th>Người báo cáo</th>
+                    <th>Mức độ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredIncidents.map(incident => (
+                    <tr key={incident.id}>
+                      <td>#{incident.id}</td>
+                      <td>{incident.shipper}</td>
+                      <td>{incident.type}</td>
+                      <td>
+                        <span className={`incident_management_status-badge ${incident.status.replace(/\s+/g, '-').toLowerCase()}`}>
+                          {incident.status}
+                        </span>
+                      </td>
+                      <td>{incident.date}</td>
+                      <td>{incident.reportedBy}</td>
+                      <td>{incident.severity}</td>
+                    </tr>
+                  ))}
+                  {filteredIncidents.length === 0 && (
+                    <tr>
+                      <td colSpan="8" className="incident_management_no-data">Không có dữ liệu</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="incident_management_actions">
+              <button
+                className="incident_management_action-btn"
+                onClick={() => handleViewDetails()}
+              >
+                Chi tiết & Điều chỉnh sự cố
+              </button>
+            </div>
+            <div className="incident_management_pagination">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &laquo;
+              </button>
+
+              {/* Generate page buttons */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                // Show pages around current page
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    className={currentPage === pageNum ? 'active' : ''}
+                    onClick={() => handlePageChange(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                &raquo;
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'stats' && (
+          <div className="incident_management_stats-container">
+            <div className="incident_management_stats-header">
+              <h2>Báo cáo & Thống kê</h2>
+              <div className="incident_management_export-buttons">
+                <button
+                  className="incident_management_export-btn"
+                  onClick={() => handleExport('xlsx')}
+                  disabled={isExporting}
+                >
+                  <Download size={16} />
+                  Xuất Excel
+                </button>
+                <button
+                  className="incident_management_export-btn"
+                  onClick={() => handleExport('pdf')}
+                  disabled={isExporting}
+                >
+                  <Download size={16} />
+                  Xuất PDF
+                </button>
+              </div>
+            </div>
+
+            <div className="incident_management_stats-summary">
+              <div className="incident_management_stats-card">
+                <h3>Tỷ lệ xử lý thành công</h3>
+                <p className="incident_management_stats-value">{summaryStats.successRate}%</p>
+              </div>
+              <div className="incident_management_stats-card">
+                <h3>Thời gian xử lý trung bình</h3>
+                <p className="incident_management_stats-value">{summaryStats.avgResolutionDays} ngày</p>
+              </div>
+              <div className="incident_management_stats-card">
+                <h3>Sự cố nghiêm trọng</h3>
+                <p className="incident_management_stats-value">{summaryStats.severeCases}</p>
+              </div>
+              <div className="incident_management_stats-card">
+                <h3>Shipper có nhiều sự cố</h3>
+                <p className="incident_management_stats-value">{summaryStats.topShipper}</p>
+              </div>
+            </div>
+
+            <div className="incident_management_charts-container">
+              <div className="incident_management_chart-wrapper">
+                <h3>Sự cố theo loại</h3>
+                <div className="incident_management_chart-inner">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={typeChartData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {typeChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="incident_management_chart-wrapper">
+                <h3>Sự cố theo shipper</h3>
+                <div className="incident_management_chart-inner">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={shipperChartData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="count" fill="#82ca9d" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Export Popup */}
-      {showPopup && (
-        <IncidentManagementExportPopup 
-          type={popupType} 
-          message={popupMessage} 
-          onClose={closeExportPopup} 
-        />
-      )}
+        {/* Export Popup */}
+        {showPopup && (
+          <IncidentManagementExportPopup
+            type={popupType}
+            message={popupMessage}
+            onClose={closeExportPopup}
+          />
+        )}
+      </div>
+      <Footer/>
     </div>
   );
 };

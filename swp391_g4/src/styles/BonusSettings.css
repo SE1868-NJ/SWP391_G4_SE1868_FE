@@ -1,7 +1,7 @@
 :root {
-  --primary: #4CAF50;
-  --primary-dark: #388E3C;
-  --primary-light: #C8E6C9;
+  --primary: #2c9d32; 
+  --primary-dark: #267d29; 
+  --primary-light: #c2e5c4; 
   --accent: #FF9800;
   --text: #212121;
   --secondary-text: #757575;
@@ -11,117 +11,104 @@
   --error: #F44336;
 }
 
-.BonusSetting-header {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.bonus-settings-nav-button {
   background-color: var(--primary);
   color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.BonusSetting-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.BonusSetting-nav-list {
-  display: flex;
-  list-style: none;
-  gap: 1.5rem;
-}
-
-.BonusSetting-nav-list li a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 0.5rem 0.8rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
   border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
   transition: background-color 0.3s;
 }
 
-.BonusSetting-nav-list li a:hover,
-.BonusSetting-nav-list li a.active {
+.bonus-settings-nav-button:hover,
+.bonus-settings-nav-button.active {
   background-color: var(--primary-dark);
 }
 
-.BonusSetting-main {
-  max-width: 1200px;
+.bonus-settings-main {
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background-color: var(--background);
 }
 
-.BonusSetting-settings-container {
+.bonus-settings-container {
   background-color: var(--card);
-  border-radius: 8px;
   padding: 2rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  max-width: 600px;
-  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.BonusSetting-settings-container h1 {
-  font-size: 1.75rem;
+.bonus-settings-container h1 {
+  color: var(--primary);
   margin-bottom: 0.5rem;
 }
 
-.BonusSetting-settings-container p {
+.bonus-settings-container p {
   color: var(--secondary-text);
   margin-bottom: 2rem;
 }
 
-.BonusSetting-form-group {
+.bonus-settings-form-group {
   margin-bottom: 1.5rem;
 }
 
-.BonusSetting-form-group label {
+.bonus-settings-form-group label {
   display: block;
-  font-weight: 600;
   margin-bottom: 0.5rem;
+  font-weight: 500;
   color: var(--text);
 }
 
-.BonusSetting-form-group input {
+.bonus-settings-form-group input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   border: 1px solid var(--divider);
   border-radius: 4px;
   font-size: 1rem;
-  color: var(--text);
+  transition: border-color 0.3s;
 }
 
-.BonusSetting-form-group input:focus {
-  border-color: var(--primary);
+.bonus-settings-form-group input:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(44, 157, 50, 0.3); /* Updated to match #2c9d32 */
 }
 
-.BonusSetting-form-group small {
+.bonus-settings-form-group small {
   display: block;
-  color: var(--secondary-text);
   margin-top: 0.25rem;
+  color: var(--secondary-text);
   font-size: 0.85rem;
 }
 
-.BonusSetting-actions {
+.bonus-settings-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 1rem;
   margin-top: 2rem;
+  justify-content: center;
 }
 
-.BonusSetting-save,
-.BonusSetting-reset {
+.bonus-settings-save,
+.bonus-settings-reset {
   padding: 0.75rem 1.5rem;
-  border-radius: 4px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -129,42 +116,35 @@
   transition: background-color 0.3s;
 }
 
-.BonusSetting-save {
+.bonus-settings-save {
   background-color: var(--primary);
   color: white;
 }
 
-.BonusSetting-save:hover {
+.bonus-settings-save:hover {
   background-color: var(--primary-dark);
 }
 
-.BonusSetting-reset {
-  background-color: white;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+.bonus-settings-reset {
+  background-color: var(--divider);
+  color: var(--text);
 }
 
-.BonusSetting-reset:hover {
-  background-color: var(--primary-light);
+.bonus-settings-reset:hover {
+  background-color: #a0a0a0; /* Slightly darker than --divider */
 }
 
 @media (max-width: 768px) {
-  .BonusSetting-main {
+  .bonus-settings-main {
     padding: 1rem;
   }
 
-  .BonusSetting-settings-container {
-    padding: 1.5rem;
-  }
-
-  .BonusSetting-actions {
+  .bonus-settings-actions {
     flex-direction: column;
-    gap: 0.75rem;
   }
 
-  .BonusSetting-save,
-  .BonusSetting-reset {
+  .bonus-settings-save,
+  .bonus-settings-reset {
     width: 100%;
-    justify-content: center;
   }
 }

@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/AdminReportHandling.css";
 import HeaderOperator from "./HeaderOperator";
-
+function Footer() {
+  return (
+    <footer className="RevenueDashboard-footer">
+      © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
+    </footer>
+  );
+}
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);
   const [shipperReports, setShipperReports] = useState([]);
@@ -57,19 +63,19 @@ const AdminReportHandling = () => {
   return (
     <div className="admin-report-page">
       <div className="admin-report-header">
-        <HeaderOperator/>
+        <HeaderOperator />
       </div>
 
       <div className="report-container-wrapper">
         {/* Tab buttons */}
         <div className="report-tabs">
-          <button 
+          <button
             className={`tab-button ${activeTab === "order" ? "active" : ""}`}
             onClick={() => setActiveTab("order")}
           >
             Báo cáo sự cố đơn hàng
           </button>
-          <button 
+          <button
             className={`tab-button ${activeTab === "shipper" ? "active" : ""}`}
             onClick={() => setActiveTab("shipper")}
           >
@@ -189,6 +195,7 @@ const AdminReportHandling = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
