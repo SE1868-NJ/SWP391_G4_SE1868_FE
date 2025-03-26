@@ -169,8 +169,8 @@ export default function FinanceManagementPage() {
 
     // Kiểm tra xem orderId đã được xử lý trước đó chưa
     const processedOrders = JSON.parse(localStorage.getItem('processedOrders') || '[]');
-    if (resultCode === "0" && extraData && !isProcessing && !processedOrders.includes(orderId)) {
-      setIsProcessing(true);
+    if (resultCode === "0" && extraData && orderId && !processedOrders.includes(orderId) && !isProcessing) {
+            setIsProcessing(true);
       const decodedExtraData = JSON.parse(atob(extraData));
       const { depositAmount } = decodedExtraData;
       setDepositAmount(depositAmount);
