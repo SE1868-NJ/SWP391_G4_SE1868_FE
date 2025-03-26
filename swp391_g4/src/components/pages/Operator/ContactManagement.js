@@ -8,10 +8,10 @@ const ContactManagement = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [responseMessage, setResponseMessage] = useState("");
   const [message, setMessage] = useState("");
-  const [activeTable, setActiveTable] = useState("pending"); // Trạng thái để chuyển đổi giữa 2 bảng
-  const [selectedDetailContact, setSelectedDetailContact] = useState(null); // Trạng thái để hiển thị popup chi tiết
+  const [activeTable, setActiveTable] = useState("pending");
+  const [selectedDetailContact, setSelectedDetailContact] = useState(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // Thêm trạng thái cho popup thành công
 
-  // Lấy danh sách liên hệ khi component được mount
   useEffect(() => {
     fetchContacts();
   }, []);
@@ -39,10 +39,10 @@ const ContactManagement = () => {
         { responseMessage }
       );
       if (response.data.success) {
-        setMessage("Phản hồi thành công!");
+        setShowSuccessPopup(true); // Hiển thị popup thành công
         setSelectedContact(null);
         setResponseMessage("");
-        fetchContacts(); // Cập nhật lại danh sách
+        fetchContacts();
       } else {
         setMessage(response.data.message);
       }
@@ -63,7 +63,10 @@ const ContactManagement = () => {
     setSelectedDetailContact(null);
   };
 
-  // Lọc danh sách liên hệ theo trạng thái
+  const handleCloseSuccessPopup = () => {
+    setShowSuccessPopup(false);
+  };
+
   const pendingContacts = contacts.filter(
     (contact) => contact.status === "Pending"
   );
@@ -73,12 +76,10 @@ const ContactManagement = () => {
 
   return (
     <div>
-      {/* Thêm HeaderOperator */}
       <div className="contact-management-header">
         <HeaderOperator />
       </div>
 
-      {/* Tiêu đề trang */}
       <div
         className="contact-management-namepage"
         style={{ marginTop: "30px", color: "#2c6e2f" }}
@@ -86,9 +87,7 @@ const ContactManagement = () => {
         <h1>Quản lý liên hệ</h1>
       </div>
 
-      {/* Nội dung chính */}
       <div className="contact-management-container" style={{ padding: "20px" }}>
-        {/* Thông báo */}
         {message && (
           <p
             className="contact-management-message"
@@ -100,7 +99,6 @@ const ContactManagement = () => {
           </p>
         )}
 
-        {/* Nút chuyển đổi giữa 2 bảng */}
         <div
           style={{
             textAlign: "center",
@@ -128,7 +126,6 @@ const ContactManagement = () => {
           </button>
         </div>
 
-        {/* Bảng "Chưa duyệt" */}
         {activeTable === "pending" && (
           <div>
             <h2>Danh sách liên hệ chưa duyệt</h2>
@@ -178,7 +175,6 @@ const ContactManagement = () => {
           </div>
         )}
 
-        {/* Bảng "Đã duyệt" */}
         {activeTable === "resolved" && (
           <div>
             <h2>Danh sách liên hệ đã duyệt</h2>
@@ -228,7 +224,6 @@ const ContactManagement = () => {
           </div>
         )}
 
-        {/* Popup xử lý liên hệ */}
         {selectedContact && (
           <div className="contact-management-popup-overlay">
             <div
@@ -273,7 +268,6 @@ const ContactManagement = () => {
           </div>
         )}
 
-        {/* Popup chi tiết phản hồi */}
         {selectedDetailContact && (
           <div className="contact-management-popup-overlay">
             <div
@@ -307,6 +301,31 @@ const ContactManagement = () => {
                 <button
                   className="contact-management-detail-button contact-management-cancel-button"
                   onClick={handleCloseDetailPopup}
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Popup thành công */}
+        {showSuccessPopup && (
+          <div className="contact-management-popup-overlay">
+            <div
+              className="contact-management-form-container"
+              style={{ width: "100%", maxWidth: "500px" }}
+            >
+              <h3 style={{ marginBottom: "15px", color: "green" }}>
+                Gửi thành công!
+              </h3>
+              <p style={{ marginBottom: "20px" }}>
+                Phản hồi đã được gửi cho khách hàng.
+              </p>
+              <div className="contact-management-form-buttons">
+                <button
+                  className="contact-management-detail-button contact-management-confirm-button"
+                  onClick={handleCloseSuccessPopup}
                 >
                   Đóng
                 </button>
