@@ -25,6 +25,7 @@ export default function FinanceManagementPage() {
   const [selectedDepositAmount, setSelectedDepositAmount] = useState(null);
   const [showDepositConfirmation, setShowDepositConfirmation] = useState(false);
   const [showDepositSuccess, setShowDepositSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   // State cho rút tiền
   const [withdrawAmount, setWithdrawAmount] = useState("")
   const [selectedWithdrawAmount, setSelectedWithdrawAmount] = useState(null)
@@ -45,7 +46,7 @@ export default function FinanceManagementPage() {
     { text: "Liên hệ", path: "/shipper-contact" },
   ];
 
-  
+
   // Cập nhật useEffect để lấy dữ liệu ví và thông tin shipper
   useEffect(() => {
     const fetchWalletData = async () => {
@@ -138,6 +139,7 @@ export default function FinanceManagementPage() {
       );
 
       if (response.data.success) {
+        setSelectedDepositAmount(response.data.orderId);
         window.location.href = response.data.payUrl;
       } else {
         throw new Error(response.data.message || "Không thể khởi tạo thanh toán");
@@ -152,23 +154,27 @@ export default function FinanceManagementPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const resultCode = urlParams.get("resultCode");
     const extraData = urlParams.get("extraData");
-
-    if (resultCode === "0" && extraData) {
+    const orderId = urlParams.get("orderId");
+  
+    // Kiểm tra xem orderId đã được xử lý trước đó chưa
+    const processedOrders = JSON.parse(localStorage.getItem('processedOrders') || '[]');
+    if (resultCode === "0" && extraData && !isProcessing && !processedOrders.includes(orderId)) {
+      setIsProcessing(true);
       const decodedExtraData = JSON.parse(atob(extraData));
-      const { depositAmount } = decodedExtraData;
+      const { depositAmount, shipperId: redirectShipperId } = decodedExtraData;
       setDepositAmount(depositAmount);
-
+  
       const updateWallet = async () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.post(
-            `http://localhost:5000/api/shipper/${shipperId}/deposit`,
-            { amount: Number(depositAmount), isManualUpdate: true },
+            `http://localhost:5000/api/shipper/${redirectShipperId}/deposit`,
+            { amount: Number(depositAmount), isManualUpdate: true, orderId },
             {
               headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             }
           );
-
+  
           if (response.data.success) {
             setWalletData({
               ...walletData,
@@ -178,14 +184,21 @@ export default function FinanceManagementPage() {
             setShowDepositSuccess(true);
             setLastTransactionId(response.data.data.transactionId);
             setActiveTab("deposit");
+            window.history.replaceState({}, document.title, window.location.pathname);
+  
+            // Lưu orderId đã xử lý vào localStorage
+            processedOrders.push(orderId);
+            localStorage.setItem('processedOrders', JSON.stringify(processedOrders));
           }
         } catch (err) {
           setError(err.message || "Đã xảy ra lỗi khi cập nhật ví");
+        } finally {
+          setIsProcessing(false);
         }
       };
       updateWallet();
     }
-  }, [shipperId, navigate]);
+  }, [shipperId]); 
   const fetchTransactionHistory = async () => {
     try {
       setHistoryLoading(true)
@@ -386,14 +399,16 @@ export default function FinanceManagementPage() {
                 <th>Trạng thái</th>
                 <th>Mô tả</th>
                 <th>Mã tham chiếu</th>
+                <th>Số dư</th> 
               </tr>
             </thead>
             <tbody>
-              {transactionHistory.map((transaction) => (
+              {transactionHistory.transactions.map((transaction) => (
                 <tr
                   key={transaction.id}
-                  className={`FinancialManagement-transaction-row ${transaction.type} ${transaction.id === lastTransactionId ? "highlight" : ""
-                    }`}
+                  className={`FinancialManagement-transaction-row ${transaction.type} ${
+                    transaction.id === lastTransactionId ? "highlight" : ""
+                  }`}
                 >
                   <td>{formatDate(transaction.date)}</td>
                   <td>
@@ -414,12 +429,13 @@ export default function FinanceManagementPage() {
                       {transaction.status === "success"
                         ? "Thành công"
                         : transaction.status === "pending"
-                          ? "Đang xử lý"
-                          : "Thất bại"}
+                        ? "Đang xử lý"
+                        : "Thất bại"}
                     </span>
                   </td>
                   <td>{transaction.description}</td>
                   <td>{transaction.referenceId || "-"}</td>
+                  <td>{formatCurrency(transaction.balanceAfterTransaction)}</td> {/* Hiển thị số dư sau giao dịch */}
                 </tr>
               ))}
             </tbody>
@@ -456,9 +472,7 @@ export default function FinanceManagementPage() {
                 <div className="FinancialManagement-deposit-form">
                   <h2>Nạp tiền</h2>
                   <p>Nhập số tiền để nạp vào ví của bạn qua MoMo.</p>
-
                   {error && <div className="FinancialManagement-error-message">{error}</div>}
-
                   {showDepositSuccess ? (
                     <div className="FinancialManagement-success-message">
                       <div className="FinancialManagement-success-icon">
@@ -529,9 +543,7 @@ export default function FinanceManagementPage() {
                 <div className="FinancialManagement-withdrawal-form">
                   <h2>Rút tiền</h2>
                   <p>Nhập số tiền và chọn phương thức thanh toán để rút tiền từ ví của bạn.</p>
-
                   {error && <div className="FinancialManagement-error-message">{error}</div>}
-
                   {showWithdrawSuccess ? (
                     <div className="FinancialManagement-success-message">
                       <div className="FinancialManagement-success-icon">
@@ -548,21 +560,11 @@ export default function FinanceManagementPage() {
                       <h3>Xác nhận thông tin rút tiền</h3>
                       <div className="FinancialManagement-beneficiary-info FinancialManagement-withdraw-info">
                         <div className="FinancialManagement-beneficiary-details">
-                          <p>
-                            <strong>Số tài khoản:</strong> {shipperData?.BankAccountNumber || "Chưa cập nhật"}
-                          </p>
-                          <p>
-                            <strong>Ngân hàng:</strong> {shipperData?.BankName || "Chưa cập nhật"}
-                          </p>
-                          <p>
-                            <strong>Chủ tài khoản:</strong> {shipperData?.FullName || "Chưa cập nhật"}
-                          </p>
-                          <p>
-                            <strong>Số tiền cần rút:</strong> {formatCurrency(Number(withdrawAmount))}
-                          </p>
-                          <p>
-                          <strong>Phương thức thanh toán:</strong> Chuyển khoản ngân hàng
-                          </p>
+                          <p><strong>Số tài khoản:</strong> {shipperData?.BankAccountNumber || "Chưa cập nhật"}</p>
+                          <p><strong>Ngân hàng:</strong> {shipperData?.BankName || "Chưa cập nhật"}</p>
+                          <p><strong>Chủ tài khoản:</strong> {shipperData?.FullName || "Chưa cập nhật"}</p>
+                          <p><strong>Số tiền cần rút:</strong> {formatCurrency(Number(withdrawAmount))}</p>
+                          <p><strong>Phương thức thanh toán:</strong> Chuyển khoản ngân hàng</p>
                         </div>
                       </div>
                       <div className="FinancialManagement-confirmation-actions">
@@ -610,10 +612,11 @@ export default function FinanceManagementPage() {
                           </p>
                         )}
                         {Number(withdrawAmount) > walletData.maxWithdrawal && (
-                          <p className="FinancialManagement-error-message">Số tiền rút tối đa là {formatCurrency(walletData.maxWithdrawal)}</p>
+                          <p className="FinancialManagement-error-message">
+                            Số tiền rút tối đa là {formatCurrency(walletData.maxWithdrawal)}
+                          </p>
                         )}
                       </div>
-
                       <div className="FinancialManagement-form-group">
                         <label>Phương thức thanh toán</label>
                         <div className="FinancialManagement-payment-methods">
@@ -645,7 +648,6 @@ export default function FinanceManagementPage() {
                           </div>
                         )}
                       </div>
-
                       <button
                         className="FinancialManagement-withdraw-button"
                         onClick={handleConfirmClick}
@@ -672,63 +674,58 @@ export default function FinanceManagementPage() {
               )}
             </div>
 
-            <div className="FinancialManagement-account-summary">
-              <h2>Tóm tắt tài khoản</h2>
-              <p>
-                {activeTab === "deposit"
-                  ? "Thông tin về số dư và hạn mức nạp tiền của bạn"
-                  : activeTab === "withdraw"
-                    ? "Thông tin về số dư và hạn mức rút tiền của bạn"
-                    : "Thông tin tài khoản của bạn"}
-              </p>
-
-              {loading ? (
-                <div className="FinancialManagement-loading">Đang tải dữ liệu...</div>
-              ) : (
-                <div>
-                  <div className="FinancialManagement-summary-item">
-                    <div className="FinancialManagement-summary-label">Số dư hiện tại</div>
-                    <div className="FinancialManagement-summary-value">{formatCurrency(walletData.totalWallet)}</div>
+            {/* Chỉ hiển thị tóm tắt tài khoản khi không ở tab lịch sử */}
+            {activeTab !== "history" && (
+              <div className="FinancialManagement-account-summary">
+                <h2>Tóm tắt tài khoản</h2>
+                <p>
+                  {activeTab === "deposit"
+                    ? "Thông tin về số dư và hạn mức nạp tiền của bạn"
+                    : "Thông tin về số dư và hạn mức rút tiền của bạn"}
+                </p>
+                {loading ? (
+                  <div className="FinancialManagement-loading">Đang tải dữ liệu...</div>
+                ) : (
+                  <div>
+                    <div className="FinancialManagement-summary-item">
+                      <div className="FinancialManagement-summary-label">Số dư hiện tại</div>
+                      <div className="FinancialManagement-summary-value">{formatCurrency(walletData.totalWallet)}</div>
+                    </div>
+                    {activeTab === "deposit" ? (
+                      <>
+                        <div className="FinancialManagement-summary-item">
+                          <div className="FinancialManagement-summary-label">Số tiền nạp tối thiểu</div>
+                          <div className="FinancialManagement-summary-value">{formatCurrency(walletData.minDeposit)}</div>
+                        </div>
+                        <div className="FinancialManagement-summary-item">
+                          <div className="FinancialManagement-summary-label">Số tiền nạp tối đa</div>
+                          <div className="FinancialManagement-summary-value">{formatCurrency(walletData.maxDeposit)}</div>
+                        </div>
+                        <div className="FinancialManagement-summary-item">
+                          <div className="FinancialManagement-summary-label">Thanh toán sẽ được xử lý trong:</div>
+                          <div className="FinancialManagement-summary-value">{walletData.ProcessingTime}</div>
+                        </div>
+                      </>
+                    ) : activeTab === "withdraw" ? (
+                      <>
+                        <div className="FinancialManagement-summary-item">
+                          <div className="FinancialManagement-summary-label">Số tiền rút tối thiểu</div>
+                          <div className="FinancialManagement-summary-value">{formatCurrency(walletData.minWithdrawal)}</div>
+                        </div>
+                        <div className="FinancialManagement-summary-item">
+                          <div className="FinancialManagement-summary-label">Số tiền rút tối đa</div>
+                          <div className="FinancialManagement-summary-value">{formatCurrency(walletData.maxWithdrawal)}</div>
+                        </div>
+                        <div className="FinancialManagement-summary-item">
+                          <div className="FinancialManagement-summary-label">Thanh toán sẽ được xử lý trong:</div>
+                          <div className="FinancialManagement-summary-value">{walletData.ProcessingTime}</div>
+                        </div>
+                      </>
+                    ) : null}
                   </div>
-
-                  {activeTab === "deposit" ? (
-                    <>
-                      <div className="FinancialManagement-summary-item">
-                        <div className="FinancialManagement-summary-label">Số tiền nạp tối thiểu</div>
-                        <div className="FinancialManagement-summary-value">{formatCurrency(walletData.minDeposit)}</div>
-                      </div>
-                      <div className="FinancialManagement-summary-item">
-                        <div className="FinancialManagement-summary-label">Số tiền nạp tối đa</div>
-                        <div className="FinancialManagement-summary-value">{formatCurrency(walletData.maxDeposit)}</div>
-                      </div>
-                      <div className="FinancialManagement-summary-item">
-                        <div className="FinancialManagement-summary-label">
-                          Thanh toán sẽ được xử lý trong:
-                        </div>
-                        <div className="FinancialManagement-summary-value">{walletData.ProcessingTime}</div>
-                      </div>
-                    </>
-                  ) : activeTab === "withdraw" ? (
-                    <>
-                      <div className="FinancialManagement-summary-item">
-                        <div className="FinancialManagement-summary-label">Số tiền rút tối thiểu</div>
-                        <div className="FinancialManagement-summary-value">{formatCurrency(walletData.minWithdrawal)}</div>
-                      </div>
-                      <div className="FinancialManagement-summary-item">
-                        <div className="FinancialManagement-summary-label">Số tiền rút tối đa</div>
-                        <div className="FinancialManagement-summary-value">{formatCurrency(walletData.maxWithdrawal)}</div>
-                      </div>
-                      <div className="FinancialManagement-summary-item">
-                        <div className="FinancialManagement-summary-label">
-                          Thanh toán sẽ được xử lý trong:
-                        </div>
-                        <div className="FinancialManagement-summary-value">{walletData.ProcessingTime}</div>
-                      </div>
-                    </>
-                  ) : null}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
 
         </div >

@@ -188,11 +188,16 @@ const ShipperAccount = () => {
     const fetchData = async () => {
       await fetchTotalWallet(); // Luôn cập nhật số dư ví
       if (selectedSection === "wallet") {
-        await fetchWalletData();
+        await fetchWalletData(); // Gọi mỗi khi vào tab "wallet"
       }
     };
     fetchData();
-  }, [selectedSection, startDate, endDate, searchDate]);
+  }, [selectedSection]); // Chỉ phụ thuộc vào selectedSection
+  useEffect(() => {
+    if (selectedSection === "wallet") {
+      fetchWalletData(); // Gọi lại khi thay đổi bộ lọc
+    }
+  }, [startDate, endDate, searchDate]);
   useEffect(() => {
     if (location.state && location.state.section) {
       setSelectedSection(location.state.section);
