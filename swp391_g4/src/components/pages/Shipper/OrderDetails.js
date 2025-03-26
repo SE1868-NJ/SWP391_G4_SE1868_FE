@@ -101,7 +101,7 @@ const OrderDetails = () => {
 
   // Tính phí vận chuyển
   const calculateShippingFee = () => {
-    const fee = Math.round((14000 + distance * 1000) / 10) * 10;
+    const fee = Math.round((15000 + distance * 1000) / 10) * 10;
     return fee;
   };
 

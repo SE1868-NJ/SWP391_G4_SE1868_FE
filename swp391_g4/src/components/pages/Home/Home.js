@@ -132,7 +132,7 @@ const Home = () => {
     const intervalId = setInterval(() => {
       setDirection("left");
       setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(intervalId);
   }, [bannerData.length]);

@@ -67,7 +67,7 @@ const CustomerOrderTracking = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("customerId");
     localStorage.removeItem("customerName");
-    navigate("/customer/login");
+    navigate("/home");
   };
 
   const formatDate = (dateString) => {
