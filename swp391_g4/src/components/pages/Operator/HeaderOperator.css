@@ -1,0 +1,84 @@
+.shipper-header {
+    font-family: Inter, -apple-system, Roboto, Helvetica, sans-serif;
+    color: white;
+    font-weight: 500;
+  }
+  
+  .navigation-items {
+    align-self: stretch;
+    display: flex;
+    align-items: stretch;
+    font-size: 14px;
+    letter-spacing: 0.32px;
+    flex-wrap: wrap;
+    color: white;
+  }
+  
+  .nav-item {
+    padding: 25px 20px;
+    line-height: 2;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  /* Hiệu ứng gạch chân khi hover */
+  .nav-item::after {
+    content: "";
+    position: absolute;
+    bottom: 10px; /* Đặt đường gạch chân cách bottom 10px */
+    left: 20px; /* Căn lề trái giống padding của button */
+    width: 0; /* Ban đầu chiều rộng là 0 */
+    height: 2px; /* Độ dày của đường gạch chân */
+    background-color: rgb(242, 246, 243); /* Màu của đường gạch chân */
+    transition: width 0.3s ease; /* Hiệu ứng chuyển đổi chiều rộng */
+  }
+  
+  .nav-item:hover::after {
+    width: calc(100% - 40px); /* Chiều rộng tối đa, trừ đi padding trái và phải (20px + 20px) */
+  }
+  
+  .nav-item:hover {
+    color: rgb(251, 252, 251); /* Chuyển màu chữ khi hover */
+  }
+  
+  /* Các style tùy chỉnh cho từng button */
+  .nav-item3 {
+    font-size: 15px; /* Giống item3 trong Header.js */
+  }
+  
+  .nav-item4 {
+    line-height: 1.7; /* Giống item4 trong Header.js */
+  }
+  
+  .nav-item5 {
+    padding: 27px 20px; /* Giống item5 trong Header.js */
+  }
+  
+  .nav-item6 {
+    padding: 27px 20px; /* Giữ giống item7 trong Header.js */
+    font-size: 15px; /* Giống item7 trong Header.js */
+    white-space: nowrap; /* Giữ giống item7 trong Header.js */
+    cursor: not-allowed; /* Button bị vô hiệu hóa */
+    opacity: 0.5; /* Button bị vô hiệu hóa */
+  }
+  
+  .nav-item6::after {
+    display: none; /* Ẩn hiệu ứng gạch chân cho button bị vô hiệu hóa */
+  }
+  
+  @media (max-width: 991px) {
+    .shipper-header {
+      max-width: 100%;
+      padding: 0 20px;
+    }
+  
+    .nav-item {
+      white-space: initial;
+    }
+  }

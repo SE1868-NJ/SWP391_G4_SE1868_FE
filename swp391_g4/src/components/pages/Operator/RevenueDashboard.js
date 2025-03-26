@@ -1381,7 +1381,7 @@ function App() {
       <div style={{padding: '35px'}}>
         <div className="RevenueDashboard-subheader">
           <div className="RevenueDashboard-title">
-            <h1 style={{ color: "#2ecc71" }}>Báo cáo doanh thu</h1>
+            <h1 style={{ color: "#2e7d32" }}>Báo cáo doanh thu</h1>
           </div>
           <SearchBar onSearch={handleSearch} />
         </div>
