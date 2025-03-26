@@ -437,6 +437,7 @@ const ManageShipper = () => {
                         <option value="Inactive">Inactive</option>
                         <option value="PendingUpdate">Pending Update</option>
                         <option value="PendingCancel">Pending Cancel</option>
+                        <option value="PendingDepositEscrow">PendingDepositEscrow</option>
                         <option value="Updated">Updated</option>
                       </select>
                     </td>

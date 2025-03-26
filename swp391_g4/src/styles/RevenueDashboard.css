@@ -537,3 +537,54 @@ footer a:hover {
 .RevenueDashboard-alert-close:hover {
   opacity: 1;
 }
+
+
+.RevenueDashboard-filters {
+  padding: 20px;
+  background: #fff;
+}
+
+.RevenueDashboard-filter-row {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.RevenueDashboard-filter-group {
+  display: flex;
+  flex-direction: column;
+  width: 140px; /* Giảm 30% chiều dài so với giả định 200px ban đầu */
+}
+
+.RevenueDashboard-filter-group label {
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.RevenueDashboard-filter-group select {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.RevenueDashboard-date-range {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.RevenueDashboard-date-range .RevenueDashboard-filter-group {
+  width: 140px; /* Đồng bộ với filter chính */
+}
+
+.RevenueDashboard-date-range input {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

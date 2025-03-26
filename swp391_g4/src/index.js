@@ -31,6 +31,7 @@ import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
 import ContactManagement from "./components/pages/Operator/ContactManagement";
 import IncidentManagement from "./components/pages/Operator/IncidentManagement";
 
+//Trang Shipper Account
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
 import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperInfo";
 import FinanceManagementPage from "./components/pages/ShipperAccount/FinanceManagementPage";
@@ -157,6 +158,7 @@ root.render(
             </PrivateRoute>
           }
         />
+        <Route path="/shipper-ranking" element={<ShipperRanking />} />
         <Route path="/orderdetail/:id" element={<OrderDetails />} />
         <Route
           path="/shipper-dashboard"
@@ -184,18 +186,16 @@ root.render(
        <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
        <Route path="/contact-management" element={<ContactManagement />} />
 
-        <Route path="/shipper-detail" element={<ShipperDetail />} />
-        <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
-        <Route path="/incident-management" element={<IncidentManagement />} />
-        {/* ** Shipper Ranking** */}
-        <Route
-          path="/shipper-ranking"
-          element={
-            <PrivateRoute>
-              <ShipperRanking />
-            </PrivateRoute>
-          }
-        />
+      <Route path="/shipper-detail" element={<ShipperDetail />} />
+      <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
+      <Route path="/incident-management" element={<IncidentManagement />} />
+      {/* ** Phan bao cao su co** */}
+      <Route path="/report-issue" element={<ReportIssue />} />
+      <Route path="/admin-report-handling" element={<AdminReportHandling />} />
+      <Route
+        path="/customer-report-tracking"
+        element={<CustomerReportTracking />}
+      />
 
       {/* ** Phan bao cao su co** */}
       <Route path="/report-issue" element={<ReportIssue />} />
@@ -220,3 +220,4 @@ root.render(
   </Router>
   </React.StrictMode>
 );
+
