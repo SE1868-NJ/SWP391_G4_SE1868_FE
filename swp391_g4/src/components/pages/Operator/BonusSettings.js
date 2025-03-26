@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Snackbar, Alert } from '@mui/material';
 import '../../../styles/BonusSettings.css';
 
 const BonusSettings = () => {
+  const navigate = useNavigate();
   const [settings, setSettings] = useState({
     rating5Threshold: 60,
     rating5Bonus: 10000,
@@ -29,6 +32,7 @@ const BonusSettings = () => {
 
   const handleSave = async () => {
     try {
+      // Lưu cài đặt mới
       await axios.put('http://localhost:4000/api/bonus/update-settings', {
         rating5Threshold: parseFloat(settings.rating5Threshold),
         rating5Bonus: parseFloat(settings.rating5Bonus),
@@ -36,29 +40,57 @@ const BonusSettings = () => {
         rating4And5Bonus: parseFloat(settings.rating4And5Bonus),
         otherBonus: parseFloat(settings.otherBonus),
       });
+  
+      // Gọi API tính lại bonus
+      await axios.post('http://localhost:4000/api/bonus/recalculate', {
+        month: new Date().toISOString().slice(0, 7) // Lấy tháng hiện tại
+      });
+  
+      // Hiển thị Snackbar thành công
       setSnackbar({
         open: true,
-        message: 'Cài đặt đã được cập nhật thành công!',
+        message: 'Cài đặt và tiền thưởng đã được cập nhật thành công!',
         severity: 'success',
       });
+
+      // Chuyển hướng sang trang danh sách thưởng sau 1.5 giây
+      setTimeout(() => {
+        navigate('/shipper-bonus-list');
+      }, 1500);
     } catch (error) {
       setSnackbar({
         open: true,
         message: 'Có lỗi xảy ra khi cập nhật cài đặt!',
         severity: 'error',
       });
+      console.error('Error updating settings:', error);
     }
   };
 
   const handleReset = () => {
-    setSettings({
+    // Đặt lại về giá trị mặc định
+    const defaultSettings = {
       rating5Threshold: 60,
       rating5Bonus: 10000,
       rating4And5Threshold: 60,
       rating4And5Bonus: 5000,
       otherBonus: 2000,
+    };
+
+    setSettings(defaultSettings);
+
+    // Hiển thị Snackbar thông báo khôi phục
+    setSnackbar({
+      open: true,
+      message: 'Đã khôi phục về cài đặt mặc định!',
+      severity: 'info',
     });
-    alert('Đã khôi phục về cài đặt mặc định');
+  };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
   };
 
   useEffect(() => {
@@ -167,6 +199,22 @@ const BonusSettings = () => {
           </div>
         </div>
       </main>
+       {/* Snackbar thông báo */}
+       <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={3000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    
     </div>
   );
 };

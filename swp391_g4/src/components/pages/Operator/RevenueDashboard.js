@@ -1044,7 +1044,7 @@ function FeesPanel({ fees }) {
 function Footer() {
   return (
     <footer>
-      © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
+      © 2025 EcoShipper | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
     </footer>
   );
 }
@@ -1181,7 +1181,6 @@ function App() {
       <RegionRevenuePanel revenueByRegion={data.revenueByRegion} />
       <ServiceRevenuePanel revenueByService={data.revenueByService} />
       <PaymentsPanel payments={data.payments} />
-      <FeesPanel fees={data.fees} />
       <Footer />
     </div>
   );

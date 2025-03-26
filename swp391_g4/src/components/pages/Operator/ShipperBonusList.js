@@ -17,7 +17,7 @@ const ShipperBonusList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedShipper, setSelectedShipper] = useState(null);
+  const [confirmationModal, setConfirmationModal] = useState(null);
   const [summaryData, setSummaryData] = useState({
     totalBonus: '0',
     shipperCount: 0,
@@ -74,26 +74,30 @@ const ShipperBonusList = () => {
       setLoading(false);
     }
   };
-
+  
   const handlePayBonus = async (shipper) => {
+    // Open confirmation modal
+    setConfirmationModal({
+      shipper: shipper,
+      isOpen: true
+    });
+  };
+
+  // Confirm payment process
+  const confirmPayment = async () => {
+    if (!confirmationModal || !confirmationModal.shipper) return;
+
+    const shipper = confirmationModal.shipper;
+    
     try {
-      // Add confirmation dialog
-      const confirmPayment = window.confirm(
-        `Bạn có chắc muốn thanh toán ${shipper.BonusAmount.toLocaleString()}đ cho shipper ${shipper.FullName}?`
-      );
-
-      if (!confirmPayment) {
-        return;  // Exit if user cancels
-      }
-
       setLoading(true);
       const response = await axios.post('http://localhost:4000/api/bonus/pay', {
         ShipperID: shipper.ShipperID,
         BonusAmount: shipper.BonusAmount,
         Month: selectedMonth
       });
-      console.log('Payment response:', response.data);
-      // Update local state to reflect payment
+      
+      // Update shipper data after successful payment
       const updatedShipperData = shipperData.map(s => 
         s.ShipperID === shipper.ShipperID 
           ? { ...s, Status: 'PAID' } 
@@ -101,7 +105,7 @@ const ShipperBonusList = () => {
       );
       setShipperData(updatedShipperData);
 
-      // Show success toast/modal
+      // Show success modal
       const paymentModal = document.createElement('div');
       paymentModal.className = 'payment-success-modal';
       paymentModal.innerHTML = `
@@ -120,10 +124,12 @@ const ShipperBonusList = () => {
         totalBonus: (parseFloat(prevSummary.totalBonus) - shipper.BonusAmount).toString()
       }));
 
+      // Close confirmation modal
+      setConfirmationModal(null);
+
     } catch (error) {
       console.error('Error paying bonus:', error);
       
-      // More detailed error handling
       const errorMessage = error.response?.data?.error || 
         error.message || 
         'Thanh toán không thành công';
@@ -143,6 +149,47 @@ const ShipperBonusList = () => {
       setLoading(false);
     }
   };
+
+  // Cancel payment and close modal
+  const cancelPayment = () => {
+    setConfirmationModal(null);
+  };
+
+  // Render confirmation modal
+  const renderConfirmationModal = () => {
+    if (!confirmationModal || !confirmationModal.isOpen) return null;
+
+    const { shipper } = confirmationModal;
+
+    return (
+      <div className="ShipperBonusList-confirmation-modal">
+        <div className="ShipperBonusList-confirmation-modal-content">
+          <h2>Xác Nhận Thanh Toán</h2>
+          <p>Bạn có chắc muốn thanh toán:</p>
+          <div className="ShipperBonusList-payment-details">
+            <p><strong>Shipper:</strong> {shipper.FullName}</p>
+            <p><strong>Số tiền:</strong> {shipper.BonusAmount.toLocaleString()}đ</p>
+            <p><strong>Tháng:</strong> {selectedMonth}</p>
+          </div>
+          <div className="ShipperBonusList-confirmation-modal-actions">
+            <button 
+              className="ShipperBonusList-confirm-btn" 
+              onClick={confirmPayment}
+            >
+              Xác Nhận
+            </button>
+            <button 
+              className="ShipperBonusList-cancel-btn" 
+              onClick={cancelPayment}
+            >
+              Hủy
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
 
   const handleExportExcel = async () => {
     try {
@@ -525,15 +572,15 @@ const ShipperBonusList = () => {
                     </td>
                     <td>{shipper.BonusAmount.toLocaleString()}đ</td>
                     <td>
-                      {shipper.Status === 'pending' ? (
+                      {shipper.Status.toLowerCase() === 'paid' ? (
+                        <span className="ShipperBonusList-paid-status">Đã thanh toán</span>
+                      ) : (
                         <button 
                           className="ShipperBonusList-pay-btn"
                           onClick={() => handlePayBonus(shipper)}
                         >
                           Thanh toán
                         </button>
-                      ) : (
-                        <span className="ShipperBonusList-paid-status">Đã thanh toán</span>
                       )}
                     </td>
                     
@@ -604,6 +651,7 @@ const ShipperBonusList = () => {
             <canvas id="ratingTrend"></canvas>
           </div>
         </div>
+        {renderConfirmationModal()}
       </main>
     </>
   );
