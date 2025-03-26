@@ -1,0 +1,89 @@
+.notification-bell-container {
+    position: relative;
+  }
+  
+  .notification-bell {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white; /* Đảm bảo chuông hiển thị trắng trên header gradient */
+    position: relative;
+  }
+  
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+  }
+  
+  .notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 10000; /* Đảm bảo luôn ở trên cùng */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Đặt chiều rộng cố định cho đẹp */
+    max-height: 400px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Thêm thanh cuộn nếu nhiều thông báo */
+  }
+  
+  /* Các style khác giữ nguyên */
+  .notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .notification-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .mark-all-read {
+    cursor: pointer;
+    color: #007bff;
+  }
+  
+  .mark-all-read:hover {
+    text-decoration: underline;
+  }
+  
+  .close-button {
+    cursor: pointer;
+  }
+  
+  .notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .notification-item.unread {
+    background: #f8f9fa;
+  }
+  
+  .notification-content {
+    margin-bottom: 5px;
+  }
+  
+  .timestamp {
+    font-size: 0.8rem;
+    color: #666;
+  }

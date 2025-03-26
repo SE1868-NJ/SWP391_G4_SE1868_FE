@@ -82,3 +82,35 @@
       white-space: initial;
     }
   }
+  .shipper-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .navigation-items {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-item {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-family: "Inter, -apple-system, Roboto, Helvetica, sans-serif";
+    font-weight: 500;
+    cursor: pointer;
+    padding: 10px 15px;
+    transition: background 0.3s;
+  }
+  
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+  }
+  
+  .nav-item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }

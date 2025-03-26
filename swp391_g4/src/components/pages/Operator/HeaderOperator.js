@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import NotificationBell from "./NotificationBell"; // Import NotificationBell
 import "./HeaderOperator.css"; // Import file CSS
 
 const HeaderOperator = () => {
@@ -17,16 +18,13 @@ const HeaderOperator = () => {
       className="shipper-header"
       style={{
         height: "100px",
-        background: "linear-gradient(to right, #18d04d, #3989d0)", // Gradient giống Header.js
-        boxShadow: "0px 4px 6px -1px rgba(0, 0, 0, 0.1)", // Shadow giống Header.js
+        background: "linear-gradient(to right, #18d04d, #3989d0)",
+        boxShadow: "0px 4px 6px -1px rgba(0, 0, 0, 0.1)",
         display: "flex",
         width: "100%",
         padding: "0 48px",
         alignItems: "center",
-        gap: "20px",
-        overflow: "hidden",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
+        justifyContent: "space-between", // Đảm bảo các phần tử được phân bố đều
       }}
     >
       {/* Phần bên trái: Logo và tiêu đề */}
@@ -34,12 +32,10 @@ const HeaderOperator = () => {
         <div
           className="shipper-icon-container"
           style={{
-            width: "100px", // Kích thước giống logo trong Header.js
+            width: "100px",
             height: "100px",
             alignSelf: "stretch",
-            margin: "auto 0",
             flexShrink: 0,
-            maxWidth: "100%",
             marginLeft: "50px",
           }}
         >
@@ -81,8 +77,16 @@ const HeaderOperator = () => {
         </div>
       </div>
 
-      {/* Phần bên phải: Các button điều hướng */}
-      <div className="navigation-items">
+      {/* Phần giữa: Các button điều hướng */}
+      <div
+        className="navigation-items"
+        style={{
+          display: "flex",
+          gap: "20px",
+          flexGrow: 1, // Cho phép phần này mở rộng để căn giữa
+          justifyContent: "center", // Căn giữa các button
+        }}
+      >
         <button
           className="nav-item"
           onClick={() => handleNavigate("/manage-shipper")}
@@ -96,26 +100,37 @@ const HeaderOperator = () => {
           Sự cố
         </button>
         <button
-          className="nav-item nav-item3"
+          className="nav-item"
           onClick={() => handleNavigate("/revenue-dashboard")}
         >
           Doanh thu
         </button>
         <button
-          className="nav-item nav-item4"
+          className="nav-item"
           onClick={() => handleNavigate("/contact-manager")}
         >
           Liên hệ
         </button>
         <button
-          className="nav-item nav-item5"
+          className="nav-item"
           onClick={() => handleNavigate("/contact-management")}
         >
           Tài chính
         </button>
-        <button className="nav-item nav-item6" disabled>
+        <button className="nav-item" disabled>
           {/* Để trống */}
         </button>
+      </div>
+
+      {/* Phần bên phải: Chuông thông báo */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginRight: "50px", // Tạo khoảng cách bên phải cho cân đối
+        }}
+      >
+        <NotificationBell />
       </div>
     </div>
   );
