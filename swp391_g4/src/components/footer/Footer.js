@@ -30,7 +30,7 @@ export const Footer = (props) => {
     <footer className={styles.footer}>
       <div
         className={styles.background}
-        style={{ backgroundImage: 'url("https://useless-gold-stingray.myfilebase.com/ipfs/QmXbGqSZv3MwHrfBTf5CN1L5qdDAFEhe8HwZ74Y5Tbb2Tj")', width: '99%' }}
+        style={{ backgroundImage: 'url("https://useless-gold-stingray.myfilebase.com/ipfs/QmXbGqSZv3MwHrfBTf5CN1L5qdDAFEhe8HwZ74Y5Tbb2Tj")', width: '92%' }}
       >
         <div className={styles.logoContainer}>
           <img

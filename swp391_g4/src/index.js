@@ -29,6 +29,7 @@ import EscrowDeposit from "./components/pages/Login/EscrowDeposit";
 import ManageShipper from "./components/pages/Operator/ManageShipper";
 import ShipperDetail from "./components/pages/Operator/ShipperDetail";
 import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
+import ContactManagement from "./components/pages/Operator/ContactManagement";
 import IncidentManagement from "./components/pages/Operator/IncidentManagement";
 
 import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
@@ -45,6 +46,8 @@ import CustomerReportTracking from "./components/pages/CustomerReportTracking";
 
 // Import controllers
 import ShipperRanking from "./components/pages/Shipper/ShipperRanking";
+
+import DeliveredOrderDetails from "./components/pages/Shipper/DeliveredOrderDetail";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -157,6 +160,10 @@ root.render(
           path="/shipper-dashboard"
           element={<Navigate to="/dashboard" />}
         />
+        <Route
+          path="/delivered-order/:id"
+          element={<DeliveredOrderDetails />}
+        />
 
         {/* ** Trang ShipperAccount** */}
         <Route
@@ -170,11 +177,10 @@ root.render(
         <Route path="/update-shipper-info" element={<UpdateShipperInfo />} />
         <Route path="/finance-management" element={<FinanceManagementPage />} />
 
-        {/* ** Trang Operator** */}
-        <Route path="/manage-shipper" element={<ManageShipper />} />
-        <Route path="/manage-shipper" element={<ManageShipper />} />
-        <Route path="/shipper-detail" element={<ShipperDetail />} />
-        <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
+       <Route path="/manage-shipper" element={<ManageShipper />} />
+       <Route path="/shipper-detail" element={<ShipperDetail />} />
+       <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
+       <Route path="/contact-management" element={<ContactManagement />} />
 
         <Route path="/shipper-detail" element={<ShipperDetail />} />
         <Route path="/revenue-dashboard" element={<RevenueDashboard />} />

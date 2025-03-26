@@ -4,7 +4,6 @@ import "../../../styles/ManageShipper.css";
 import moment from "moment";
 import BackButton from "../../buttons/BackButton";
 import { useNavigate } from "react-router-dom";
-import NotificationBell from "./NotificationBell";
 import HeaderOperator from "./HeaderOperator";
 
 const ManageShipper = () => {
@@ -122,28 +121,6 @@ const ManageShipper = () => {
           id,
           newStatus,
         });
-
-        // Thêm thông báo khi thay đổi trạng thái
-        const shipper = [
-          ...pendingRegisterShippers,
-          ...updatingShippers,
-          ...cancelingShippers,
-          ...approvedShippers,
-        ].find((s) => s.ShipperID === id);
-
-        // Tạo object thông báo
-        const notification = {
-          Title: "Thay Đổi Trạng Thái Shipper",
-          Message: `Shipper ${shipper.FullName} (ID: ${id}) đã được thay đổi trạng thái từ ${currentStatus} sang ${newStatus}.`,
-          Type: "info",
-        };
-
-        // Gửi thông báo lên server
-        await axios.post(
-          "http://localhost:5000/api/admin-notifications",
-          notification
-        );
-
         fetchShippers();
       } catch (error) {
         console.error("Error changing shipper status:", error);
@@ -175,7 +152,6 @@ const ManageShipper = () => {
       );
   };
 
-  // Thay thế hàm cũ bằng hàm mới tại đây
   const handleConfirmUpdate = async () => {
     if (!shipperUpdateDetails) return;
 
@@ -185,25 +161,11 @@ const ManageShipper = () => {
         newStatus: "Active",
       });
 
-      const notification = {
-        Title: "Cập Nhật Thông Tin Shipper",
-        Message: `Shipper ${shipperUpdateDetails.FullName} (ID: ${shipperUpdateDetails.ShipperID}) đã được cập nhật thông tin và chuyển sang trạng thái Active.`,
-        Type: "success",
-      };
-
-      await axios.post(
-        "http://localhost:5000/api/admin-notifications",
-        notification
-      );
-
       setShowUpdatePopup(false);
       setShipperUpdateDetails(null);
       fetchShippers();
     } catch (error) {
-      console.error(
-        "Error updating shipper account or sending notification:",
-        error
-      );
+      console.error("Error updating shipper account:", error);
     }
   };
 
@@ -239,7 +201,7 @@ const ManageShipper = () => {
       <div className="manage-shipper-header">
         <HeaderOperator />
       </div>
-      <div className="manage-shipper-namepage" style={{marginTop: "30px", color: "#2c6e2f"}}>
+      <div className="manage-shipper-namepage" style={{ marginTop: "30px", color: "#2c6e2f" }}>
         <h1>Quản lý danh sách Shipper</h1>
       </div>
       <div className="manage-shipper-container">
