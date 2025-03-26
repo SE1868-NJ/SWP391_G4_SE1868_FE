@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import axios from 'axios';
 import '../../../styles/ShipperBonusList.css';
@@ -12,6 +12,12 @@ const ShipperBonusList = () => {
   const [ratingFilter, setRatingFilter] = useState('all');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const bonusDistributionChartRef = useRef(null);
+  const ratingTrendChartRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [selectedShipper, setSelectedShipper] = useState(null);
   const [summaryData, setSummaryData] = useState({
     totalBonus: '0',
     shipperCount: 0,
@@ -28,8 +34,11 @@ const ShipperBonusList = () => {
           ratingFilter: ratingFilter 
         }
       });
-      
-      setShipperData(response.data.data);
+      const shipperDataWithStatus = response.data.data.map(shipper => ({
+        ...shipper,
+        Status: shipper.Status || 'pending'
+      }));
+      setShipperData(shipperDataWithStatus);
       setSummaryData(response.data.summary);
     } catch (error) {
       console.error('Error fetching bonus data:', error);
@@ -66,15 +75,70 @@ const ShipperBonusList = () => {
     }
   };
 
-  const handleCalculateBonus = async () => {
-    setLoading(true);
-    setError(null);
+  const handlePayBonus = async (shipper) => {
     try {
-      await axios.post('http://localhost:4000/api/bonus/calculate', { month: selectedMonth });
-      fetchBonusData();
+      // Add confirmation dialog
+      const confirmPayment = window.confirm(
+        `Bạn có chắc muốn thanh toán ${shipper.BonusAmount.toLocaleString()}đ cho shipper ${shipper.FullName}?`
+      );
+
+      if (!confirmPayment) {
+        return;  // Exit if user cancels
+      }
+
+      setLoading(true);
+      const response = await axios.post('http://localhost:4000/api/bonus/pay', {
+        ShipperID: shipper.ShipperID,
+        BonusAmount: shipper.BonusAmount,
+        Month: selectedMonth
+      });
+      console.log('Payment response:', response.data);
+      // Update local state to reflect payment
+      const updatedShipperData = shipperData.map(s => 
+        s.ShipperID === shipper.ShipperID 
+          ? { ...s, Status: 'PAID' } 
+          : s
+      );
+      setShipperData(updatedShipperData);
+
+      // Show success toast/modal
+      const paymentModal = document.createElement('div');
+      paymentModal.className = 'payment-success-modal';
+      paymentModal.innerHTML = `
+        <div class="modal-content">
+          <h2>Thanh toán thành công</h2>
+          <p>Đã chuyển ${shipper.BonusAmount.toLocaleString()}đ cho shipper ${shipper.FullName}</p>
+          <p>Mã giao dịch: ${response.data.transactionId}</p>
+          <button onclick="this.closest('.payment-success-modal').remove()">Đóng</button>
+        </div>
+      `;
+      document.body.appendChild(paymentModal);
+
+      // Update summary data
+      setSummaryData(prevSummary => ({
+        ...prevSummary,
+        totalBonus: (parseFloat(prevSummary.totalBonus) - shipper.BonusAmount).toString()
+      }));
+
     } catch (error) {
-      console.error('Error calculating bonuses:', error);
-      setError('Không thể tính toán thưởng. Vui lòng thử lại.');
+      console.error('Error paying bonus:', error);
+      
+      // More detailed error handling
+      const errorMessage = error.response?.data?.error || 
+        error.message || 
+        'Thanh toán không thành công';
+
+      const errorModal = document.createElement('div');
+      errorModal.className = 'payment-error-modal';
+      errorModal.innerHTML = `
+        <div class="modal-content">
+          <h2>Lỗi Thanh Toán</h2>
+          <p>${errorMessage}</p>
+          <button onclick="this.closest('.payment-error-modal').remove()">Đóng</button>
+        </div>
+      `;
+      document.body.appendChild(errorModal);
+
     } finally {
       setLoading(false);
     }
@@ -82,24 +146,61 @@ const ShipperBonusList = () => {
 
   const handleExportExcel = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/bonus/export', {
-        params: { 
-          month: selectedMonth, 
-          ratingFilter: ratingFilter 
-        },
-        responseType: 'blob'
+      console.log('Exporting with params:', { 
+        month: selectedMonth, 
+        ratingFilter: ratingFilter 
       });
+  
+      const response = await axios.post(
+        'http://localhost:4000/api/bonus/export', 
+        { 
+          params: { 
+            month: selectedMonth, 
+            ratingFilter: ratingFilter 
+          }
+        },
+        {
+          responseType: 'blob',
+          // Add timeout and error handling
+          timeout: 10000,
+          validateStatus: (status) => status >= 200 && status < 300
+        }
+      );
       
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // More robust file download
+      const contentType = response.headers['content-type'];
+      if (contentType !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        throw new Error('Invalid file type received');
+      }
+  
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: contentType }));
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `Shipper_Bonus_${selectedMonth}.xlsx`);
       document.body.appendChild(link);
       link.click();
+      
+      // Clean up
       link.remove();
+      window.URL.revokeObjectURL(url);
+  
     } catch (error) {
-      console.error('Error exporting data:', error);
-      setError('Không thể xuất Excel. Vui lòng thử lại.');
+      console.error('Detailed Export Error:', error);
+      
+      // More informative error handling
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error('Server Response Error:', error.response.data);
+        setError(`Export failed: ${error.response.data.error || 'Unknown server error'}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No Response Received:', error.request);
+        setError('No response from server. Check network connection.');
+      } else {
+        // Something happened in setting up the request
+        console.error('Request Setup Error:', error.message);
+        setError(`Export error: ${error.message}`);
+      }
     }
   };
 
@@ -115,7 +216,7 @@ const ShipperBonusList = () => {
   const getSortedData = () => {
     if (!shipperData.length) return [];
     
-    return [...shipperData].sort((a, b) => {
+    const sorted = [...shipperData].sort((a, b) => {
       let comparison = 0;
       switch(sortField) {
         case 'ShipperID':
@@ -137,6 +238,14 @@ const ShipperBonusList = () => {
       
       return sortDirection === 'asc' ? comparison : -comparison;
     });
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    return sorted.slice(indexOfFirstItem, indexOfLastItem);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   useEffect(() => {
@@ -145,16 +254,21 @@ const ShipperBonusList = () => {
 
   useEffect(() => {
     const createCharts = () => {
+      // Bonus Distribution Chart
+      if (bonusDistributionChartRef.current) {
+        bonusDistributionChartRef.current.destroy();
+      }
+      
       const bonusDistributionCtx = document.getElementById('bonusDistribution')?.getContext('2d');
       if (bonusDistributionCtx) {
         const high = shipperData.filter(s => s.AvgRating >= 4.5).length;
         const medium = shipperData.filter(s => s.AvgRating >= 3.5 && s.AvgRating < 4.5).length;
         const low = shipperData.filter(s => s.AvgRating < 3.5).length;
 
-        new Chart(bonusDistributionCtx, {
+        bonusDistributionChartRef.current = new Chart(bonusDistributionCtx, {
           type: 'doughnut',
           data: {
-            labels: ['5 sao (10.000đ/đơn)', '4-5 sao (5.000đ/đơn)', 'Dưới ngưỡng (2.000đ/đơn)'],
+            labels: ['5 sao ', '4-5 sao ', 'Dưới ngưỡng '],
             datasets: [{
               data: [high, medium, low],
               backgroundColor: ['#4CAF50', '#FF9800', '#F44336'],
@@ -168,59 +282,112 @@ const ShipperBonusList = () => {
         });
       }
 
+      // Rating Trend Chart (New Bar Chart)
+      if (ratingTrendChartRef.current) {
+        ratingTrendChartRef.current.destroy();
+      }
+      
       const ratingTrendCtx = document.getElementById('ratingTrend')?.getContext('2d');
       if (ratingTrendCtx) {
-        new Chart(ratingTrendCtx, {
-          type: 'line',
+        const generateRatingDistributionData = (shipperData) => {
+          const ratingBuckets = {
+            '5 sao': 0,
+            '4-4.9 sao': 0,
+            '3-3.9 sao': 0,
+            '2-2.9 sao': 0,
+            '1-1.9 sao': 0
+          };
+
+          shipperData.forEach(shipper => {
+            if (shipper.AvgRating >= 5) ratingBuckets['5 sao']++;
+            else if (shipper.AvgRating >= 4) ratingBuckets['4-4.9 sao']++;
+            else if (shipper.AvgRating >= 3) ratingBuckets['3-3.9 sao']++;
+            else if (shipper.AvgRating >= 2) ratingBuckets['2-2.9 sao']++;
+            else ratingBuckets['1-1.9 sao']++;
+          });
+
+          return {
+            labels: Object.keys(ratingBuckets),
+            data: Object.values(ratingBuckets)
+          };
+        };
+
+        const { labels, data } = generateRatingDistributionData(shipperData);
+
+        ratingTrendChartRef.current = new Chart(ratingTrendCtx, {
+          type: 'bar',
           data: {
-            labels: ['T10/2023', 'T11/2023', 'T12/2023', 'T1/2024', 'T2/2024', 'T3/2024'],
-            datasets: [
-              {
-                label: 'Đánh giá trung bình',
-                data: [3.85, 3.92, 4.05, 4.12, 4.25, 4.37],
-                borderColor: '#4CAF50',
-                backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                tension: 0.4,
-                fill: true
-              },
-              {
-                label: 'Tỉ lệ đánh giá 5 sao',
-                data: [35, 38, 42, 48, 52, 59],
-                borderColor: '#FF9800',
-                backgroundColor: 'rgba(255, 152, 0, 0)',
-                tension: 0.4
-              }
-            ]
+            labels: labels,
+            datasets: [{
+              label: 'Số lượng Shipper',
+              data: data,
+              backgroundColor: [
+                'rgba(76, 175, 80, 0.8)',    // 5 sao - Green
+                'rgba(255, 152, 0, 0.8)',     // 4-4.9 sao - Orange
+                'rgba(33, 150, 243, 0.8)',    // 3-3.9 sao - Blue
+                'rgba(255, 87, 34, 0.8)',     // 2-2.9 sao - Deep Orange
+                'rgba(158, 158, 158, 0.8)'    // 1-1.9 sao - Gray
+              ],
+              borderWidth: 1
+            }]
           },
           options: {
             responsive: true,
             scales: {
-              y: { beginAtZero: false, min: 3.5, max: 5, title: { display: true, text: 'Đánh giá' } }
+              y: { 
+                beginAtZero: true, 
+                title: { 
+                  display: true, 
+                  text: 'Số lượng Shipper' 
+                } 
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Phân loại đánh giá'
+                }
+              }
             },
-            plugins: { legend: { position: 'bottom' } }
+            plugins: { 
+              legend: { display: false },
+              title: {
+                display: true,
+                text: `Phân phối đánh giá Shipper (${selectedMonth})`
+              }
+            }
           }
         });
       }
     };
 
-    const timer = setTimeout(() => createCharts(), 500);
-    return () => clearTimeout(timer);
-  }, [shipperData]);
+    const timer = setTimeout(createCharts, 500);
+    
+    return () => {
+      clearTimeout(timer);
+      if (bonusDistributionChartRef.current) {
+        bonusDistributionChartRef.current.destroy();
+      }
+      if (ratingTrendChartRef.current) {
+        ratingTrendChartRef.current.destroy();
+      }
+    };
+  }, [shipperData, selectedMonth]);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(shipperData.length / itemsPerPage));
+  }, [shipperData, itemsPerPage]);
 
   return (
     <>
       <header className="ShipperBonusList-header">
         <div className="ShipperBonusList-logo">
-          <i className="fas fa-shipping-fast"></i>
-          <span>Quản Lý Shipper</span>
+          
+          <span>Quản Lý Tiền Thưởng Của Shipper</span>
         </div>
         <nav>
           <ul>
-            <li><a href="#">Tổng quan</a></li>
-            <li><a href="#" className="ShipperBonusList-active">Quản lý thưởng</a></li>
-            <li><a href="#">Shipper</a></li>
-            <li><a href="#">Báo cáo</a></li>
-            <li><a href="#">Cài đặt</a></li>
+            <li><a href="http://localhost:3000/shipper-bonus-list" className="ShipperBonusList-active">Quản lý thưởng</a></li>
+            <li><a href="http://localhost:3000/bonus-settings">Cài đặt</a></li>
           </ul>
         </nav>
       </header>
@@ -234,21 +401,21 @@ const ShipperBonusList = () => {
             <h3>Tổng tiền thưởng ({selectedMonth.slice(5)}/{selectedMonth.slice(0, 4)})</h3>
             <div className="ShipperBonusList-value">{Number(summaryData.totalBonus).toLocaleString()} VNĐ</div>
             <div className="ShipperBonusList-change ShipperBonusList-positive">
-              <i className="fas fa-arrow-up"></i> 12,3% so với tháng trước
+              <i className="fas fa-arrow-up"></i> 
             </div>
           </div>
           <div className="ShipperBonusList-card">
             <h3>Số shipper nhận thưởng</h3>
             <div className="ShipperBonusList-value">{summaryData.shipperCount}</div>
             <div className="ShipperBonusList-change ShipperBonusList-positive">
-              <i className="fas fa-arrow-up"></i> 8,5% so với tháng trước
+              <i className="fas fa-arrow-up"></i> 
             </div>
           </div>
           <div className="ShipperBonusList-card">
             <h3>Đánh giá trung bình</h3>
             <div className="ShipperBonusList-value">{summaryData.avgRating.toFixed(2)} <small>/ 5</small></div>
             <div className="ShipperBonusList-change ShipperBonusList-positive">
-              <i className="fas fa-arrow-up"></i> 0.25 so với tháng trước
+              <i className="fas fa-arrow-up"></i> 
             </div>
           </div>
         </div>
@@ -262,10 +429,10 @@ const ShipperBonusList = () => {
         <div className="ShipperBonusList-tools">
           <div className="ShipperBonusList-filters">
             <select id="month-filter" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-              <option value="2024-03">Tháng 3/2024</option>
-              <option value="2024-02">Tháng 2/2024</option>
-              <option value="2024-01">Tháng 1/2024</option>
-              <option value="2023-12">Tháng 12/2023</option>
+              <option value="2025-03">Tháng 3/2025</option>
+              <option value="2025-02">Tháng 2/2025</option>
+              <option value="2025-01">Tháng 1/2025</option>
+              <option value="2024-12">Tháng 12/2024</option>
             </select>
             <select 
               id="rating-filter" 
@@ -297,9 +464,7 @@ const ShipperBonusList = () => {
             >
               <i className="fas fa-download"></i> Xuất Excel
             </button>
-            <button onClick={handleCalculateBonus}>
-              <i className="fas fa-calculator"></i> Tính toán lại
-            </button>
+            
           </div>
         </div>
 
@@ -341,8 +506,8 @@ const ShipperBonusList = () => {
                   <th onClick={() => handleSort('BonusAmount')}>
                     Tiền thưởng {sortField === 'BonusAmount' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </th>
-                  <th>Trạng thái</th>
-                  <th>Thao tác</th>
+                  <th>Thanh toán</th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -360,18 +525,18 @@ const ShipperBonusList = () => {
                     </td>
                     <td>{shipper.BonusAmount.toLocaleString()}đ</td>
                     <td>
-                      <span className={`ShipperBonusList-status-badge ShipperBonusList-${shipper.Status === 'paid' ? 'high' : 'medium'}`}>
-                        {shipper.Status === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán'}
-                      </span>
+                      {shipper.Status === 'pending' ? (
+                        <button 
+                          className="ShipperBonusList-pay-btn"
+                          onClick={() => handlePayBonus(shipper)}
+                        >
+                          Thanh toán
+                        </button>
+                      ) : (
+                        <span className="ShipperBonusList-paid-status">Đã thanh toán</span>
+                      )}
                     </td>
-                    <td>
-                      <button className="ShipperBonusList-secondary">
-                        <i className="fas fa-eye"></i>
-                      </button>
-                      <button className="ShipperBonusList-secondary">
-                        <i className="fas fa-edit"></i>
-                      </button>
-                    </td>
+                    
                   </tr>
                 ))}
                 {getSortedData().length === 0 && (
@@ -386,11 +551,46 @@ const ShipperBonusList = () => {
           )}
 
           <div className="ShipperBonusList-pagination">
-            <button className="ShipperBonusList-secondary"><i className="fas fa-chevron-left"></i></button>
-            <button className="ShipperBonusList-secondary">1</button>
-            <button>2</button>
-            <button className="ShipperBonusList-secondary">3</button>
-            <button className="ShipperBonusList-secondary"><i className="fas fa-chevron-right"></i></button>
+            <button 
+              className="ShipperBonusList-secondary" 
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNumber = index + 1;
+              if (
+                pageNumber === 1 ||
+                pageNumber === totalPages ||
+                (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+              ) {
+                return (
+                  <button
+                    key={pageNumber}
+                    className={currentPage === pageNumber ? 'active' : 'ShipperBonusList-secondary'}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              } else if (
+                pageNumber === currentPage - 2 ||
+                pageNumber === currentPage + 2
+              ) {
+                return <span key={pageNumber}>...</span>;
+              }
+              return null;
+            })}
+
+            <button 
+              className="ShipperBonusList-secondary"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <i className="fas fa-chevron-right"></i>
+            </button>
           </div>
         </div>
 
@@ -400,7 +600,7 @@ const ShipperBonusList = () => {
             <canvas id="bonusDistribution"></canvas>
           </div>
           <div className="ShipperBonusList-chart-card">
-            <h3>Xu hướng đánh giá theo tháng</h3>
+            <h3>Phân phối đánh giá Shipper</h3>
             <canvas id="ratingTrend"></canvas>
           </div>
         </div>

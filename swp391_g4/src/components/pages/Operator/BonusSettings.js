@@ -14,8 +14,14 @@ const BonusSettings = () => {
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get('/api/bonus/settings');
-      setSettings(response.data);
+      const response = await axios.get('http://localhost:4000/api/bonus/settings');
+      setSettings({
+        rating5Threshold: parseFloat(response.data.rating5Threshold),
+        rating5Bonus: parseFloat(response.data.rating5Bonus),
+        rating4And5Threshold: parseFloat(response.data.rating4And5Threshold),
+        rating4And5Bonus: parseFloat(response.data.rating4And5Bonus),
+        otherBonus: parseFloat(response.data.otherBonus),
+      });
     } catch (error) {
       console.error('Error fetching settings:', error);
     }
@@ -23,7 +29,13 @@ const BonusSettings = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put('/api/bonus/settings', settings);
+      await axios.put('http://localhost:4000/api/bonus/update-settings', {
+        rating5Threshold: parseFloat(settings.rating5Threshold),
+        rating5Bonus: parseFloat(settings.rating5Bonus),
+        rating4And5Threshold: parseFloat(settings.rating4And5Threshold),
+        rating4And5Bonus: parseFloat(settings.rating4And5Bonus),
+        otherBonus: parseFloat(settings.otherBonus),
+      });
       setSnackbar({
         open: true,
         message: 'Cài đặt đã được cập nhật thành công!',
@@ -41,13 +53,12 @@ const BonusSettings = () => {
   const handleReset = () => {
     setSettings({
       rating5Threshold: 60,
-      rating4And5Threshold: 60,
       rating5Bonus: 10000,
+      rating4And5Threshold: 60,
       rating4And5Bonus: 5000,
       otherBonus: 2000,
     });
     alert('Đã khôi phục về cài đặt mặc định');
-    // Gọi API để reset tại đây
   };
 
   useEffect(() => {
@@ -56,22 +67,19 @@ const BonusSettings = () => {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setSettings((prev) => ({ ...prev, [id]: parseFloat(value) }));
+    setSettings((prev) => ({ ...prev, [id]: value === '' ? '' : parseFloat(value) }));
   };
 
   return (
     <div>
       <header className="BonusSetting-header">
         <div className="BonusSetting-logo">
-          <i className="fas fa-shipping-fast"></i>
-          <span>Quản Lý Shipper</span>
+          
+          <span>Quản Lý Tiền Thưởng của Shipper</span>
         </div>
         <nav>
           <ul className="BonusSetting-nav-list">
-            <li><a href="#">Tổng quan</a></li>
-            <li><a href="#">Quản lý thưởng</a></li>
-            <li><a href="#">Shipper</a></li>
-            <li><a href="#">Báo cáo</a></li>
+            <li><a href="http://localhost:3000/shipper-bonus-list">Danh sách thưởng</a></li>
             <li><a href="#" className="active">Cài đặt</a></li>
           </ul>
         </nav>
