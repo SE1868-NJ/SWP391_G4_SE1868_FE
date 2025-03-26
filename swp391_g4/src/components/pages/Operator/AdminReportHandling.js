@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/AdminReportHandling.css";
-import { Header } from "../../header/Header";
-import Footer from "../../footer/Footer";
+import NotificationBell from './NotificationBell';
+import HeaderOperator from "./HeaderOperator";
 
 const AdminReportHandling = () => {
   const [orderReports, setOrderReports] = useState([]);
   const [shipperReports, setShipperReports] = useState([]);
   const [updatedStatus, setUpdatedStatus] = useState({});
-  const [activeTab, setActiveTab] = useState("order"); // Thêm state để theo dõi tab đang hiển thị
+  const [activeTab, setActiveTab] = useState("order");
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -41,14 +41,13 @@ const AdminReportHandling = () => {
   const handleStatusChange = (reportId, status) => {
     setUpdatedStatus((prev) => ({ ...prev, [reportId]: status }));
   };
-
   const updateStatus = async (reportId) => {
     if (!updatedStatus[reportId]) return;
     try {
       await axios.put(`http://localhost:4000/api/reports/${reportId}`, {
         status: updatedStatus[reportId],
         processedDate: new Date().toISOString().split("T")[0],
-      });
+      })
       fetchOrderReports();
       fetchShipperReports();
     } catch (error) {
@@ -58,9 +57,10 @@ const AdminReportHandling = () => {
 
   return (
     <div className="admin-report-page">
-      <div className="header">
-        <Header />
+      <div className="admin-report-header">
+        <HeaderOperator/>
       </div>
+
       <div className="report-container-wrapper">
         {/* Tab buttons */}
         <div className="report-tabs">
@@ -190,7 +190,6 @@ const AdminReportHandling = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
