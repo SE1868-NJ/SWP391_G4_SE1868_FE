@@ -19,6 +19,7 @@ export class Header extends React.Component {
       notifications: [],
       unreadCount: 0,
       showNotificationModal: false,
+      balance: 0 // Thêm state cho balance
     };
   }
 
@@ -28,10 +29,12 @@ export class Header extends React.Component {
 
     if (token && shipperId) {
       this.fetchNotifications(shipperId);
+      this.fetchBalance(shipperId); // Thêm hàm fetch balance
 
       this.notificationInterval = setInterval(() => {
         this.fetchNotifications(shipperId);
-      }, 60000); 
+        this.fetchBalance(shipperId); // Cập nhật balance định kỳ
+      }, 60000);
 
       document.addEventListener("click", this.handleClickOutside);
     }
@@ -43,6 +46,26 @@ export class Header extends React.Component {
     }
     document.removeEventListener("click", this.handleClickOutside);
   }
+
+  // Hàm mới để lấy thông tin balance từ API
+  fetchBalance = async (shipperId) => {
+    try {
+      const token = localStorage.getItem("token"); // Lấy token từ localStorage
+      const response = await axios.get(
+        `http://localhost:4000/api/getShipperBalance/${shipperId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào header
+          },
+        }
+      );
+      const balance = response.data.balance || 0; // Giả định response trả về { balance: number }
+      this.setState({ balance });
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      this.setState({ balance: 0 }); // Đặt về 0 nếu lỗi xảy ra
+    }
+  };
 
   handleClickOutside = (event) => {
     if (
@@ -125,18 +148,9 @@ export class Header extends React.Component {
     localStorage.removeItem("token");
     localStorage.removeItem("shipperId");
     localStorage.removeItem("shipperName");
-
-    // Redirect to home page
     window.location.href = "/home";
   };
 
-  /*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Renders the header component.
-   *
-   * @returns {JSX.Element}
-   */
-  /******  e685888b-b3ca-43af-96f5-438a6bdd62b9  *******/
   render() {
     const defaultNavItems = [
       { text: "Trang chủ", path: "/home", isActive: true },
@@ -169,7 +183,6 @@ export class Header extends React.Component {
             ) : (
               <div className={styles.authContainer}>
                 <div className={styles.dropdownWrapper}>
-                  {/* Notification Button */}
                   <button
                     className={styles.notificationButton}
                     onClick={this.toggleNotificationModal}
@@ -194,16 +207,18 @@ export class Header extends React.Component {
                     )}
                   </button>
 
-                  {/* Dropdown Toggle */}
                   <button
                     className={styles.dropdownToggle}
                     onClick={this.toggleDropdown}
                   >
-                    {this.state.shipperName} &#9660;
+                    {this.state.shipperName} ▼
                   </button>
 
                   {this.state.isDropdownOpen && (
                     <div className={styles.dropdownMenu}>
+                      <div className={styles.dropdownItem}>
+                        Số dư: {this.state.balance.toLocaleString()} VNĐ
+                      </div>
                       <a
                         href="/shipper-account"
                         className={styles.dropdownItem}
@@ -248,7 +263,6 @@ export class Header extends React.Component {
           </div>
         </nav>
 
-        {/* Notification Modal */}
         {!this.state.showLoginButton && this.state.showNotificationModal && (
           <div className={styles.notificationModal}>
             <div className={styles.notificationHeader}>
@@ -276,9 +290,8 @@ export class Header extends React.Component {
                 this.state.notifications.map((notif) => (
                   <div
                     key={notif.id}
-                    className={`${styles.notificationItem} ${
-                      notif.unread ? styles.unread : ""
-                    }`}
+                    className={`${styles.notificationItem} ${notif.unread ? styles.unread : ""
+                      }`}
                     onClick={() => this.handleMarkAsRead(notif.id)}
                   >
                     <div className={styles.notificationMessage}>

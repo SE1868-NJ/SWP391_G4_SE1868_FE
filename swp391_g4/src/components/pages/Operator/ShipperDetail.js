@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
+import NotificationBell from './NotificationBell';
 const ShipperDetail = () => {
   const [shippersList, setShippersList] = useState([]);
   const [selectedShipper, setSelectedShipper] = useState(null);
@@ -196,13 +197,16 @@ useEffect(() => {
       });
   };
   const handleRejectShipper = async () => {
+    if (!selectedShipper) {
+      alert('Vui lòng chọn một shipper trước khi từ chối');
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:4000/api/reject-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   
       if (response.data.success) {
-        // Cập nhật lại danh sách shipper
         const updatedList = shippersList.filter(
           shipper => shipper.ShipperID !== selectedShipper.ShipperID
         );
@@ -229,13 +233,16 @@ useEffect(() => {
   };
   
   const handleApproveShipper = async () => {
+    if (!selectedShipper) {
+      alert('Vui lòng chọn một shipper trước khi duyệt');
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:4000/api/approve-shipper', {
         shipperId: selectedShipper.ShipperID
       });
   
       if (response.data.success) {
-        // Cập nhật lại trạng thái trong danh sách
         const updatedList = shippersList.map(shipper => {
           if (shipper.ShipperID === selectedShipper.ShipperID) {
             return { ...shipper, Status: 'Active' };
@@ -266,10 +273,12 @@ useEffect(() => {
   const handleGoBack = () => {
     window.history.back();
   };
+
+
   
   return (
     <div className="shipper-container">
-      {/* Enhanced Header */}
+      
       <div className="back-button-container">
         <Button 
           variant="outline" 
@@ -289,6 +298,9 @@ useEffect(() => {
               <h1 className="shipper-title">Operator</h1>
               <p className="shipper-subtitle">Xem xét và xác minh các đơn đăng ký của shipper</p>
             </div>
+            <div className="shipper-notification-container">
+            <NotificationBell /> {/* Đây là component chuông bạn đã import */}
+          </div>
           </div>
         </div>
       </div>

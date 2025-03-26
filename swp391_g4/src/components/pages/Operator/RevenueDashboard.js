@@ -44,361 +44,115 @@ function Header({ onSearch }) {
 }
 
 // Filters Component
-// Filters Component
 function Filters({ filters, onChange }) {
-  const [dateRangeVisible, setDateRangeVisible] = useState(false);
-  
-  useEffect(() => {
-    // Show date range picker if custom time period is selected
-    if (filters.timePeriod === 'custom') {
-      setDateRangeVisible(true);
+  // State để kiểm soát hiển thị date pickers
+  const [showDatePickers, setShowDatePickers] = useState(false);
+
+  // Xử lý khi thay đổi loại khoảng thời gian
+  const handleTimePeriodChange = (value) => {
+    if (value === 'custom') {
+      setShowDatePickers(true);
+      onChange('timePeriod', value);
     } else {
-      setDateRangeVisible(false);
+      setShowDatePickers(false);
+      onChange('timePeriod', value);
+      // Reset các giá trị startDate và endDate nếu không chọn custom
+      onChange('startDate', null);
+      onChange('endDate', null);
     }
-  }, [filters.timePeriod]);
 
-  // Handle date change for start date
-  const handleStartDateChange = (e) => {
-    onChange('startDate', e.target.value);
   };
-
-  // Handle date change for end date
-  const handleEndDateChange = (e) => {
-    onChange('endDate', e.target.value);
-  };
+  const handleDateChange = (type, value) => {
+    onChange(type, value);
+    
+    // You could add validation here
+    // For example, ensure end date is after start date
+    if (type === 'endDate' && filters.startDate && new Date(value) < new Date(filters.startDate)) {
+      alert('End date must be after start date');
+      onChange('endDate', filters.startDate);
+    }
+  };  
 
   return (
     <div className="RevenueDashboard-filters">
-      <div className="RevenueDashboard-filters-container">
-        <div className="RevenueDashboard-filter-group">
-          <label>Khoảng thời gian:</label>
-          <select 
-            value={filters.timePeriod} 
-            onChange={(e) => onChange('timePeriod', e.target.value)}
-          >
-            <option value="today">Hôm nay</option>
-            <option value="yesterday">Hôm qua</option>
-            <option value="week">7 ngày qua</option>
-            <option value="month">30 ngày qua</option>
-            <option value="quarter">Quý hiện tại</option>
-            <option value="year">Năm hiện tại</option>
-            <option value="custom">Tùy chỉnh</option>
-          </select>
-        </div>
-        
-        {dateRangeVisible && (
-          <div className="RevenueDashboard-filter-date-range">
-            <div className="RevenueDashboard-filter-group">
-              <label>Từ ngày:</label>
-              <input 
-                type="date" 
-                value={filters.startDate || ''} 
-                onChange={handleStartDateChange}
-              />
-            </div>
-            <div className="RevenueDashboard-filter-group">
-              <label>Đến ngày:</label>
-              <input 
-                type="date" 
-                value={filters.endDate || ''} 
-                onChange={handleEndDateChange}
-              />
-            </div>
+      <div className="RevenueDashboard-filter-group">
+        <label htmlFor="time-period">Khoảng thời gian</label>
+        <select 
+          id="time-period" 
+          value={filters.timePeriod}
+          onChange={(e) => handleTimePeriodChange(e.target.value)}
+        >
+          <option value="day">Hôm nay</option>
+          <option value="week">Tuần này</option>
+          <option value="month">Tháng này</option>
+          <option value="year">Năm nay</option>
+          <option value="custom">Tùy chỉnh</option>
+        </select>
+      </div>
+      
+      {/* Date pickers cho khoảng thời gian tùy chỉnh */}
+      {showDatePickers && (
+        <div className="RevenueDashboard-date-range">
+          <div className="RevenueDashboard-filter-group">
+            <label htmlFor="start-date">Từ ngày</label>
+            <input 
+              type="date" 
+              id="start-date"
+              value={filters.startDate || ''}
+              onChange={(e) => handleDateChange('startDate', e.target.value)}
+            />
           </div>
-        )}
-        
-        <div className="RevenueDashboard-filter-group">
-          <label>Khu vực:</label>
-          <select 
-            value={filters.region} 
-            onChange={(e) => onChange('region', e.target.value)}
-          >
-            <option value="all">Tất cả khu vực</option>
-            <option value="central">Trung tâm</option>
-            <option value="mid_zone">Quanh trung tâm</option>
-            <option value="outer_zone">Rìa trung tâm</option>
-          </select>
+          <div className="RevenueDashboard-filter-group">
+            <label htmlFor="end-date">Đến ngày</label>
+            <input 
+              type="date" 
+              id="end-date"
+              value={filters.endDate || ''}
+              onChange={(e) => handleDateChange('endDate', e.target.value)}
+            />
+          </div>
         </div>
-        
-        <div className="RevenueDashboard-filter-group">
-          <label>Loại dịch vụ:</label>
-          <select 
-            value={filters.serviceType} 
-            onChange={(e) => onChange('serviceType', e.target.value)}
-          >
-            <option value="all">Tất cả dịch vụ</option>
-            <option value="Standard">Tiêu chuẩn</option>
-            <option value="Express">Nhanh</option>
-            <option value="Scheduled">Hẹn giờ</option>
-          </select>
-        </div>
-        
-        <div className="RevenueDashboard-filter-actions">
-          <button 
-            onClick={() => {
-              // Reset filters to default values
-              onChange('timePeriod', 'month');
-              onChange('startDate', null);
-              onChange('endDate', null);
-              onChange('region', 'all');
-              onChange('serviceType', 'all');
-              onChange('shipperCode', '');
-            }}
-            className="RevenueDashboard-filter-reset"
-          >
-            Đặt lại
-          </button>
-          
-          <button 
-            onClick={() => {
-              // Trigger a refetch of data with current filters
-              // This is optional as your useEffect already watches filters
-              console.log("Applied filters:", filters);
-            }}
-            className="RevenueDashboard-filter-apply"
-          >
-            Áp dụng
-          </button>
-        </div>
+      )}
+      
+      <div className="RevenueDashboard-filter-group">
+        <label htmlFor="region">Khu vực</label>
+        <select 
+          id="region" 
+          value={filters.region}
+          onChange={(e) => onChange('region', e.target.value)}
+        >
+          <option value="all">Tất cả khu vực</option>
+          <option value="central">Trung tâm</option>
+          <option value="mid_zone">Quanh Trung Tâm</option>
+          <option value="outer_zone">Rìa Trung Tâm</option>
+        </select>
+      </div>
+      <div className="RevenueDashboard-filter-group">
+        <label htmlFor="service-type">Loại dịch vụ</label>
+        <select 
+          id="service-type" 
+          value={filters.serviceType}
+          onChange={(e) => onChange('serviceType', e.target.value)}
+        >
+          <option value="all">Tất cả dịch vụ</option>
+          <option value="standard">Giao hàng tiêu chuẩn</option>
+          <option value="express">Giao hàng nhanh</option>
+          <option value="scheduled">Giao hàng hẹn giờ</option>
+        </select>
       </div>
     </div>
   );
 }
 
 // Alerts Container Component
-// Enhanced AlertsContainer Component
-function AlertsContainer({ data, revenueByDay, revenueByRegion, revenueByService, alerts }) {
-  const [generatedAlerts, setGeneratedAlerts] = useState([]);
-  
-  useEffect(() => {
-    // Combine API alerts with dynamically generated alerts
-    const dynamicAlerts = [];
-    
-    // Check if we have data to analyze
-    if (data && revenueByDay && revenueByDay.length > 0) {
-      // Đảm bảo dữ liệu đủ để phân tích có ý nghĩa
-      if (revenueByDay.length >= 7) {
-        // 1. Phân tích xu hướng doanh thu trong 7 ngày gần nhất
-        const lastWeekData = revenueByDay.slice(-7);
-        const firstHalf = lastWeekData.slice(0, 3);
-        const secondHalf = lastWeekData.slice(-3);
-        
-        const firstHalfAvg = firstHalf.reduce((sum, day) => sum + day.revenue, 0) / firstHalf.length;
-        const secondHalfAvg = secondHalf.reduce((sum, day) => sum + day.revenue, 0) / secondHalf.length;
-        
-        // Chỉ cảnh báo khi có sự thay đổi đáng kể
-        if (firstHalfAvg > 0) {
-          const percentChange = ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100;
-          
-          if (percentChange < -20) {
-            dynamicAlerts.push({
-              type: 'error',
-              message: `Doanh thu có xu hướng giảm mạnh (${percentChange.toFixed(1)}%) trong tuần qua. Kiểm tra các yếu tố ảnh hưởng đến hoạt động kinh doanh.`,
-              source: 'analysis'
-            });
-          } else if (percentChange < -10) {
-            dynamicAlerts.push({
-              type: 'warning',
-              message: `Doanh thu có xu hướng giảm nhẹ (${percentChange.toFixed(1)}%) trong tuần qua. Theo dõi tình hình.`,
-              source: 'analysis'
-            });
-          } else if (percentChange > 20) {
-            dynamicAlerts.push({
-              type: 'success',
-              message: `Doanh thu có xu hướng tăng mạnh (${percentChange.toFixed(1)}%) trong tuần qua. Duy trì chiến lược hiện tại.`,
-              source: 'analysis'
-            });
-          }
-        }
-      }
-      
-      // 2. So sánh doanh thu ngày gần nhất với trung bình 30 ngày (hoặc tất cả ngày có sẵn nếu ít hơn 30)
-      const daysToAnalyze = Math.min(revenueByDay.length, 30);
-      const recentDaysData = revenueByDay.slice(-daysToAnalyze);
-      const avgRevenue = recentDaysData.reduce((sum, day) => sum + day.revenue, 0) / recentDaysData.length;
-      
-      // Chỉ kiểm tra ngày gần nhất
-      const mostRecentDay = revenueByDay[revenueByDay.length - 1];
-      
-      if (mostRecentDay && avgRevenue > 0) {
-        const revenueChange = ((mostRecentDay.revenue - avgRevenue) / avgRevenue) * 100;
-        
-        // Chỉ cảnh báo khi có sự chênh lệch lớn
-        if (revenueChange < -30) {
-          dynamicAlerts.push({
-            type: 'warning',
-            message: `Doanh thu ngày ${mostRecentDay.date} giảm ${Math.abs(revenueChange).toFixed(1)}% so với trung bình ${daysToAnalyze} ngày (${formatCurrency(mostRecentDay.revenue)} so với ${formatCurrency(avgRevenue)}).`,
-            source: 'analysis'
-          });
-        } else if (revenueChange > 50) {
-          dynamicAlerts.push({
-            type: 'info',
-            message: `Doanh thu ngày ${mostRecentDay.date} tăng ${revenueChange.toFixed(1)}% so với trung bình. Kiểm tra sự kiện đặc biệt hoặc xác nhận tính chính xác của dữ liệu.`,
-            source: 'analysis'
-          });
-        }
-      }
-      
-      // 3. Phân tích phân phối doanh thu theo khu vực
-      if (revenueByRegion) {
-        // Chuẩn hóa dữ liệu
-        const central = Number(revenueByRegion.central) || 0;
-        const midZone = Number(revenueByRegion.mid_zone) || 0;
-        const outerZone = Number(revenueByRegion.outer_zone) || 0;
-        const totalRegionRevenue = central + midZone + outerZone;
-          
-        // Chỉ phân tích khi có doanh thu đáng kể
-        if (totalRegionRevenue > 5000000) {
-          const centralPercent = central / totalRegionRevenue;
-          const midZonePercent = midZone / totalRegionRevenue;
-          const outerZonePercent = outerZone / totalRegionRevenue;
-          
-          // Tỷ lệ phân phối lý tưởng dựa trên dữ liệu lịch sử (ví dụ)
-          const idealDistribution = { central: 0.4, midZone: 0.35, outerZone: 0.25 };
-          
-          // So sánh với phân phối lý tưởng
-          if (centralPercent < idealDistribution.central * 0.5) {
-            dynamicAlerts.push({
-              type: 'warning',
-              message: `Doanh thu Khu vực Trung tâm thấp bất thường (${(centralPercent * 100).toFixed(1)}% so với mục tiêu ${(idealDistribution.central * 100).toFixed(1)}%). Kiểm tra hoạt động.`,
-              source: 'analysis'
-            });
-          }
-          
-          if (midZonePercent < idealDistribution.midZone * 0.5) {
-            dynamicAlerts.push({
-              type: 'warning',
-              message: `Doanh thu Khu vực Quanh trung tâm thấp bất thường (${(midZonePercent * 100).toFixed(1)}% so với mục tiêu ${(idealDistribution.midZone * 100).toFixed(1)}%). Kiểm tra hoạt động.`,
-              source: 'analysis'
-            });
-          }
-          
-          if (outerZonePercent < idealDistribution.outerZone * 0.5) {
-            dynamicAlerts.push({
-              type: 'warning',
-              message: `Doanh thu Khu vực Rìa trung tâm thấp bất thường (${(outerZonePercent * 100).toFixed(1)}% so với mục tiêu ${(idealDistribution.outerZone * 100).toFixed(1)}%). Kiểm tra hoạt động.`,
-              source: 'analysis'
-            });
-          }
-        }
-      }
-      
-      // 4. Phân tích phân phối dịch vụ
-      if (revenueByService) {
-        const normalizedService = {
-          standard: Number(revenueByService.standard || revenueByService.Standard || 0),
-          express: Number(revenueByService.express || revenueByService.Express || 0),
-          scheduled: Number(revenueByService.scheduled || revenueByService.Scheduled || 0)
-        };
-        
-        const totalServiceRevenue = normalizedService.standard + normalizedService.express + normalizedService.scheduled;
-        
-        // Chỉ phân tích khi có doanh thu đáng kể
-        if (totalServiceRevenue > 10000000) {
-          // Các chỉ số KPI tham chiếu
-          const expressTarget = 0.25; // Mục tiêu tỷ lệ dịch vụ express
-          const scheduledTarget = 0.20; // Mục tiêu tỷ lệ dịch vụ scheduled
-          
-          const expressPercent = normalizedService.express / totalServiceRevenue;
-          const scheduledPercent = normalizedService.scheduled / totalServiceRevenue;
-          
-          // So sánh với mục tiêu
-          if (expressPercent < expressTarget * 0.7) {
-            dynamicAlerts.push({
-              type: 'info',
-              message: `Dịch vụ giao hàng nhanh đạt ${(expressPercent * 100).toFixed(1)}% (mục tiêu: ${(expressTarget * 100).toFixed(1)}%). Cân nhắc xem xét chính sách giá và marketing.`,
-              source: 'analysis'
-            });
-          }
-          
-          if (scheduledPercent > scheduledTarget * 1.5) {
-            dynamicAlerts.push({
-              type: 'success',
-              message: `Dịch vụ giao hàng hẹn giờ đang vượt mục tiêu (${(scheduledPercent * 100).toFixed(1)}% so với ${(scheduledTarget * 100).toFixed(1)}%). Xem xét mở rộng năng lực.`,
-              source: 'analysis'
-            });
-          }
-        }
-      }
-      
-      // 5. So sánh tổng doanh thu với mục tiêu (nếu có)
-      if (data.revenue) {
-        // Giả định mục tiêu doanh thu tháng
-        const monthlyTarget = 500000000;
-        const currentRevenue = Number(data.revenue);
-        
-        // Giả định ngày hiện tại trong tháng (có thể lấy từ dữ liệu thực tế)
-        const currentDayOfMonth = new Date().getDate();
-        const daysInMonth = 30; // Giả định
-        
-        // Dự đoán doanh thu cuối tháng dựa trên tốc độ hiện tại
-        const projectedMonthlyRevenue = (currentRevenue / currentDayOfMonth) * daysInMonth;
-        
-        // Chỉ cảnh báo khi có nguy cơ không đạt mục tiêu
-        if (projectedMonthlyRevenue < monthlyTarget * 0.85) {
-          dynamicAlerts.push({
-            type: 'error',
-            message: `Dự báo doanh thu tháng (${formatCurrency(projectedMonthlyRevenue)}) thấp hơn ${((1 - projectedMonthlyRevenue/monthlyTarget) * 100).toFixed(1)}% so với mục tiêu. Cần có biện pháp khẩn cấp.`,
-            source: 'analysis'
-          });
-        } else if (projectedMonthlyRevenue < monthlyTarget * 0.95) {
-          dynamicAlerts.push({
-            type: 'warning',
-            message: `Dự báo doanh thu tháng (${formatCurrency(projectedMonthlyRevenue)}) có nguy cơ không đạt mục tiêu. Xem xét các biện pháp cải thiện.`,
-            source: 'analysis'
-          });
-        }
-      }
-    }
-    
-    // Kết hợp cảnh báo từ API với cảnh báo động
-    const combinedAlerts = [...(alerts || []), ...dynamicAlerts];
-    
-    // Sắp xếp cảnh báo theo mức độ ưu tiên và lọc trùng lặp
-    const uniqueAlertMessages = new Set();
-    const prioritizedAlerts = combinedAlerts
-      .filter(alert => {
-        // Lọc cảnh báo trùng lặp dựa trên nội dung thông báo
-        if (uniqueAlertMessages.has(alert.message)) {
-          return false;
-        }
-        uniqueAlertMessages.add(alert.message);
-        return true;
-      })
-      .sort((a, b) => {
-        // Sắp xếp theo mức độ ưu tiên
-        const typePriority = { error: 4, warning: 3, info: 2, success: 1 };
-        return typePriority[b.type] - typePriority[a.type];
-      })
-      .slice(0, 5); // Giới hạn 5 cảnh báo quan trọng nhất
-    
-    setGeneratedAlerts(prioritizedAlerts);
-  }, [data, revenueByDay, revenueByRegion, revenueByService, alerts]);
-  
-  if (!generatedAlerts || generatedAlerts.length === 0) return null;
+function AlertsContainer({ alerts }) {
+  if (!alerts || alerts.length === 0) return null;
   
   return (
-    <div className="RevenueDashboard-alerts-container">
-      {generatedAlerts.map((alert, index) => (
-        <div key={index} className={`RevenueDashboard-alert RevenueDashboard-alert-${alert.type}`}>
-          <div className="RevenueDashboard-alert-icon">
-            {alert.type === 'error' && <span>❌</span>}
-            {alert.type === 'warning' && <span>⚠️</span>}
-            {alert.type === 'info' && <span>ℹ️</span>}
-            {alert.type === 'success' && <span>✅</span>}
-          </div>
-          <div className="RevenueDashboard-alert-content">
-            <span className="RevenueDashboard-alert-title">
-              {alert.type === 'error' && 'Cảnh báo khẩn cấp'}
-              {alert.type === 'warning' && 'Cảnh báo'}
-              {alert.type === 'info' && 'Thông tin'}
-              {alert.type === 'success' && 'Thành công'}
-            </span>
-            <p className="RevenueDashboard-alert-message">{alert.message}</p>
-          </div>
-          <button className="RevenueDashboard-alert-close" onClick={() => {
-            setGeneratedAlerts(generatedAlerts.filter((_, i) => i !== index));
-          }}>×</button>
+    <div id="alerts-container">
+      {alerts.map((alert, index) => (
+        <div key={index} className={`alert alert-${alert.type}`}>
+          <strong>Cảnh báo:</strong> {alert.message}
         </div>
       ))}
     </div>
@@ -1044,13 +798,12 @@ function FeesPanel({ fees }) {
 function Footer() {
   return (
     <footer>
-      © 2025 EcoShipper | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
+      © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
     </footer>
   );
 }
 
 // Main App Component
-// Main App Component (cập nhật phần liên quan đến AlertsContainer)
 function App() {
   const [data, setData] = useState({
     totals: { revenue: 0, orders: 0, avgRevenue: 0, profitAfterFees: 0 },
@@ -1175,12 +928,17 @@ function App() {
   return (
     <div className="RevenueDashboard-container">
       <Header onSearch={handleSearch} />
-      <Filters filters={filters} onChange={handleFilterChange} />      
+      <Filters filters={filters} onChange={handleFilterChange} />
+      {/* Dynamically show alerts from backend if available */}
+      {data.alerts && data.alerts.length > 0 && (
+        <AlertsContainer alerts={data.alerts} />
+      )}
       <OverviewPanel data={data.totals} revenueByDay={data.revenueByDay} />
       <OrdersPanel filters={filters} /> 
       <RegionRevenuePanel revenueByRegion={data.revenueByRegion} />
       <ServiceRevenuePanel revenueByService={data.revenueByService} />
       <PaymentsPanel payments={data.payments} />
+      
       <Footer />
     </div>
   );
