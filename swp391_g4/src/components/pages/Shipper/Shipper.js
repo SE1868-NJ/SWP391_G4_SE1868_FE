@@ -7,7 +7,6 @@ import ReactPaginate from 'react-paginate';
 import { format } from 'date-fns';
 import { Input, initMDB } from 'mdb-ui-kit';
 import Header from '../../header/Header';
-import ProfileShipper from '../../common/profileShipper';
 initMDB({ Input });
 
 const Shipper = () => {
@@ -26,12 +25,6 @@ const Shipper = () => {
     limit: 15
   });
 
-  // Fetch shipper profile
-  useEffect(() => {
-    axios.get(`http://localhost:4000/api/shippers/${shipperID}`)
-      .then(response => setShipper(response.data))
-      .catch(error => console.error("Lỗi tải thông tin shipper:", error));
-  }, [shipperID]);
 
   // Fetch orders
   const fetchOrders = () => {
@@ -43,22 +36,22 @@ const Shipper = () => {
         page: pagination.currentPage
       }
     })
-    .then(response => {
-      const { orders, totalRows, totalPages } = response.data;
-      
-      // Lọc theo trạng thái thanh toán nếu có
-      const filteredOrders = paymentFilter 
-        ? orders.filter(order => order.PaymentStatus === paymentFilter)
-        : orders;
+      .then(response => {
+        const { orders, totalRows, totalPages } = response.data;
 
-      setOrders(filteredOrders);
-      setPagination(prev => ({
-        ...prev, 
-        totalOrders: filteredOrders.length,
-        totalPages: totalPages
-      }));
-    })
-    .catch(error => console.error("Lỗi tải đơn hàng:", error));
+        // Lọc theo trạng thái thanh toán nếu có
+        const filteredOrders = paymentFilter
+          ? orders.filter(order => order.PaymentStatus === paymentFilter)
+          : orders;
+
+        setOrders(filteredOrders);
+        setPagination(prev => ({
+          ...prev,
+          totalOrders: filteredOrders.length,
+          totalPages: totalPages
+        }));
+      })
+      .catch(error => console.error("Lỗi tải đơn hàng:", error));
   };
 
   // Fetch orders when dependencies change
@@ -83,30 +76,24 @@ const Shipper = () => {
   return (
     <div className="form shipper">
       <div className='header'>
-        <Header/>
+        <Header />
       </div>
+      <main className="mx-md-5" style={{ marginTop: '49px' }}>
+      <h2 className="text-center"style={{fontSize: "28px",
+    fontWeight: "700",
+    color: "#2c6e2f",
+    textAlign: "center",
+    marginBottom: "30px"}}>ĐƠN HÀNG ĐANG CHỜ</h2>
 
-      <main className="mx-md-5">
-        <div className="my-3 d-flex justify-content-between align-items-center">
-          <img
-            src="https://useless-gold-stingray.myfilebase.com/ipfs/QmTujYCZq9ZGX7tAEbPfY1uZUgp2qRd4Gyc85fbmcuDi6K"
-            alt="Vận Chuyển Tiết Kiệm"
-            className="service-image"
-          />
-          <div className='ProfileShipper'><ProfileShipper props={shipper} /></div>
-        </div>
-        
-        <h2 className="text-center">Đơn Hàng Đang Chờ</h2>
-        
         <div className="row mb-3">
           <div className='col-6 align-content-end'>
-            <h5>Tổng Số Đơn Hàng: {pagination.totalOrders}</h5> 
+            <h5>Tổng Số Đơn Hàng: {pagination.totalOrders}</h5>
           </div>
           <div className='col-6'>
             <div className='d-flex justify-content-end'>
               <div className="w-25 me-3">
-                <select 
-                  className="form-select" 
+                <select
+                  className="form-select"
                   value={paymentFilter}
                   onChange={(e) => {
                     setPaymentFilter(e.target.value);
@@ -119,18 +106,18 @@ const Shipper = () => {
                 </select>
               </div>
               <div className="input-group w-50">
-                <input 
-                  type="search" 
-                  className="form-control rounded" 
+                <input
+                  type="search"
+                  className="form-control rounded"
                   placeholder="Tên, điện thoại hoặc email"
-                  aria-label="Tìm Kiếm" 
-                  aria-describedby="search-addon" 
+                  aria-label="Tìm Kiếm"
+                  aria-describedby="search-addon"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button 
-                  type="button" 
-                  className="btn btn-outline-primary" 
+                <button
+                  type="button"
+                  className="btn btn-outline-primary"
                   onClick={handleSearch}
                 >
                   Tìm Kiếm
@@ -139,7 +126,7 @@ const Shipper = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="table-orders">
           <table className="table table-hover">
             <thead className='table-light'>
@@ -161,8 +148,8 @@ const Shipper = () => {
                 </tr>
               )}
               {orders.map((order, index) => (
-                <tr 
-                  className={`${index % 2 !== 0 ? 'table-active' : ''}`}  
+                <tr
+                  className={`${index % 2 !== 0 ? 'table-active' : ''}`}
                   key={order.OrderID}
                 >
                   <td className="py-2 align-content-center">#{order.OrderID}</td>
@@ -171,9 +158,9 @@ const Shipper = () => {
                   <td className="py-2 align-content-center">{order.Email}</td>
                   <td className="py-2 align-content-center">{order.DeliveryAddress}</td>
                   <td className="py-2 align-content-center">
-                    <span 
-                      className={`badge ${order.PaymentStatus === 'PrePaid' 
-                        ? 'bg-info text-dark' 
+                    <span
+                      className={`badge ${order.PaymentStatus === 'PrePaid'
+                        ? 'bg-info text-dark'
                         : 'bg-danger text-white'}`}
                     >
                       {order.PaymentStatus === 'PrePaid' ? 'Trả Trước' : 'Trả Sau'}
@@ -183,8 +170,8 @@ const Shipper = () => {
                     {format(new Date(order.OrderDate), 'dd/MM/yyyy HH:mm:ss')}
                   </td>
                   <td className="py-2 align-content-center">
-                    <button 
-                      className="btn btn-success btn-sm" 
+                    <button
+                      className="btn btn-success btn-sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate(`/orderdetail/${order.OrderID}`);
@@ -198,7 +185,7 @@ const Shipper = () => {
             </tbody>
           </table>
         </div>
-        
+
         {pagination.totalPages > 0 &&
           <div className='d-flex justify-content-end'>
             <ReactPaginate

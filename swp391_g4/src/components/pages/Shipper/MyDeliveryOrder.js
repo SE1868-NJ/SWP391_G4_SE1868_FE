@@ -55,7 +55,11 @@ const MyDeliveryOrder = () => {
   return (
     <div className="form shipper">
       <main className="mx-md-5">
-        <h2 className="text-center mt-5">Đơn Hàng Đang Giao</h2>
+        <h2 className="text-center mt-5" style={{fontSize: "28px",
+    fontWeight: "700",
+    color: "#2c6e2f",
+    textAlign: "center",
+    marginBottom: "30px"}}>ĐƠN HÀNG ĐANG GIAO</h2>
         <div className="row">
           <div className="col-6 align-content-end">
             <h5>Tổng Số Đơn Hàng: {totalOrders}</h5>

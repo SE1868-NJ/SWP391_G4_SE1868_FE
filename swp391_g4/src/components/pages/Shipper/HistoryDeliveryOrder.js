@@ -60,7 +60,11 @@ const HistoryDeliveryOrder = () => {
   return (
     <div className="form shipper">
       <main className="mx-md-5">
-        <h2 className="text-center mt-5">Lịch Sử Đơn Hàng Đã Giao</h2>
+        <h2 className="text-center mt-5" style={{fontSize: "28px",
+    fontWeight: "700",
+    color: "#2c6e2f",
+    textAlign: "center",
+    marginBottom: "30px"}}>ĐƠN HÀNG ĐÃ GIAO</h2>
         <div className="row">
           <div className="col-6 align-content-end">
             <h5>Tổng Số Đơn Hàng: {totalOrders}</h5>
@@ -122,10 +126,7 @@ const HistoryDeliveryOrder = () => {
               )}
               {orders.map((order, index) => (
                 <tr
-                  className={`${index % 2 !== 0 ? "table-active" : ""}`}
-                  key={order.OrderID}
-                  onClick={() => navigate(`/delivered-order/${order.OrderID}`)}
-                >
+                  className={`${index % 2 !== 0 ? 'table-active' : ''}`} key={order.OrderID} onClick={() => (navigate(`/orderdetail/${order.OrderID}`))}>
                   <td className="py-2 align-content-center">
                     #{order.OrderID}
                   </td>
