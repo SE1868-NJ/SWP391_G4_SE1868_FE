@@ -17,7 +17,10 @@ const EscrowHeader = ({ navigationItems }) => {
   ];
 
   const navItems = navigationItems || defaultNavItems;
-
+  const handleNavigation = (path) => {
+    localStorage.clear();
+    window.location.href = path;
+  };
   return (
     <header className={styles.header}>
       <nav className={styles.backgroundShadow}>
@@ -29,9 +32,11 @@ const EscrowHeader = ({ navigationItems }) => {
               text={item.text}
               path={item.path}
               isActive={item.isActive}
+              onClick={() => handleNavigation(item.path)}
             />
           ))}
         </div>
+        
       </nav>
     </header>
   );

@@ -122,7 +122,6 @@ const ShipperAccount = () => {
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
-  const [isAccountCollapsed, setIsAccountCollapsed] = useState(false);
   const [walletData, setWalletData] = useState([]);
   const [totals, setTotals] = useState({ totalShippingFee: 0, totalExtraMoney: 0, totalBonus: 0 });
   const [totalWallet, setTotalWallet] = useState(0);
@@ -134,6 +133,8 @@ const ShipperAccount = () => {
   const [searchDate, setSearchDate] = useState('');
   const location = useLocation();
   const [isBalanceHidden, setIsBalanceHidden] = useState(true);
+  const [escrowBalance, setEscrowBalance] = useState(0);
+  const [isEscrowHidden, setIsEscrowHidden] = useState(true);
   useEffect(() => {
     const fetchShipperData = async () => {
       try {
@@ -162,7 +163,27 @@ const ShipperAccount = () => {
 
     fetchShipperData();
   }, [navigate]);
+  const fetchEscrowBalance = async () => {
+    try {
+      const shipperId = localStorage.getItem("shipperId");
+      const token = localStorage.getItem("token");
+      if (!shipperId || !token) return;
 
+      const response = await axios.get(
+        `http://localhost:5000/api/escrow/balance`,
+        {
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        }
+      );
+
+      if (response.data.success) {
+        setEscrowBalance(response.data.data.escrowBalance);
+      }
+    } catch (err) {
+      console.error("Fetch Escrow Balance Error:", err);
+      setEscrowBalance(0);
+    }
+  };
   const fetchTotalWallet = async () => {
     try {
       const shipperId = localStorage.getItem("shipperId");
@@ -186,16 +207,17 @@ const ShipperAccount = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      await fetchTotalWallet(); // Luôn cập nhật số dư ví
+      await fetchTotalWallet();
+      await fetchEscrowBalance();
       if (selectedSection === "wallet") {
-        await fetchWalletData(); // Gọi mỗi khi vào tab "wallet"
+        await fetchWalletData();
       }
     };
     fetchData();
-  }, [selectedSection]); // Chỉ phụ thuộc vào selectedSection
+  }, [selectedSection]);
   useEffect(() => {
     if (selectedSection === "wallet") {
-      fetchWalletData(); // Gọi lại khi thay đổi bộ lọc
+      fetchWalletData();
     }
   }, [startDate, endDate, searchDate]);
   useEffect(() => {
@@ -381,11 +403,11 @@ const ShipperAccount = () => {
     { id: 'wallet', label: 'Ví của Shipper' }
   ];
 
-  const handleAccountClick = () => {
-    setIsAccountCollapsed(!isAccountCollapsed);
-  };
   const toggleBalanceVisibility = () => {
     setIsBalanceHidden(!isBalanceHidden);
+  };
+  const toggleEscrowVisibility = () => {
+    setIsEscrowHidden(!isEscrowHidden);
   };
   const formatLocalDate = (date) => {
     if (!date) return '';
@@ -468,6 +490,20 @@ const ShipperAccount = () => {
       ),
       'wallet': (
         <div className="shipperAccount-section-content">
+          <div className="shipperAccount-escrow-balance">
+            <p>
+              Số dư ví ký quỹ:
+              <span className="shipperAccount-balance-value">
+                {isEscrowHidden ? "******" : formatData.currency(escrowBalance)}
+              </span>
+              <span
+                className="shipperAccount-toggle-balance"
+                onClick={toggleEscrowVisibility}
+              >
+                {isEscrowHidden ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </p>
+          </div>
           <div className="shipperAccount-date-filter">
             <label htmlFor="shipperAccount-searchDate">Tìm kiếm ngày: </label>
             <DatePicker
@@ -482,6 +518,11 @@ const ShipperAccount = () => {
               placeholderText="Ngày/Tháng/Năm"
               customInput={<input id="shipperAccount-searchDate" />}
               locale={vi}
+              showMonthDropdown
+              showYearDropdown
+              yearDropdownItemNumber={50}
+              minDate={new Date("1980-01-01")}
+              maxDate={new Date("2026-12-31")}
             />
 
             <label htmlFor="shipperAccount-startDate" style={{ marginLeft: '20px' }}>Từ ngày: </label>
@@ -497,6 +538,10 @@ const ShipperAccount = () => {
               customInput={<input id="shipperAccount-startDate" />}
               disabled={searchDate !== ''}
               locale={vi}
+              showMonthDropdown
+              showYearDropdown
+              yearDropdownItemNumber={50}
+              maxDate={new Date("2026-12-31")}
             />
 
             <label htmlFor="shipperAccount-endDate" style={{ marginLeft: '20px' }}>Đến ngày: </label>
@@ -510,9 +555,13 @@ const ShipperAccount = () => {
               dateFormat="dd/MM/yyyy"
               placeholderText="Ngày/Tháng/Năm"
               customInput={<input id="shipperAccount-endDate" />}
-              minDate={startDate ? new Date(startDate) : null}
+              minDate={startDate ? new Date(startDate) : new Date("1980-01-01")}
               disabled={searchDate !== ''}
               locale={vi}
+              showMonthDropdown
+              showYearDropdown
+              yearDropdownItemNumber={50}
+              maxDate={new Date("2026-12-31")}
             />
 
             {(searchDate || startDate || endDate) && (
@@ -620,7 +669,7 @@ const ShipperAccount = () => {
               </table>
               <div className="shipperAccount-wallet-balance">
                 <p>
-                  Số dư ví:
+                  Số dư ví Shipper:
                   <span className="shipperAccount-balance-value">
                     {isBalanceHidden ? "******" : formatData.currency(totalWallet)}
                   </span>

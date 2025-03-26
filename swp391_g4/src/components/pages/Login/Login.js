@@ -128,7 +128,7 @@ const Login = ({ isPopup = false, onClose }) => {
       {error && <p className="login-error">{error}</p>}
       {showEscrowNotice && (
       <div className="login-escrow-notice">
-        <p>Bạn phải nạp tiền vào ví ký quỹ để có thể hoạt động.</p>
+        <p>Số dư trong ví ký quỹ không đủ, vui lòng nạp thêm để có thể hoạt động.</p>
         <button className="login-escrow-notice-ok" onClick={handleEscrowNoticeOk}>
           Nạp tiền
         </button>

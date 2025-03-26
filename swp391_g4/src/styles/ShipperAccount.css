@@ -510,6 +510,27 @@ body {
   background-color: #e6f3ed;
 }
 
+/* Thêm vào file ShipperAccount.css */
+.shipperAccount-escrow-balance {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e4e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shipperAccount-escrow-balance p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a3c34;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 /* Documents Grid */
 .shipperAccount-documents-grid {
   display: grid;
@@ -939,26 +960,6 @@ body {
     font-size: 0.9rem;
   }
 
-  .shipperAccount-beneficiary-info {
-    flex-direction: column;
-  }
-
-  .shipperAccount-beneficiary-info .beneficiary-details {
-    border-right: none;
-    border-bottom: 1px dashed #24ae6e;
-    padding-right: 0;
-    padding-bottom: 1.5rem;
-  }
-
-  .shipperAccount-beneficiary-info .qr-code-container {
-    padding-left: 0;
-    padding-top: 1.5rem;
-  }
-
-  .shipperAccount-deposit-options {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .shipperAccount-popup-content {
     padding: 1.5rem;
   }
@@ -1003,12 +1004,5 @@ body {
   .shipperAccount-wallet-table th,
   .shipperAccount-wallet-table td {
     min-width: 120px;
-  }
-}
-
-@media (min-width: 768px) {
-  .shipperAccount-beneficiary-info {
-    flex-direction: row;
-    align-items: center;
   }
 }

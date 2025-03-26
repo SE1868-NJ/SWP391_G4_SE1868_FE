@@ -5,6 +5,9 @@ import { FaCheckCircle, FaHistory, FaWallet } from "react-icons/fa"
 import '../../../styles/FinanceManagementPage.css'
 import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { vi } from 'date-fns/locale';
 export default function FinanceManagementPage() {
   const [walletData, setWalletData] = useState({
     totalWallet: 0,
@@ -20,7 +23,6 @@ export default function FinanceManagementPage() {
   const [shipperData, setShipperData] = useState(null)
 
   // State cho nạp tiền
-  const [showDepositPopup, setShowDepositPopup] = useState(false);
   const [depositAmount, setDepositAmount] = useState("");
   const [selectedDepositAmount, setSelectedDepositAmount] = useState(null);
   const [showDepositConfirmation, setShowDepositConfirmation] = useState(false);
@@ -36,16 +38,24 @@ export default function FinanceManagementPage() {
   const [transactionHistory, setTransactionHistory] = useState([])
   const [historyLoading, setHistoryLoading] = useState(false)
   const [lastTransactionId, setLastTransactionId] = useState(null)
-
+  const [searchDate, setSearchDate] = useState(null);
   // Giả sử ID của shipper được lưu trong localStorage hoặc context
-  const shipperId = localStorage.getItem("shipperId") || "1" // Mặc định là '1' nếu không có
+  const shipperId = localStorage.getItem("shipperId") || "1"
   const newsNavigationItems = [
     { text: "Trang chủ", path: "/home" },
     { text: "Về chúng tôi", path: "/about" },
     { text: "Tin tức", path: "/news" },
     { text: "Liên hệ", path: "/shipper-contact" },
   ];
-
+  // Hàm định dạng ngày theo giờ địa phương
+  const formatLocalDate = (date) => {
+    if (!date) return null;
+    const localDate = new Date(date);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   // Cập nhật useEffect để lấy dữ liệu ví và thông tin shipper
   useEffect(() => {
@@ -120,6 +130,7 @@ export default function FinanceManagementPage() {
 
     setError(null);
     setShowDepositConfirmation(true);
+    window.scrollTo(0, 0);
   };
 
   const handleDeposit = async () => {
@@ -155,26 +166,26 @@ export default function FinanceManagementPage() {
     const resultCode = urlParams.get("resultCode");
     const extraData = urlParams.get("extraData");
     const orderId = urlParams.get("orderId");
-  
+
     // Kiểm tra xem orderId đã được xử lý trước đó chưa
     const processedOrders = JSON.parse(localStorage.getItem('processedOrders') || '[]');
     if (resultCode === "0" && extraData && !isProcessing && !processedOrders.includes(orderId)) {
       setIsProcessing(true);
       const decodedExtraData = JSON.parse(atob(extraData));
-      const { depositAmount, shipperId: redirectShipperId } = decodedExtraData;
+      const { depositAmount } = decodedExtraData;
       setDepositAmount(depositAmount);
-  
+
       const updateWallet = async () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.post(
-            `http://localhost:5000/api/shipper/${redirectShipperId}/deposit`,
+            `http://localhost:5000/api/shipper/${shipperId}/deposit`,
             { amount: Number(depositAmount), isManualUpdate: true, orderId },
             {
               headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             }
           );
-  
+
           if (response.data.success) {
             setWalletData({
               ...walletData,
@@ -185,7 +196,7 @@ export default function FinanceManagementPage() {
             setLastTransactionId(response.data.data.transactionId);
             setActiveTab("deposit");
             window.history.replaceState({}, document.title, window.location.pathname);
-  
+
             // Lưu orderId đã xử lý vào localStorage
             processedOrders.push(orderId);
             localStorage.setItem('processedOrders', JSON.stringify(processedOrders));
@@ -198,7 +209,7 @@ export default function FinanceManagementPage() {
       };
       updateWallet();
     }
-  }, [shipperId]); 
+  }, [shipperId]);
   const fetchTransactionHistory = async () => {
     try {
       setHistoryLoading(true)
@@ -209,23 +220,25 @@ export default function FinanceManagementPage() {
         setHistoryLoading(false)
         return
       }
-
+      const formattedDate = formatLocalDate(searchDate);
       // Gọi API lấy lịch sử giao dịch
       const response = await axios.get(`http://localhost:5000/api/shipper/${shipperId}/transaction-history`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        params: formattedDate ? { searchDate: formattedDate } : {},
       })
 
       if (response.data.success) {
-        setTransactionHistory(response.data.data || [])
+        setTransactionHistory(response.data.data || { transactions: [] });
       } else {
         throw new Error(response.data.message || "Không thể lấy lịch sử giao dịch")
       }
     } catch (err) {
       console.error("Error fetching transaction history:", err)
       setError("Đã xảy ra lỗi khi lấy lịch sử giao dịch")
+      setTransactionHistory({ transactions: [] });
     } finally {
       setHistoryLoading(false)
     }
@@ -235,7 +248,7 @@ export default function FinanceManagementPage() {
     if (activeTab === "history") {
       fetchTransactionHistory()
     }
-  }, [activeTab])
+  }, [activeTab, searchDate])
 
   useEffect(() => {
     if (lastTransactionId) {
@@ -252,8 +265,9 @@ export default function FinanceManagementPage() {
   }
 
   const handleAmountChange = (e) => {
-    setWithdrawAmount(e.target.value)
-  }
+    const value = e.target.value;
+    setWithdrawAmount(value);
+  };
 
   const handleAmountSelect = (amount) => {
     setSelectedWithdrawAmount(amount)
@@ -286,6 +300,7 @@ export default function FinanceManagementPage() {
 
     setError(null)
     setShowWithdrawConfirmation(true)
+    window.scrollTo(0, 0);
   }
 
   const handleCancelConfirmation = () => {
@@ -383,64 +398,103 @@ export default function FinanceManagementPage() {
       return <div className="FinancialManagement-loading">Đang tải lịch sử giao dịch...</div>;
     }
 
-    if (transactionHistory.length === 0) {
-      return <div className="FinancialManagement-empty-history">Không có giao dịch nào</div>;
-    }
+    // Kiểm tra xem có giao dịch nào không
+    const hasTransactions = transactionHistory.transactions && transactionHistory.transactions.length > 0;
 
     return (
       <div className="FinancialManagement-transaction-history">
-        <div className="FinancialManagement-transaction-table-wrapper">
-          <table className="FinancialManagement-transaction-table">
-            <thead>
-              <tr>
-                <th>Ngày</th>
-                <th>Loại</th>
-                <th>Số tiền</th>
-                <th>Trạng thái</th>
-                <th>Mô tả</th>
-                <th>Mã tham chiếu</th>
-                <th>Số dư</th> 
-              </tr>
-            </thead>
-            <tbody>
-              {transactionHistory.transactions.map((transaction) => (
-                <tr
-                  key={transaction.id}
-                  className={`FinancialManagement-transaction-row ${transaction.type} ${
-                    transaction.id === lastTransactionId ? "highlight" : ""
-                  }`}
-                >
-                  <td>{formatDate(transaction.date)}</td>
-                  <td>
-                    {transaction.type === "withdraw" ? (
-                      <span className="FinancialManagement-transaction-type withdraw">Rút tiền</span>
-                    ) : transaction.type === "deposit" ? (
-                      <span className="FinancialManagement-transaction-type deposit">Nạp tiền</span>
-                    ) : (
-                      <span className="FinancialManagement-transaction-type order">Đơn hàng</span>
-                    )}
-                  </td>
-                  <td className={`FinancialManagement-transaction-amount ${transaction.type}`}>
-                    {transaction.type === "withdraw" ? "-" : "+"}
-                    {formatCurrency(transaction.amount)}
-                  </td>
-                  <td>
-                    <span className={`FinancialManagement-transaction-status ${transaction.status}`}>
-                      {transaction.status === "success"
-                        ? "Thành công"
-                        : transaction.status === "pending"
-                        ? "Đang xử lý"
-                        : "Thất bại"}
-                    </span>
-                  </td>
-                  <td>{transaction.description}</td>
-                  <td>{transaction.referenceId || "-"}</td>
-                  <td>{formatCurrency(transaction.balanceAfterTransaction)}</td> {/* Hiển thị số dư sau giao dịch */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="FinancialManagement-history-header">
+          <div className="FinancialManagement-current-balance">
+            Số dư hiện tại: {formatCurrency(walletData.totalWallet)}
+          </div>
+          <div className="FinancialManagement-search-date">
+            <label>Tìm kiếm theo ngày: </label>
+            <DatePicker
+              selected={searchDate}
+              onChange={(date) => setSearchDate(date)}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Chọn ngày"
+              isClearable // Cho phép xóa ngày
+              className="FinancialManagement-datepicker"
+              locale={vi}
+              showMonthDropdown
+              showYearDropdown
+              yearDropdownItemNumber={50}
+              minDate={new Date("1980-01-01")}
+              maxDate={new Date("2026-12-31")}
+            />
+          </div>
         </div>
+
+        {!hasTransactions ? (
+          <div className="FinancialManagement-empty-history">
+            {searchDate ? (
+              <>
+                Không có giao dịch nào vào ngày {formatDate(searchDate)}
+                <button
+                  className="FinancialManagement-back-button"
+                  onClick={() => setSearchDate(null)} // Xóa searchDate khi nhấn "Quay lại"
+                >
+                  Quay lại
+                </button>
+              </>
+            ) : (
+              "Không có giao dịch nào"
+            )}
+          </div>
+        ) : (
+          <div className="FinancialManagement-transaction-table-wrapper">
+            <table className="FinancialManagement-transaction-table">
+              <thead>
+                <tr>
+                  <th>Ngày</th>
+                  <th>Loại</th>
+                  <th>Số tiền</th>
+                  <th>Trạng thái</th>
+                  <th>Mô tả</th>
+                  <th>Mã tham chiếu</th>
+                  <th>Số dư</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactionHistory.transactions.map((transaction) => (
+                  <tr
+                    key={transaction.id}
+                    className={`FinancialManagement-transaction-row ${transaction.type} ${transaction.id === lastTransactionId ? "highlight" : ""
+                      }`}
+                  >
+                    <td>{formatDate(transaction.date)}</td>
+                    <td>
+                      {transaction.type === "withdraw" ? (
+                        <span className="FinancialManagement-transaction-type withdraw">Rút tiền</span>
+                      ) : transaction.type === "deposit" ? (
+                        <span className="FinancialManagement-transaction-type deposit">Nạp tiền</span>
+                      ) : (
+                        <span className="FinancialManagement-transaction-type order">Đơn hàng</span>
+                      )}
+                    </td>
+                    <td className={`FinancialManagement-transaction-amount ${transaction.type}`}>
+                      {transaction.type === "withdraw" ? "-" : "+"}
+                      {formatCurrency(transaction.amount)}
+                    </td>
+                    <td>
+                      <span className={`FinancialManagement-transaction-status ${transaction.status}`}>
+                        {transaction.status === "success"
+                          ? "Thành công"
+                          : transaction.status === "pending"
+                            ? "Đang xử lý"
+                            : "Thất bại"}
+                      </span>
+                    </td>
+                    <td>{transaction.description}</td>
+                    <td>{transaction.referenceId || "-"}</td>
+                    <td>{formatCurrency(transaction.balanceAfterTransaction)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     );
   };
@@ -506,11 +560,11 @@ export default function FinanceManagementPage() {
                     <>
                       <div className="FinancialManagement-form-group">
                         <label>Số tiền nạp</label>
-                        <div className="FinancialManagement-deposit-options">
-                          {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
+                        <div className="FinancialManagement-amount-options">
+                          {[50000, 100000, 200000, 500000, 1000000, 2000000,3000000].map((amount) => (
                             <button
                               key={amount}
-                              className={`FinancialManagement-deposit-option ${selectedDepositAmount === amount ? "selected" : ""}`}
+                              className={`FinancialManagement-amount-option ${selectedDepositAmount === amount ? "selected" : ""}`}
                               onClick={() => handleDepositSelect(amount)}
                             >
                               {formatCurrency(amount)}
@@ -580,15 +634,20 @@ export default function FinanceManagementPage() {
                     <>
                       <div className="FinancialManagement-form-group">
                         <label>Số tiền rút</label>
-                        <div className="FinancialManagement-deposit-options">
+                        <div className="FinancialManagement-amount-options">
                           {[50000, 100000, 200000, 500000, 1000000, 2000000].map((amount) => (
                             <button
                               key={amount}
-                              className={`FinancialManagement-deposit-option ${selectedWithdrawAmount === amount ? "selected" : ""}`}
+                              className={`FinancialManagement-amount-option ${selectedWithdrawAmount === amount ? "selected" : ""
+                                } ${amount > walletData.totalWallet ? "disabled" : ""
+                                }`}
                               onClick={() => handleAmountSelect(amount)}
                               disabled={amount > walletData.totalWallet}
                             >
                               {formatCurrency(amount)}
+                              {amount > walletData.totalWallet && (
+                                <span className="FinancialManagement-option-warning">Không đủ</span>
+                              )}
                             </button>
                           ))}
                         </div>
@@ -604,7 +663,9 @@ export default function FinanceManagementPage() {
                           />
                         </div>
                         {withdrawAmount > walletData.totalWallet && (
-                          <p className="FinancialManagement-error-message">Số dư trong ví không đủ</p>
+                          <p className="FinancialManagement-error-message" style={{ color: 'red', marginTop: '5px' }}>
+                            Số tiền rút không được vượt quá số dư hiện tại!
+                          </p>
                         )}
                         {Number(withdrawAmount) < walletData.minWithdrawal && withdrawAmount && (
                           <p className="FinancialManagement-error-message">
@@ -741,5 +802,3 @@ export default function FinanceManagementPage() {
     </div>
   )
 }
-
-
