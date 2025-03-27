@@ -49,17 +49,24 @@ const MyDeliveryOrder = () => {
   };
 
   const handleReportIssue = () => {
-    navigate('/report-issue');
+    navigate("/report-issue");
   };
 
   return (
     <div className="form shipper">
       <main className="mx-md-5">
-        <h2 className="text-center mt-5" style={{fontSize: "28px",
-    fontWeight: "700",
-    color: "#2c6e2f",
-    textAlign: "center",
-    marginBottom: "30px"}}>ĐƠN HÀNG ĐANG GIAO</h2>
+        <h2
+          className="text-center mt-5"
+          style={{
+            fontSize: "28px",
+            fontWeight: "700",
+            color: "#2c6e2f",
+            textAlign: "center",
+            marginBottom: "30px",
+          }}
+        >
+          ĐƠN HÀNG ĐANG GIAO
+        </h2>
         <div className="row">
           <div className="col-6 align-content-end">
             <h5>Tổng Số Đơn Hàng: {totalOrders}</h5>
@@ -79,7 +86,8 @@ const MyDeliveryOrder = () => {
                   type="button"
                   className="btn btn-outline-primary"
                   onClick={handleSearch}
-                 style={{marginRight: '75px'}}>
+                  style={{ marginRight: "75px" }}
+                >
                   Tìm Kiếm
                 </button>
               </div>
@@ -96,6 +104,7 @@ const MyDeliveryOrder = () => {
                 <th scope="col">Email</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Ngày Đặt Hàng</th>
+                <th scope="col">Thanh Toán</th>
                 <th scope="col">Thời Gian Dự Kiến</th>
                 <th scope="col">Hành Động</th>
               </tr>
@@ -103,7 +112,9 @@ const MyDeliveryOrder = () => {
             <tbody>
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan="8" className="text-center">Không Tìm Thấy Đơn Hàng</td>
+                  <td colSpan="8" className="text-center">
+                    Không Tìm Thấy Đơn Hàng
+                  </td>
                 </tr>
               )}
               {orders.map((order, index) => (
@@ -125,10 +136,18 @@ const MyDeliveryOrder = () => {
                     {order.DeliveryAddress}
                   </td>
                   <td className="py-2 align-content-center">
-                    {format(
-                      new Date(order.OrderDate),
-                      "dd/MM/yyyy HH:mm:ss"
-                    )}
+                    {format(new Date(order.OrderDate), "dd/MM/yyyy HH:mm:ss")}
+                  </td>
+                  <td className="py-2 align-content-center">
+                    <span
+                      className={`badge ${
+                        order.PaymentStatus === "PrePaid"
+                          ? "bg-info text-dark"
+                          : "bg-danger text-white"
+                      }`}
+                    >
+                      {order.PaymentStatus === "PrePaid" ? "Trả Trước" : "Trả Sau"}
+                    </span>
                   </td>
                   <td className="py-2 align-content-center">
                     {format(
@@ -137,7 +156,7 @@ const MyDeliveryOrder = () => {
                     )}
                   </td>
                   <td className="py-2 align-content-center">
-                    <button 
+                    <button
                       className="btn btn-primary btn-sm"
                       onClick={() => navigate(`/orderdetail/${order.OrderID}`)}
                       style={{ backgroundColor: "green" }}
@@ -177,10 +196,7 @@ const MyDeliveryOrder = () => {
 
         {/* Nút Sự cố đơn hàng */}
         <div className="d-flex justify-content-end mt-3">
-          <button 
-            className="btn btn-warning"
-            onClick={handleReportIssue}
-          >
+          <button className="btn btn-warning" onClick={handleReportIssue}>
             Sự Cố Đơn Hàng
           </button>
         </div>

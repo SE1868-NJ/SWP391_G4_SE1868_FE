@@ -113,6 +113,7 @@ const HistoryDeliveryOrder = () => {
                 <th scope="col">Số Điện Thoại</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Ngày Đặt Hàng</th>
+                <th scope="col">Thanh toán</th>
                 <th scope="col">Thời Gian Dự Kiến</th>
                 <th scope="col">Thời Gian Giao Thực Tế</th>
                 <th scope="col">Trạng Thái</th>
@@ -141,6 +142,17 @@ const HistoryDeliveryOrder = () => {
                   </td>
                   <td className="py-2 align-content-center">
                     {format(new Date(order.OrderDate), "dd/MM/yyyy HH:mm:ss")}
+                  </td>
+                  <td className="py-2 align-content-center">
+                    <span
+                      className={`badge ${
+                        order.PaymentStatus === "PrePaid"
+                          ? "bg-info text-dark"
+                          : "bg-danger text-white"
+                      }`}
+                    >
+                      {order.PaymentStatus === "PrePaid" ? "Trả Trước" : "Trả Sau"}
+                    </span>
                   </td>
                   <td className="py-2 align-content-center">
                     {format(
