@@ -612,3 +612,12 @@
   background-color: #10B981;
   color: white;
 }
+
+
+/* Notification Container */
+.shipper-notification-container {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  z-index: 1000;
+}

@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import moment from 'moment';
+import NotificationBell from './NotificationBell';
 
 const ShipperDetail = () => {
   const [shippersList, setShippersList] = useState([]);
@@ -299,6 +300,7 @@ useEffect(() => {
               <p className="shipper-subtitle">Xem xét và xác minh các đơn đăng ký của shipper</p>
             </div>
             <div className="shipper-notification-container">
+            <NotificationBell />
           </div>
           </div>
         </div>
