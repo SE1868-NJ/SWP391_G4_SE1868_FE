@@ -151,9 +151,9 @@
 }
 
 .EscrowDeposit-deposit-option.selected {
-  background: #3498db; 
+  background: #24ae6e; 
   color: #fff;
-  border-color: #2980b9;
+  border-color: #198754;
 }
 
 /* Input wrapper */
@@ -182,7 +182,7 @@
 }
 
 .EscrowDeposit-amount-input:focus {
-  border-color: #3498db;
+  border-color: #198754;
 }
 
 .EscrowDeposit-amount-input:disabled {
@@ -194,7 +194,7 @@
 .EscrowDeposit-deposit-button {
   width: 100%;
   padding: 14px;
-  background: #3498db;
+  background: #24ae6e;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -205,7 +205,7 @@
 }
 
 .EscrowDeposit-deposit-button:hover {
-  background: #2980b9;
+  background: #198754;
 }
 
 .EscrowDeposit-deposit-button:disabled {

@@ -4,6 +4,14 @@ import axios from 'axios';
 import '../../../styles/ShipperBonusList.css';
 import HeaderOperator from './HeaderOperator'; // Assuming this is the correct import path
 
+
+function Footer() {
+  return (
+    <footer className="RevenueDashboard-footer" style={{color:"#ffffff"}}>
+      © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
+    </footer>
+  );
+}
 const ShipperBonusList = () => {
   const [shipperData, setShipperData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -587,11 +595,12 @@ const ShipperBonusList = () => {
           </div>
           <div className="shipper-bonuslist-chart-card">
             <h3>Phân phối đánh giá Shipper</h3>
-            <canvas id="ratingTrend"></canvas>
+            <canvas id="ratingTrend" style={{height:"350px"}}></canvas>
           </div>
         </div>
         {renderConfirmationModal()}
       </main>
+      <Footer/>
     </>
   );
 };

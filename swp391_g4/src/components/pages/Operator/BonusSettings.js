@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Snackbar, Alert } from '@mui/material';
-import '../../../styles/BonusSettings.css';
-import HeaderOperator from './HeaderOperator'; // Assuming this is the correct import path
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Snackbar, Alert } from "@mui/material";
+import "../../../styles/BonusSettings.css";
+import HeaderOperator from "./HeaderOperator"; // Assuming this is the correct import path
+
+function Footer() {
+  return (
+    <footer className="RevenueDashboard-footer" style={{color:"#ffffff"}}>
+      © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
+    </footer>
+  );
+}
 
 const BonusSettings = () => {
   const navigate = useNavigate();
@@ -14,11 +22,17 @@ const BonusSettings = () => {
     rating4And5Bonus: 5000,
     otherBonus: 2000,
   });
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/bonus/settings');
+      const response = await axios.get(
+        "http://localhost:4000/api/bonus/settings"
+      );
       setSettings({
         rating5Threshold: parseFloat(response.data.rating5Threshold),
         rating5Bonus: parseFloat(response.data.rating5Bonus),
@@ -27,40 +41,40 @@ const BonusSettings = () => {
         otherBonus: parseFloat(response.data.otherBonus),
       });
     } catch (error) {
-      console.error('Error fetching settings:', error);
+      console.error("Error fetching settings:", error);
     }
   };
 
   const handleSave = async () => {
     try {
-      await axios.put('http://localhost:4000/api/bonus/update-settings', {
+      await axios.put("http://localhost:4000/api/bonus/update-settings", {
         rating5Threshold: parseFloat(settings.rating5Threshold),
         rating5Bonus: parseFloat(settings.rating5Bonus),
         rating4And5Threshold: parseFloat(settings.rating4And5Threshold),
         rating4And5Bonus: parseFloat(settings.rating4And5Bonus),
         otherBonus: parseFloat(settings.otherBonus),
       });
-  
-      await axios.post('http://localhost:4000/api/bonus/recalculate', {
+
+      await axios.post("http://localhost:4000/api/bonus/recalculate", {
         month: new Date().toISOString().slice(0, 7),
       });
-  
+
       setSnackbar({
         open: true,
-        message: 'Cài đặt và tiền thưởng đã được cập nhật thành công!',
-        severity: 'success',
+        message: "Cài đặt và tiền thưởng đã được cập nhật thành công!",
+        severity: "success",
       });
 
       setTimeout(() => {
-        navigate('/shipper-bonus-list');
+        navigate("/shipper-bonus-list");
       }, 1500);
     } catch (error) {
       setSnackbar({
         open: true,
-        message: 'Có lỗi xảy ra khi cập nhật cài đặt!',
-        severity: 'error',
+        message: "Có lỗi xảy ra khi cập nhật cài đặt!",
+        severity: "error",
       });
-      console.error('Error updating settings:', error);
+      console.error("Error updating settings:", error);
     }
   };
 
@@ -77,13 +91,13 @@ const BonusSettings = () => {
 
     setSnackbar({
       open: true,
-      message: 'Đã khôi phục về cài đặt mặc định!',
-      severity: 'info',
+      message: "Đã khôi phục về cài đặt mặc định!",
+      severity: "info",
     });
   };
 
   const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setSnackbar({ ...snackbar, open: false });
@@ -95,22 +109,29 @@ const BonusSettings = () => {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setSettings((prev) => ({ ...prev, [id]: value === '' ? '' : parseFloat(value) }));
+    setSettings((prev) => ({
+      ...prev,
+      [id]: value === "" ? "" : parseFloat(value),
+    }));
   };
 
   return (
     <div>
       <HeaderOperator />
-      <div style={{ textAlign: 'center', margin: '20px 0' }}>
-        <button 
-          className="bonus-settings-nav-button" 
-          onClick={() => window.location.href = "http://localhost:3000/shipper-bonus-list"}
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <button
+          className="bonus-settings-nav-button"
+          onClick={() =>
+            (window.location.href = "http://localhost:3000/shipper-bonus-list")
+          }
         >
           Danh sách thưởng
         </button>
-        <button 
-          className="bonus-settings-nav-button active" 
-          onClick={() => window.location.href = "http://localhost:3000/bonus-settings"}
+        <button
+          className="bonus-settings-nav-button active"
+          onClick={() =>
+            (window.location.href = "http://localhost:3000/bonus-settings")
+          }
         >
           Cài đặt
         </button>
@@ -119,7 +140,9 @@ const BonusSettings = () => {
       <main className="bonus-settings-main">
         <div className="bonus-settings-container">
           <h1>Cài Đặt Thưởng Shipper</h1>
-          <p>Thiết lập các quy tắc tính tiền thưởng dựa trên đánh giá của shipper</p>
+          <p>
+            Thiết lập các quy tắc tính tiền thưởng dựa trên đánh giá của shipper
+          </p>
 
           <div className="bonus-settings-form-group">
             <label htmlFor="rating5Threshold">Ngưỡng Rating 5 sao (%):</label>
@@ -136,7 +159,9 @@ const BonusSettings = () => {
           </div>
 
           <div className="bonus-settings-form-group">
-            <label htmlFor="rating4And5Threshold">Ngưỡng Rating 4 + 5 sao (%):</label>
+            <label htmlFor="rating4And5Threshold">
+              Ngưỡng Rating 4 + 5 sao (%):
+            </label>
             <input
               type="number"
               id="rating4And5Threshold"
@@ -146,11 +171,15 @@ const BonusSettings = () => {
               max="100"
               step="1"
             />
-            <small>Tỷ lệ đơn hàng đạt 4 hoặc 5 sao để nhận mức thưởng trung bình</small>
+            <small>
+              Tỷ lệ đơn hàng đạt 4 hoặc 5 sao để nhận mức thưởng trung bình
+            </small>
           </div>
 
           <div className="bonus-settings-form-group">
-            <label htmlFor="rating5Bonus">Thưởng cho Rating 5 sao (VNĐ/đơn):</label>
+            <label htmlFor="rating5Bonus">
+              Thưởng cho Rating 5 sao (VNĐ/đơn):
+            </label>
             <input
               type="number"
               id="rating5Bonus"
@@ -163,7 +192,9 @@ const BonusSettings = () => {
           </div>
 
           <div className="bonus-settings-form-group">
-            <label htmlFor="rating4And5Bonus">Thưởng cho Rating 4 + 5 sao (VNĐ/đơn):</label>
+            <label htmlFor="rating4And5Bonus">
+              Thưởng cho Rating 4 + 5 sao (VNĐ/đơn):
+            </label>
             <input
               type="number"
               id="rating4And5Bonus"
@@ -172,7 +203,9 @@ const BonusSettings = () => {
               min="0"
               step="1000"
             />
-            <small>Số tiền thưởng mỗi đơn nếu đạt ngưỡng Rating 4 + 5 sao</small>
+            <small>
+              Số tiền thưởng mỗi đơn nếu đạt ngưỡng Rating 4 + 5 sao
+            </small>
           </div>
 
           <div className="bonus-settings-form-group">
@@ -199,20 +232,21 @@ const BonusSettings = () => {
         </div>
       </main>
 
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={3000} 
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert 
+        <Alert
           onClose={handleCloseSnackbar}
           severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {snackbar.message}
         </Alert>
       </Snackbar>
+      <Footer />
     </div>
   );
 };

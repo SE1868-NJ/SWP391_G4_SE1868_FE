@@ -526,7 +526,7 @@ function PaymentsPanel({ payments }) {
 // Footer Component
 function Footer() {
   return (
-    <footer className="RevenueDashboard-footer">
+    <footer className="RevenueDashboard-footer" style={{color:"#ffffff"}}>
       © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
     </footer>
   );
@@ -633,6 +633,7 @@ function App() {
   return (
     <>
       <HeaderOperator />
+      <h1 style={{marginTop: "50px", color:"rgb(44, 110, 47)"}}>DOANH THU HỆ THỐNG</h1>
       <div style={{padding:"25px"}}>
         <div className="RevenueDashboard-search-bar">
           <input

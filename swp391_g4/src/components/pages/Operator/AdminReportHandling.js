@@ -4,7 +4,7 @@ import "../../../styles/AdminReportHandling.css";
 import HeaderOperator from "./HeaderOperator";
 function Footer() {
   return (
-    <footer className="RevenueDashboard-footer">
+    <footer className="RevenueDashboard-footer" style={{color:"#ffffff"}}>
       © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
     </footer>
   );
