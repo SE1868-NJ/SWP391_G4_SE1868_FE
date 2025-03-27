@@ -216,9 +216,6 @@ export class Header extends React.Component {
 
                   {this.state.isDropdownOpen && (
                     <div className={styles.dropdownMenu}>
-                      <div className={styles.dropdownItem}>
-                        Số dư: {this.state.balance.toLocaleString()} VNĐ
-                      </div>
                       <a
                         href="/shipper-account"
                         className={styles.dropdownItem}

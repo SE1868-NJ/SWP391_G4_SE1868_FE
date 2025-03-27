@@ -752,11 +752,10 @@ const Revenue = () => {
         <div className="revenue-chart-card">
           <h2 className="revenue-chart-title">Tổng Quan Đơn Hàng</h2>
           <div className="revenue-chart-container">
-            <canvas ref={pieChartRef}></canvas>
+            <canvas ref={pieChartRef} style={{ width: "300px", height: "300px", marginLeft:"310px" }}></canvas>
           </div>
         </div>
       </div>
-
       <OrderDetailsModal />
       <NotificationModal />
     </div>

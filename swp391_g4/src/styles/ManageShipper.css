@@ -10,10 +10,7 @@
 
 /* Tiêu đề */
 .manage-shipper-container h2 {
-  font-size: 1.8rem;
-  margin: 20px 0;
-  color: white;
-  text-transform: uppercase;
+  color: #388e3c;
 }
 
 /* Bảng dữ liệu */
