@@ -276,7 +276,7 @@
   }
   
   .revenue-order-details-modal .modal-header {
-    background-color: #2c6e2f;
+    background-color: #24ae6e;
     color: white;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
@@ -380,7 +380,7 @@
   
   .revenue-page-item.revenue-active .revenue-page-link {
     color: #fff;
-    background-color: #2c6e2f;
+    background-color: #24ae6e;
     border-color: #2c6e2f;
   }
   

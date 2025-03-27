@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../../styles/ManageShipper.css";
 import moment from "moment";
-import BackButton from "../../buttons/BackButton";
 import { useNavigate } from "react-router-dom";
 import HeaderOperator from "./HeaderOperator";
 
@@ -456,9 +455,6 @@ const ManageShipper = () => {
             padding: "0 20px",
           }}
         >
-          <div style={{ flex: "0 0 auto" }}>
-            <BackButton />
-          </div>
           <div style={{ flex: "1", textAlign: "center" }}>
             <button
               className="manage-shipper-detail-button"

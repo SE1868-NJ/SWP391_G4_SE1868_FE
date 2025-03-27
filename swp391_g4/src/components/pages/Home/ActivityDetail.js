@@ -130,7 +130,7 @@ const ActivityDetail = () => {
           </div>
         </div>
       )}
-      <div className="backbutton"><BackButton/></div>
+      <div className="backbutton" style={{marginLeft: "100px"}}><BackButton/></div>
       <ChatPopup />
       <Footer />
     </div>

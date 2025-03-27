@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import NotificationBell from "./NotificationBell"; // Import NotificationBell
-import "./HeaderOperator.css"; // Import file CSS
+import NotificationBell from "./NotificationBell";
+import "./HeaderOperator.css";
 
 const HeaderOperator = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const HeaderOperator = () => {
         width: "100%",
         padding: "0 48px",
         alignItems: "center",
-        justifyContent: "space-between", // Đảm bảo các phần tử được phân bố đều
+        justifyContent: "space-between",
       }}
     >
       {/* Phần bên trái: Logo và tiêu đề */}
@@ -83,8 +83,8 @@ const HeaderOperator = () => {
         style={{
           display: "flex",
           gap: "20px",
-          flexGrow: 1, // Cho phép phần này mở rộng để căn giữa
-          justifyContent: "center", // Căn giữa các button
+          flexGrow: 1,
+          justifyContent: "center",
         }}
       >
         <button
@@ -122,15 +122,27 @@ const HeaderOperator = () => {
         </button>
       </div>
 
-      {/* Phần bên phải: Chuông thông báo */}
+      {/* Phần bên phải: Chuông thông báo và button Trở về */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          marginRight: "50px", // Tạo khoảng cách bên phải cho cân đối
+          marginRight: "50px",
+          gap: "15px",
         }}
       >
         <NotificationBell />
+        <button
+          className="home-button"
+          onClick={() => handleNavigate("/home")}
+          title="Trở về trang chủ"
+        >
+          <img
+            src="https://img.icons8.com/ios-filled/50/ffffff/door.png"
+            alt="Trở về"
+            className="home-icon"
+          />
+        </button>
       </div>
     </div>
   );

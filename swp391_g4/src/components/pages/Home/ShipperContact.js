@@ -6,6 +6,7 @@ import { Header } from "../../header/Header";
 import Footer from "../../footer/Footer";
 import Login from "../Login/Login";
 import ChatPopup from "./ChatPopup";
+import BackButton from "../../buttons/BackButton";
 
 function ShipperContact() {
   // Quản lý trạng thái popup
@@ -58,6 +59,7 @@ function ShipperContact() {
   };
 
   return (
+    <div>
     <div className="shippercontact-container">
       {/* Header */}
       <div className="shippercontact-header">
@@ -207,13 +209,14 @@ function ShipperContact() {
           </div>
         </div>
       )}
-
+            <div style={{marginLeft:"100px"}}><BackButton/></div>
       {/* Chat và Footer */}
       <ChatPopup />
       <Footer 
         showAccountSection={true} 
         onLoginClick={openLoginPopup} 
       />
+    </div>
     </div>
   );
 }

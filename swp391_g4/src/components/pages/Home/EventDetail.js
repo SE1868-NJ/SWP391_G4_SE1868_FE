@@ -139,7 +139,6 @@ const closeLoginPopup = () => {
           onLoginClick={openLoginPopup} />
       </div>
       <div className='event-detail'>
-        <button className="back-button" onClick={() => navigate('/news')}>Quay lại</button>
         <h1>{event.title}</h1>
         <img src={event.image} alt={event.title} className="event-image" />
         <p>{event.description}</p>
@@ -168,7 +167,9 @@ const closeLoginPopup = () => {
           </div>
         </div>
       )}
-      <BackButton/>
+      <div style={{marginLeft: '100px'}}>
+      <BackButton />
+      </div>
       <ChatPopup />
       <Footer />
     </div>
