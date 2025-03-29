@@ -4,25 +4,6 @@
   background-color: #f9fafb;
 }
 
-.shipper-header {
-  position: sticky;
-  top: 0;
-  background-image: linear-gradient(to right, #18d04d, #3989d0);
-  padding: 2rem;
-  
-}
-
-.shipper-header-content {
-  max-width: 80rem;
-  margin: 0 auto;
-}
-
-.shipper-header-flex {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
 
 
 .shipper-title {
@@ -41,7 +22,7 @@
   max-width: 80rem;
   margin: 0 auto;
   padding: 0 1rem;
-  margin-top: -2rem;
+  margin-top: 40px;
 }
 
 @media (min-width: 640px) {
@@ -79,7 +60,7 @@
   border-radius: 0.75rem;
   overflow: hidden;
   position: sticky;
-  top: 100px; /* Điều chỉnh vị trí tùy thuộc vào yêu cầu */
+  top: 100px;
   z-index: 10;
 }
 
@@ -130,7 +111,7 @@
 }
 
 .shipper-list-item:hover {
-  background-color: #f9fafb;
+  background-color: #79f3a6;
 }
 
 .shipper-list-item-selected {
@@ -224,8 +205,8 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 1.5rem;
   position: sticky;
-  top: 100px; /* Điều chỉnh giá trị này tùy theo vị trí bạn muốn */
-  z-index: 10; /* Đảm bảo phần này ở trên các nội dung khác */
+  top: 100px;
+  z-index: 10;
 }
 
 @media (min-width: 768px) {
@@ -614,10 +595,89 @@
 }
 
 
-/* Notification Container */
-.shipper-notification-container {
-  position: absolute;
-  top: 20px;
-  right: 60px;
-  z-index: 1000;
+
+
+/* Notification Overlay */
+.ShipperDetail-notification-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+  z-index: 1000; /* Đảm bảo popup nằm trên cùng */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Notification Popup */
+.ShipperDetail-notification-popup {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 300px; /* Đảm bảo đủ rộng để chứa nội dung */
+  text-align: center;
+}
+
+/* Success and Error Variants */
+.ShipperDetail-success {
+  border: 1px solid #4CAF50;
+}
+
+.ShipperDetail-error {
+  border: 1px solid #F44336;
+}
+
+/* Notification Content */
+.ShipperDetail-notification-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px; /* Khoảng cách giữa nội dung và nút Đóng */
+}
+
+/* Notification Icon */
+.ShipperDetail-notification-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* Notification Message */
+.ShipperDetail-notification-message {
+  font-size: 1rem;
+  color: #111827;
+  font-weight: 500;
+}
+
+/* Close Button */
+.ShipperDetail-notification-close-button {
+  padding: 5px 15px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.ShipperDetail-notification-close-button:hover {
+  background-color: #2563eb;
+}
+
+.ShipperDetail-notification-overlay {
+  display: flex !important;
+  z-index: 1000 !important;
+}
+
+.ShipperDetail-notification-content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.ShipperDetail-notification-message {
+  display: block !important;
+  font-size: 1rem !important;
 }

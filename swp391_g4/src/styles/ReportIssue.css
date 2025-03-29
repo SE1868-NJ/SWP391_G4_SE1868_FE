@@ -64,8 +64,8 @@ label {
   font-weight: bold;
   text-align: left;
 }
-
-input, select, textarea {
+.report-issue-page {
+  input, select, textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
@@ -73,7 +73,8 @@ input, select, textarea {
   font-size: 14px;
   color: var(--text-color);
   background-color: #fff;
-}
+}}
+
 
 select:focus, input:focus, textarea:focus {
   border-color: var(--primary-color);

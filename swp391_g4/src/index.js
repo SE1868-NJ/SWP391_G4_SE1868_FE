@@ -9,53 +9,53 @@ import {
 import { jwtDecode } from "jwt-decode";
 import "./index.css";
 
-import Home from "./components/pages/Home/Home";
-import About from "./components/pages/Home/About";
-import News from "./components/pages/Home/News";
-import ServiceDetailPage from "./components/pages/Home/ServiceDetailPage";
-import PrivacyPolicy from "./components/pages/Home/PrivacyPolicy";
-import TermsOfUse from "./components/pages/Home/TermOfUse";
-import JobDetail from "./components/pages/Home/JobDetail";
-import ShipperContact from "./components/pages/Home/ShipperContact";
-import EventDetail from "./components/pages/Home/EventDetail";
-import ActivityDetail from "./components/pages/Home/ActivityDetail";
+import Home from "./pages/Home/Home";
+import About from "./pages/Home/About";
+import News from "./pages/Home/News";
+import ServiceDetailPage from "./pages/Home/ServiceDetailPage";
+import PrivacyPolicy from "./pages/Home/PrivacyPolicy";
+import TermsOfUse from "./pages/Home/TermOfUse";
+import JobDetail from "./pages/Home/JobDetail";
+import ShipperContact from "./pages/Home/ShipperContact";
+import EventDetail from "./pages/Home/EventDetail";
+import ActivityDetail from "./pages/Home/ActivityDetail";
 
-import Login from "./components/pages/Login/Login";
-import ForgotPassword from "./components/pages/Login/ForgotPassword";
-import ResetPassword from "./components/pages/Login/ResetPassword";
-import ShipperRegister from "./components/pages/Login/ShipperRegister";
-import EscrowDeposit from "./components/pages/Login/EscrowDeposit";
+import Login from "./pages/Login/Login";
+import ForgotPassword from "./pages/Login/ForgotPassword";
+import ResetPassword from "./pages/Login/ResetPassword";
+import ShipperRegister from "./pages/Login/ShipperRegister";
+import EscrowDeposit from "./pages/Login/EscrowDeposit";
 //Trang Operator
-import ManageShipper from "./components/pages/Operator/ManageShipper";
-import ShipperDetail from "./components/pages/Operator/ShipperDetail";
-import RevenueDashboard from "./components/pages/Operator/RevenueDashboard";
-import ContactManagement from "./components/pages/Operator/ContactManagement";
-import IncidentManagement from "./components/pages/Operator/IncidentManagement";
-import ShipperBonusList from "./components/pages/Operator/ShipperBonusList";
-import BonusSetting from "./components/pages/Operator/BonusSettings";
+import ManageShipper from "./pages/Operator/ManageShipper";
+import ShipperDetail from "./pages/Operator/ShipperDetail";
+import RevenueDashboard from "./pages/Operator/RevenueDashboard";
+import ContactManagement from "./pages/Operator/ContactManagement";
+import IncidentManagement from "./pages/Operator/IncidentManagement";
+import ShipperBonusList from "./pages/Operator/ShipperBonusList";
+import BonusSetting from "./pages/Operator/BonusSettings";
 
 //Trang Shipper Account
-import ShipperAccount from "./components/pages/ShipperAccount/ShipperAccount";
-import UpdateShipperInfo from "./components/pages/ShipperAccount/UpdateShipperInfo";
-import FinanceManagementPage from "./components/pages/ShipperAccount/FinanceManagementPage";
+import ShipperAccount from "./pages/ShipperAccount/ShipperAccount";
+import UpdateShipperInfo from "./pages/ShipperAccount/UpdateShipperInfo";
+import FinanceManagementPage from "./pages/ShipperAccount/FinanceManagementPage";
 //Trang Shipper
-import Shipper from "./components/pages/Shipper/Shipper";
-import OrderDetails from "./components/pages/Shipper/OrderDetails";
-import ShipperDashboard from "./components/pages/Shipper/ShipperDashboard";
+import Shipper from "./pages/Shipper/Shipper";
+import OrderDetails from "./pages/Shipper/OrderDetails";
+import ShipperDashboard from "./pages/Shipper/ShipperDashboard";
 
-import ReportIssue from "./components/pages/Shipper/ReportIssue";
-import AdminReportHandling from "./components/pages/Operator/AdminReportHandling";
-import CustomerReportTracking from "./components/pages/Customer/CustomerReportTracking";
+import ReportIssue from "./pages/Shipper/ReportIssue";
+import AdminReportHandling from "./pages/Operator/AdminReportHandling";
+import CustomerReportTracking from "./pages/Customer/CustomerReportTracking";
 
 //Trang Customer
-import CustomerLogin from "./components/pages/Customer/CustomerLogin";
-import CustomerOrderTracking from "./components/pages/Customer/CustomerOrderTracking";
-import CustomerOrderDetail from "./components/pages/Customer/CustomerOrderDetail";
+import CustomerLogin from "./pages/Customer/CustomerLogin";
+import CustomerOrderTracking from "./pages/Customer/CustomerOrderTracking";
+import CustomerOrderDetail from "./pages/Customer/CustomerOrderDetail";
 
 // Import controllers
-import ShipperRanking from "./components/pages/Shipper/ShipperRanking";
+import ShipperRanking from "./pages/Shipper/ShipperRanking";
 
-import DeliveredOrderDetails from "./components/pages/Shipper/DeliveredOrderDetail";
+import DeliveredOrderDetails from "./pages/Shipper/DeliveredOrderDetail";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
