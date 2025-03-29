@@ -1,0 +1,150 @@
+:root {
+  --primary: #2c9d32; 
+  --primary-dark: #267d29; 
+  --primary-light: #c2e5c4; 
+  --accent: #FF9800;
+  --text: #212121;
+  --secondary-text: #757575;
+  --divider: #BDBDBD;
+  --background: #F5F5F5;
+  --card: #FFFFFF;
+  --error: #F44336;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.bonus-settings-nav-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.bonus-settings-nav-button:hover,
+.bonus-settings-nav-button.active {
+  background-color: var(--primary-dark);
+}
+
+.bonus-settings-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.bonus-settings-container {
+  background-color: var(--card);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-settings-container h1 {
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.bonus-settings-container p {
+  color: var(--secondary-text);
+  margin-bottom: 2rem;
+}
+
+.bonus-settings-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.bonus-settings-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.bonus-settings-form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.bonus-settings-form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(44, 157, 50, 0.3); /* Updated to match #2c9d32 */
+}
+
+.bonus-settings-form-group small {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--secondary-text);
+  font-size: 0.85rem;
+}
+
+.bonus-settings-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.bonus-settings-save,
+.bonus-settings-reset {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.bonus-settings-save {
+  background-color: var(--primary);
+  color: white;
+}
+
+.bonus-settings-save:hover {
+  background-color: var(--primary-dark);
+}
+
+.bonus-settings-reset {
+  background-color: var(--divider);
+  color: var(--text);
+}
+
+.bonus-settings-reset:hover {
+  background-color: #a0a0a0; /* Slightly darker than --divider */
+}
+
+@media (max-width: 768px) {
+  .bonus-settings-main {
+    padding: 1rem;
+  }
+
+  .bonus-settings-actions {
+    flex-direction: column;
+  }
+
+  .bonus-settings-save,
+  .bonus-settings-reset {
+    width: 100%;
+  }
+}

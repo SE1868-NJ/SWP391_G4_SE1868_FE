@@ -1,0 +1,501 @@
+/* Container chính */
+.revenue-container {
+    padding: 30px;
+    min-height: 100vh;
+  }
+  
+  /* Tiêu đề chính */
+  .revenue-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c6e2f;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Phần lọc ngày */
+  .revenue-date-filter-section {
+    margin-bottom: 30px;
+  }
+  
+  .revenue-date-filter-container {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .revenue-date-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .revenue-date-input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .revenue-date-input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .revenue-date-input:focus {
+    border-color: #2c6e2f;
+    box-shadow: 0 0 0 0.2rem rgba(44, 110, 47, 0.25);
+    outline: none;
+  }
+  
+  .revenue-btn-filter {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  }
+  
+  .revenue-btn-search {
+    background-color: #24ae6e;
+    color: white;
+    border: none;
+  }
+  
+  .revenue-btn-search:hover {
+    background-color: #245c27;
+    transform: translateY(-2px);
+  }
+  
+  .revenue-btn-reset {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+  }
+  
+  .revenue-btn-reset:hover {
+    background-color: #b02828;
+    transform: translateY(-2px);
+  }
+  
+  /* Phần thống kê tổng quan */
+  .revenue-stats-section {
+    margin-bottom: 40px;
+  }
+  
+  .revenue-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .revenue-stat-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .revenue-stat-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .revenue-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c6e2f;
+    margin-bottom: 10px;
+  }
+  
+  .revenue-stat-label {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  /* Phần thống kê giao hàng */
+  .revenue-delivery-stats-section {
+    margin-bottom: 40px;
+  }
+  
+  .revenue-delivery-stats-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .revenue-delivery-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .revenue-delivery-stat-card {
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .revenue-delivery-stat-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .revenue-delivery-stat-card.revenue-success {
+    background-color: #e8f5e9;
+    border: 1px solid #4CAF50;
+  }
+  
+  .revenue-delivery-stat-card.revenue-failed {
+    background-color: #ffebee;
+    border: 1px solid #FF5252;
+  }
+  
+  .revenue-delivery-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .revenue-delivery-stat-card.revenue-success .revenue-delivery-stat-value {
+    color: #4CAF50;
+  }
+  
+  .revenue-delivery-stat-card.revenue-failed .revenue-delivery-stat-value {
+    color: #FF5252;
+  }
+  
+  .revenue-delivery-stat-label {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .revenue-delivery-stat-rate {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .revenue-delivery-stat-card.revenue-success .revenue-delivery-stat-rate {
+    color: #4CAF50;
+  }
+  
+  .revenue-delivery-stat-card.revenue-failed .revenue-delivery-stat-rate {
+    color: #FF5252;
+  }
+  
+  .revenue-btn-details {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  }
+  
+  .revenue-delivery-stat-card.revenue-success .revenue-btn-details {
+    background-color: #4CAF50;
+  }
+  
+  .revenue-delivery-stat-card.revenue-success .revenue-btn-details:hover {
+    background-color: #388E3C;
+    transform: translateY(-2px);
+  }
+  
+  .revenue-delivery-stat-card.revenue-failed .revenue-btn-details {
+    background-color: #FF5252;
+  }
+  
+  .revenue-delivery-stat-card.revenue-failed .revenue-btn-details:hover {
+    background-color: #D32F2F;
+    transform: translateY(-2px);
+  }
+  
+  /* Phần biểu đồ */
+  .revenue-charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+  
+  .revenue-chart-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .revenue-chart-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .revenue-chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+  }
+  
+  /* Modal chi tiết đơn hàng */
+  .revenue-order-details-modal .modal-dialog {
+    max-width: 800px;
+  }
+  
+  .revenue-order-details-modal .modal-content {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: revenue-scale-in 0.3s ease forwards;
+  }
+  
+  @keyframes revenue-scale-in {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .revenue-order-details-modal .modal-header {
+    background-color: #24ae6e;
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  .revenue-order-details-modal .modal-title {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .revenue-order-details-modal .modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .revenue-modal-content-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .revenue-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 0;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  
+  .table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .revenue-status-badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .revenue-status-Delivered {
+    background-color: #4CAF50;
+  }
+  
+  .revenue-status-Cancelled {
+    background-color: #FF5252;
+  }
+  
+  .revenue-pagination-info {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .revenue-pagination-wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .revenue-pagination {
+    margin: 0;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    gap: 5px;
+  }
+  
+  .revenue-page-item {
+    margin: 0 2px;
+  }
+  
+  .revenue-page-link {
+    padding: 8px 12px;
+    line-height: 1.25;
+    color: #2c6e2f;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .revenue-page-link:hover {
+    color: #245c27;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+  }
+  
+  .revenue-page-item.revenue-active .revenue-page-link {
+    color: #fff;
+    background-color: #24ae6e;
+    border-color: #2c6e2f;
+  }
+  
+  .revenue-page-item.disabled .revenue-page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+  }
+  
+  .revenue-loading-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .revenue-loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #2c6e2f;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: revenue-spin 1s linear infinite;
+  }
+  
+  @keyframes revenue-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Popup thông báo */
+  .revenue-notification-modal .modal-dialog {
+    max-width: 400px;
+  }
+  
+  .revenue-notification-modal .modal-content {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: revenue-scale-in 0.3s ease forwards;
+  }
+  
+  .revenue-notification-modal .modal-header {
+    background-color: #d32f2f; /* Màu đỏ để báo lỗi */
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  .revenue-notification-modal .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .revenue-notification-modal .modal-body {
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .revenue-notification-modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    border-top: none;
+    padding: 10px 20px 20px;
+  }
+  
+  .revenue-btn-close-notification {
+    background-color: #d32f2f;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  }
+  
+  .revenue-btn-close-notification:hover {
+    background-color: #b02828;
+    transform: translateY(-2px);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .revenue-container {
+      padding: 15px;
+    }
+  
+    .revenue-title {
+      font-size: 24px;
+    }
+  
+    .revenue-date-filter-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .revenue-btn-filter {
+      width: 100%;
+    }
+  
+    .revenue-stat-value {
+      font-size: 24px;
+    }
+  
+    .revenue-delivery-stat-value {
+      font-size: 24px;
+    }
+  
+    .revenue-chart-container {
+      height: 250px;
+    }
+  }

@@ -1,0 +1,153 @@
+:root {
+  --primary-color: #24ae6e;
+  --background-color: #f4f6f9;
+  --text-color: #333;
+  --button-hover: #2b8b59;
+}
+
+.report-issue-page {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px;
+}
+
+.report-issue-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%
+}
+
+.report-issue-container-wrapper {
+  display: flex;
+  gap: 80px;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 20px;
+  padding-top: 100px;
+}
+
+.report-issue-container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 40%;
+  text-align: center;
+  min-width: 350px;
+}
+
+h2 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  font-size: 1.5em;
+}
+
+.report-issue-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: stretch;
+}
+
+label {
+  font-weight: bold;
+  text-align: left;
+}
+.report-issue-page {
+  input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  color: var(--text-color);
+  background-color: #fff;
+}}
+
+
+select:focus, input:focus, textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 6px rgba(36, 174, 110, 0.5);
+}
+
+textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+.report-issue-submit-btn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.report-issue-submit-btn:hover {
+  background-color: var(--button-hover);
+  transform: scale(1.05);
+}
+
+.report-issue-success-msg {
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.report-issue-back-btn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.report-issue-back-btn:hover {
+  background-color: var(--button-hover);
+  transform: scale(1.05);
+}
+
+footer {
+  width: 100%;
+  margin-top: 30px; 
+  background-color: var(--primary-color);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.report-issue-type-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: stretch;
+}

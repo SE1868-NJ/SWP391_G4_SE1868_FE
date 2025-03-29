@@ -1,0 +1,178 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import '../../styles/ResetPassword.css';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
+
+const ResetPassword = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [email, setEmail] = useState(location.state?.email || '');
+  const [resetToken, setResetToken] = useState(location.state?.resetToken || '');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    message: '',
+    type: 'success'
+  });
+
+  useEffect(() => {
+    if (!email || !resetToken) {
+      navigate('/forgot-password');
+    }
+  }, [email, resetToken, navigate]);
+
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    return regex.test(password);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!newPassword || !confirmPassword) {
+      setError('Vui lòng nhập đầy đủ thông tin.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError('Mật khẩu xác nhận không khớp.');
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      setError('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        'http://localhost:4000/api/reset-password',
+        { 
+          email, 
+          resetToken,
+          newPassword 
+        },
+        { 
+          headers: { 'Content-Type': 'application/json' },
+          timeout: 10000 
+        }
+      );
+
+      if (response.data.success) {
+        // Show success popup
+        setPopup({
+          show: true,
+          message: 'Mật khẩu đã được cập nhật thành công!',
+          type: 'success'
+        });
+
+        // Automatically navigate to login after 3 seconds
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
+      } else {
+        setError(response.data.message || 'Đã xảy ra lỗi.');
+      }
+    } catch (error) {
+      console.error('Lỗi đặt lại mật khẩu:', error);
+      if (error.response) {
+        setError(error.response.data.message || 'Không thể đặt lại mật khẩu.');
+      } else if (error.request) {
+        setError('Không có phản hồi từ máy chủ. Vui lòng kiểm tra kết nối.');
+      } else {
+        setError('Đã xảy ra lỗi. Vui lòng thử lại.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Popup component
+  const Popup = ({ show, message, type, onClose }) => {
+    if (!show) return null;
+
+    return (
+      <div className="reset-password-popup-overlay">
+        <div className={`reset-password-popup reset-password-${type}`}>
+          <div className="reset-password-popup-content" style={{color:"white"}}>
+            {type === 'success' ? (
+              <CheckCircle2 className="reset-password-popup-icon success" />
+            ) : (
+              <AlertCircle className="reset-password-popup-icon error" />
+            )}
+            <p>{message}</p>
+          </div>
+          <button 
+            className="reset-password-popup-close-button" 
+            onClick={onClose}
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="reset-password-wrapper">
+      <Popup 
+        show={popup.show}
+        message={popup.message}
+        type={popup.type}
+        onClose={() => setPopup({ ...popup, show: false })}
+      />
+      
+      <div className="reset-password-container left">
+        <h1 className="reset-password-title">Đặt lại mật khẩu</h1>
+        <form className="reset-password-form" onSubmit={handleSubmit}>
+          <input
+            className="reset-password-input"
+            type="password"
+            placeholder="Nhập mật khẩu mới"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+          <input
+            className="reset-password-input"
+            type="password"
+            placeholder="Xác nhận mật khẩu"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <button 
+            className="reset-password-button" 
+            type="submit" 
+            disabled={loading}
+          >
+            {loading ? 'Đang xử lý...' : 'Cập nhật mật khẩu'}
+          </button>
+        </form>
+        {error && <p className="reset-password-error">{error}</p>}
+        <button 
+          className="reset-password-back-button" 
+          onClick={() => navigate('/login')}
+        >
+          Quay lại đăng nhập
+        </button>
+      </div>
+      <div className="reset-password-image right">
+        <img 
+          src="https://giaohangtietkiem.vn/_next/image/?url=https%3A%2F%2Fcache.giaohangtietkiem.vn%2Fd%2Fda016201224ba6d2e2ee24f3bc51b89f.png&w=828&q=75" 
+          alt="Reset Password" 
+          style={{ maxWidth: '90%', height: 'auto', maxHeight: '350px' }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ResetPassword;

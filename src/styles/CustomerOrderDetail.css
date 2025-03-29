@@ -1,0 +1,264 @@
+/* CustomerOrderDetail.css */
+.customer-orderdetail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f5f7f5; /* Nền nhạt để làm nổi bật nội dung */
+}
+
+/* Định nghĩa cỡ chữ toàn cục cho các phần tử chính */
+.customer-orderdetail-h1 {
+  font-size: 24px; /* Tiêu đề chính */
+  color: #28a745; /* Xanh lá */
+}
+
+.customer-orderdetail-h2 {
+  font-size: 18px; /* Tiêu đề phụ */
+  color: #28a745; /* Xanh lá */
+  font-weight: bold;
+}
+
+p {
+  font-size: 14px; /* Nội dung chính */
+  color: #333;
+  margin: 5px 0;
+}
+
+/* Header */
+.customer-orderdetail-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #28a745; /* Viền xanh lá */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.customer-orderdetail-back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #28a745; /* Nút xanh lá */
+  border: none;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-right: 40px;
+}
+
+.customer-orderdetail-back-button:hover {
+  background-color: #218838; /* Xanh đậm hơn khi hover */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.customer-orderdetail-back-button i {
+  font-size: 14px;
+  color: white;
+}
+
+.customer-orderdetail-header-content {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.customer-orderdetail-order-status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+  font-weight: bold;
+}
+
+.customer-orderdetail-order-status.pending {
+  background-color: #ffeaa7;
+  color: #d63031;
+}
+
+.customer-orderdetail-order-status.inprogress {
+  background-color: #74b9ff;
+  color: #fff;
+}
+
+.customer-orderdetail-order-status.delivered {
+  background-color: #d4edda; /* Xanh lá nhạt */
+  color: #155724;
+}
+
+.customer-orderdetail-order-status.cancelled {
+  background-color: #ff7675;
+  color: #fff;
+}
+
+/* Main Content */
+.customer-orderdetail-main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.customer-orderdetail-left-column,
+.customer-orderdetail-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.customer-orderdetail-order-status-section,
+.customer-orderdetail-order-items-section,
+.customer-orderdetail-delivery-info-section,
+.customer-orderdetail-shipper-info-section,
+.customer-orderdetail-payment-summary-section,
+.customer-orderdetail-rating-section {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Trạng thái đơn hàng */
+.customer-orderdetail-status-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.customer-orderdetail-status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.customer-orderdetail-status-item.customer-orderdetail-completed {
+  color: #28a745; /* Xanh lá cho trạng thái hoàn thành */
+}
+
+/* Sản phẩm đặt hàng */
+.customer-orderdetail-order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.customer-orderdetail-order-item-details p {
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+}
+
+.customer-orderdetail-order-item-details p:first-child {
+  font-weight: bold;
+}
+
+.customer-orderdetail-order-item-total {
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+  font-weight: bold;
+  color: #28a745; /* Xanh lá */
+}
+
+/* Tổng thanh toán */
+.customer-orderdetail-payment-summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+}
+
+.customer-orderdetail-payment-summary-item.customer-orderdetail-total {
+  font-weight: bold;
+  border-top: 2px solid #28a745; /* Viền xanh lá */
+  padding-top: 10px;
+  margin-top: 10px;
+  color: #28a745; /* Xanh lá */
+}
+
+/* Thông tin giao hàng và shipper */
+.customer-orderdetail-delivery-info-section p,
+.customer-orderdetail-shipper-info-section p {
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+}
+
+/* Đánh giá đơn hàng */
+.customer-orderdetail-rating-section {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.customer-orderdetail-star-rating {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.customer-orderdetail-star {
+  font-size: 20px;
+  color: #ddd;
+  cursor: pointer;
+}
+
+.customer-orderdetail-star.customer-orderdetail-filled {
+  color: #f1c40f; /* Vàng cho sao được chọn */
+}
+
+.customer-orderdetail-rating-form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #28a745; /* Viền xanh lá */
+  border-radius: 5px;
+  margin-bottom: 10px;
+  resize: vertical;
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+  color: #333;
+  font-family: Arial, sans-serif;
+}
+
+.customer-orderdetail-rating-form textarea::placeholder {
+  color: #555;
+  font-size: 14px;
+}
+
+.customer-orderdetail-submit-rating-button {
+  background-color: #28a745; /* Nút xanh lá */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+}
+
+.customer-orderdetail-submit-rating-button:hover {
+  background-color: #218838; /* Xanh đậm hơn khi hover */
+}
+
+.customer-orderdetail-existing-rating p {
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+}
+
+.customer-orderdetail-existing-rating p strong {
+  font-weight: bold;
+}
+
+.customer-orderdetail-existing-rating p .customer-orderdetail-feedback-text {
+  font-weight: normal;
+}
+
+.customer-orderdetail-existing-rating p .customer-orderdetail-star-rating {
+  display: inline-flex;
+  gap: 5px;
+  vertical-align: middle;
+}
+
+.customer-orderdetail-error-message {
+  color: #dc3545;
+  text-align: center;
+  font-size: 14px; /* Đồng bộ cỡ chữ */
+}

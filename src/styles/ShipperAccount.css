@@ -1,0 +1,1008 @@
+/* Keyframes (Chỉ định nghĩa một lần) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(36, 174, 110, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(36, 174, 110, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(36, 174, 110, 0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Layout chính */
+.shipperAccount-container {
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 80px;
+}
+
+.shipperAccount-main {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  padding-top: 120px;
+  min-height: calc(100vh - 80px);
+}
+
+.footer {
+  margin-top: auto;
+}
+
+/* Account Layout */
+.shipperAccount-account-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.shipperAccount-left-sidebar {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shipperAccount-sidebar-item {
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.shipperAccount-sidebar-item:hover {
+  background-color: #f0f0f0;
+}
+
+.shipperAccount-sidebar-item.active {
+  background-color: rgb(36, 174, 110);
+  color: white;
+}
+
+.shipperAccount-right-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Content */
+.shipperAccount-section-content {
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.shipperAccount-section-content h2 {
+  font-size: 1.8rem;
+  color: #1a3c34;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  border-bottom: 2px solid #24ae6e;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Info Grid */
+.shipperAccount-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.shipperAccount-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shipperAccount-label {
+  font-weight: bold;
+  color: #666;
+}
+
+.shipperAccount-value {
+  font-size: 1.1rem;
+}
+
+/* Wallet Section */
+.shipperAccount-wallet-balance {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1.5rem;
+  background: white;
+  border: 2px solid #24ae6e;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 1rem;
+}
+
+.shipperAccount-wallet-balance:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.shipperAccount-wallet-balance p {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a3c34;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem
+}
+.shipperAccount-balance-value {
+  min-width: 50px; 
+  display: inline-block;
+}
+.shipperAccount-toggle-balance {
+  cursor: pointer;
+  font-size: 1.2rem; 
+  color: #24ae6e; 
+  transition: color 0.3s ease;
+}
+.shipperAccount-toggle-balance:hover {
+  color: #1a8a55; 
+}
+.shipperAccount-transaction-button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #24ae6e, #1a8a55);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase; 
+  letter-spacing: 0.5px; 
+}
+.shipperAccount-transaction-button:hover {
+  background: linear-gradient(135deg, #1a8a55, #24ae6e); 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.shipperAccount-transaction-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.shipperAccount-date-filter {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e4e8;
+  transition: box-shadow 0.2s ease;
+}
+
+.shipperAccount-date-filter:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+}
+
+.shipperAccount-date-filter label {
+  font-size: 0.9rem;
+  color: #1a3c34;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.shipperAccount-date-filter input[type="week"] {
+  padding: 0.4rem 0.6rem;
+   border: 1px solid #d1d5db;
+   border-radius: 6px;
+   font-size: 0.9rem;
+  color: #343a40;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  height: 32px;
+}
+
+.shipperAccount-date-filter input[type="week"]:hover {
+  border-color: #24ae6e;
+}
+
+.shipperAccount-date-filter input[type="week"]:focus {
+  border-color: #24ae6e;
+  box-shadow: 0 0 0 2px rgba(36, 174, 110, 0.2);
+  outline: none;
+}
+
+.shipperAccount-date-filter p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #495057;
+  font-weight: 500;
+  background: #f0f4f2;
+   padding: 0.3rem 0.6rem;
+   border-radius: 4px;
+   border: 1px solid #d4e0db;
+   flex: 1;
+   text-align: center;
+   min-width: 150px;
+}
+.shipperAccount-date-filter-reset-button {
+  padding: 5px 10px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.shipperAccount-date-filter-reset-button:hover {
+  background-color: #cc0000;
+}
+.react-datepicker-popper {
+  z-index: 9999 !important; 
+}
+
+
+.shipperAccount-wallet-table {
+  z-index: 1; 
+}
+
+ /* Order Details Section */
+ .shipperAccount-order-details {
+  margin-top: 1.5rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.shipperAccount-order-details h3 {
+  font-size: 1.5rem;
+  color: #1a3c34;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  border-bottom: 2px solid #24ae6e;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.shipperAccount-order-details-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  display: block;
+  overflow-x: auto;
+  /* Cho phép cuộn ngang trên màn hình nhỏ */
+}
+
+.shipperAccount-order-details-table thead,
+.shipperAccount-order-details-table tbody {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.shipperAccount-order-details-table thead th {
+  position: sticky;
+  top: 0;
+  background: #24ae6e;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+  font-size: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  z-index: 1;
+}
+
+.shipperAccount-order-details-table td {
+  padding: 1rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #343a40;
+  border-bottom: 1px solid #e9ecef;
+  min-width: 100px;
+}
+
+.shipperAccount-order-details-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.shipperAccount-order-details-table tr:hover {
+  background-color: #e6f3ed;
+}
+
+/* Back Button */
+.shipperAccount-back-button {
+  margin-top: 1.5rem;
+  background-color: #24ae6e;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+}
+
+.shipperAccount-back-button:hover {
+  background-color: #1a8a55;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.shipperAccount-back-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+/* Wallet Table */
+.shipperAccount-wallet-table-container {
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+
+.shipperAccount-wallet-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  display: block;
+}
+
+.shipperAccount-wallet-table thead,
+.shipperAccount-wallet-table tfoot {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.shipperAccount-wallet-table tbody {
+  display: block;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.shipperAccount-wallet-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.shipperAccount-wallet-table tbody tr:hover {
+  background-color: #e6f3ed;
+  box-shadow: inset 0 0 0 1px #24ae6e;
+}
+
+.shipperAccount-wallet-table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.shipperAccount-wallet-table th,
+.shipperAccount-wallet-table td {
+  padding: 1rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #343a40;
+  border-bottom: 1px solid #e9ecef;
+  min-width: 100px;
+}
+
+.shipperAccount-wallet-table thead th {
+  position: sticky;
+  top: 0;
+  background: #24ae6e;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 1;
+}
+
+.shipperAccount-wallet-table tfoot td {
+  position: sticky;
+  bottom: 0;
+  background: #24ae6e;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  z-index: 1;
+  border-bottom: none;
+}
+
+.shipperAccount-wallet-table tfoot .shipperAccount-wallet-grand-total td {
+  background: #24ae6e;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 1.2rem 1.5rem;
+  border-top: 2px solid #1a3c34;
+}
+
+.shipperAccount-wallet-table tfoot .shipperAccount-wallet-grand-total td:first-child {
+  text-align: left;
+}
+
+.shipperAccount-wallet-table tfoot .shipperAccount-wallet-grand-total td:last-child {
+  text-align: center;
+}
+
+.shipperAccount-wallet-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.shipperAccount-wallet-table tr:hover {
+  background-color: #e6f3ed;
+}
+
+/* Thêm vào file ShipperAccount.css */
+.shipperAccount-escrow-balance {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e4e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shipperAccount-escrow-balance p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a3c34;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+/* Documents Grid */
+.shipperAccount-documents-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;  
+  padding: 10px;
+}
+
+.shipperAccount-document-item {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd; /* Tùy chọn: Thêm viền để phân biệt */
+  border-radius: 5px;
+}
+
+.shipperAccount-document-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.shipperAccount-document-item h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.shipperAccount-document-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+/* Account Actions */
+.shipperAccount-account-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  margin-right: 20px;
+}
+
+.shipperAccount-update-button,
+.shipperAccount-cancel-account-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.shipperAccount-update-button {
+  background-color: rgb(36, 174, 110);
+  color: white;
+}
+
+.shipperAccount-cancel-account-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.shipperAccount-update-button:hover,
+.shipperAccount-cancel-account-button:hover {
+  opacity: 0.9;
+}
+
+/* Popup Overlay */
+.shipperAccount-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1300;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.3s ease;
+}
+
+.shipperAccount-cancel-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1200;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.3s ease;
+}
+
+/* Popup Content */
+.shipperAccount-popup-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.4s ease;
+  position: relative;
+}
+
+.shipperAccount-cancel-popup-content {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.4s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.shipperAccount-popup-content h2,
+.shipperAccount-cancel-popup-content h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #1a3c34;
+  font-weight: 700;
+  padding-bottom: 0.75rem;
+  display: block;
+}
+
+.shipperAccount-popup-content h2 {
+  border-bottom: 2px solid #24ae6e;
+}
+
+.shipperAccount-cancel-popup-content h2 {
+  border-bottom: 2px solid #dc3545;
+}
+
+.shipperAccount-cancel-popup-content p {
+  text-align: center;
+  color: #495057;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Popup Close Button */
+.shipperAccount-popup-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.shipperAccount-popup-close:hover {
+  background-color: #f1f1f1;
+  color: #dc3545;
+}
+
+/* Cancel Reason Options */
+.shipperAccount-cancel-reason-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.shipperAccount-cancel-reason-options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.shipperAccount-cancel-reason-options::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.shipperAccount-cancel-reason-options::-webkit-scrollbar-thumb {
+  background: #dc3545;
+  border-radius: 4px;
+}
+
+.shipperAccount-cancel-reason-options::-webkit-scrollbar-thumb:hover {
+  background: #c82333;
+}
+
+.shipperAccount-cancel-reason-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.shipperAccount-cancel-reason-option:hover {
+  background-color: #f1f3f5;
+  border-color: #dc3545;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.15);
+}
+
+.shipperAccount-cancel-reason-option input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.shipperAccount-cancel-reason-option label {
+  font-size: 1rem;
+  color: #343a40;
+  cursor: pointer;
+  line-height: 1.5;
+  flex: 1;
+  transition: color 0.3s ease;
+}
+
+.shipperAccount-cancel-other-reason-input {
+  width: 100%;
+  height: 80px;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  resize: none;
+  margin-top: 1rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shipperAccount-cancel-other-reason-input:focus {
+  border-color: #dc3545;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}
+
+/* Popup Actions */
+.shipperAccount-popup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.shipperAccount-cancel-popup-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.shipperAccount-close-button,
+.shipperAccount-cancel-popup-button,
+.shipperAccount-cancel-close-button,
+.shipperAccount-ok-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.shipperAccount-close-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.shipperAccount-close-button:hover,
+.shipperAccount-cancel-close-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.shipperAccount-cancel-popup-button {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 0.75rem 2rem;
+  min-width: 140px;
+}
+
+.shipperAccount-cancel-popup-button:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.shipperAccount-cancel-close-button {
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #ced4da;
+  min-width: 140px;
+}
+
+.shipperAccount-cancel-close-button:hover {
+  background-color: #e9ecef;
+}
+
+.shipperAccount-ok-button {
+  background-color: #24ae6e;
+  color: white;
+  margin: 1.5rem auto 0.5rem;
+}
+
+.shipperAccount-ok-button:hover {
+  background-color: #1a8a55;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.shipperAccount-popup-content input[type="number"] {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+
+.shipperAccount-popup-content input[type="number"]:focus {
+  border-color: #24ae6e;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(36, 174, 110, 0.2);
+  outline: none;
+}
+
+/* Error Message */
+.shipperAccount-error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  background-color: rgba(220, 53, 69, 0.1);
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+/* Amount Highlight */
+.shipperAccount-amount-highlight {
+  background-color: #e6f3ed;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  color: #24ae6e;
+  animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .shipperAccount-main {
+    padding: 1rem;
+  }
+
+  .shipperAccount-section-content {
+    padding: 1rem;
+  }
+
+  .shipperAccount-account-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .shipperAccount-date-filter {
+    flex-wrap: wrap;
+    padding: 0.5rem 0.8rem;
+    gap: 0.6rem;
+  }
+
+  .shipperAccount-date-filter input[type="date"] {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #343a40;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    height: 32px;
+  }
+
+  .shipperAccount-date-filter input[type="date"]:disabled {
+    background: #e9ecef;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .shipperAccount-date-filter label {
+    margin-bottom: -0.2rem;
+  }
+
+
+
+  .shipperAccount-wallet-table th,
+  .shipperAccount-wallet-table td {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .shipperAccount-popup-content {
+    padding: 1.5rem;
+  }
+
+  .shipperAccount-popup-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 767px) {
+
+  .shipperAccount-cancel-popup-content {
+    padding: 1.5rem;
+    width: 95%;
+    max-width: 400px;
+  }
+
+  .shipperAccount-cancel-popup-actions {
+    flex-direction: column;
+  }
+
+  .shipperAccount-cancel-popup-button,
+  .shipperAccount-cancel-close-button {
+    width: 100%;
+    padding: 0.75rem;
+  }
+
+  .shipperAccount-cancel-reason-options {
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shipperAccount-wallet-table tbody {
+    max-height: 200px;
+  }
+
+  .shipperAccount-wallet-table {
+    overflow-x: auto;
+  }
+
+  .shipperAccount-wallet-table th,
+  .shipperAccount-wallet-table td {
+    min-width: 120px;
+  }
+}

@@ -1,0 +1,230 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import "./index.css";
+
+import Home from "./pages/Home/Home";
+import About from "./pages/Home/About";
+import News from "./pages/Home/News";
+import ServiceDetailPage from "./pages/Home/ServiceDetailPage";
+import PrivacyPolicy from "./pages/Home/PrivacyPolicy";
+import TermsOfUse from "./pages/Home/TermOfUse";
+import JobDetail from "./pages/Home/JobDetail";
+import ShipperContact from "./pages/Home/ShipperContact";
+import EventDetail from "./pages/Home/EventDetail";
+import ActivityDetail from "./pages/Home/ActivityDetail";
+
+import Login from "./pages/Login/Login";
+import ForgotPassword from "./pages/Login/ForgotPassword";
+import ResetPassword from "./pages/Login/ResetPassword";
+import ShipperRegister from "./pages/Login/ShipperRegister";
+import EscrowDeposit from "./pages/Login/EscrowDeposit";
+//Trang Operator
+import ManageShipper from "./pages/Operator/ManageShipper";
+import ShipperDetail from "./pages/Operator/ShipperDetail";
+import RevenueDashboard from "./pages/Operator/RevenueDashboard";
+import ContactManagement from "./pages/Operator/ContactManagement";
+import IncidentManagement from "./pages/Operator/IncidentManagement";
+import ShipperBonusList from "./pages/Operator/ShipperBonusList";
+import BonusSetting from "./pages/Operator/BonusSettings";
+
+//Trang Shipper Account
+import ShipperAccount from "./pages/ShipperAccount/ShipperAccount";
+import UpdateShipperInfo from "./pages/ShipperAccount/UpdateShipperInfo";
+import FinanceManagementPage from "./pages/ShipperAccount/FinanceManagementPage";
+//Trang Shipper
+import Shipper from "./pages/Shipper/Shipper";
+import OrderDetails from "./pages/Shipper/OrderDetails";
+import ShipperDashboard from "./pages/Shipper/ShipperDashboard";
+
+import ReportIssue from "./pages/Shipper/ReportIssue";
+import AdminReportHandling from "./pages/Operator/AdminReportHandling";
+import CustomerReportTracking from "./pages/Customer/CustomerReportTracking";
+
+//Trang Customer
+import CustomerLogin from "./pages/Customer/CustomerLogin";
+import CustomerOrderTracking from "./pages/Customer/CustomerOrderTracking";
+import CustomerOrderDetail from "./pages/Customer/CustomerOrderDetail";
+
+// Import controllers
+import ShipperRanking from "./pages/Shipper/ShipperRanking";
+
+import DeliveredOrderDetails from "./pages/Shipper/DeliveredOrderDetail";
+
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+
+    if (decodedToken.exp < currentTime) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("shipperId");
+      localStorage.removeItem("shipperName");
+      return <Navigate to="/login" replace />;
+    }
+
+    return children;
+  } catch (error) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("shipperId");
+    localStorage.removeItem("shipperName");
+    return <Navigate to="/login" replace />;
+  }
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/shipper-contact" element={<ShipperContact />} />
+        <Route path="/eventdetail" element={<EventDetail />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:eventId" element={<EventDetail />} />
+        <Route path="/activities/:activityId" element={<ActivityDetail />} />
+        <Route path="/service/:serviceId" element={<ServiceDetailPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-use" element={<TermsOfUse />} />
+        <Route path="/job/:jobId" element={<JobDetail />} />
+        <Route path="/about" element={<About />} />
+
+      {/* ** Trang Login ** */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/register" element={<ShipperRegister />} />
+      <Route path="/escrow-deposit" element={<EscrowDeposit />} />
+      {/* ** Trang Shipper** */}
+      <Route
+        path="/history-delivery-order"
+        element={<Navigate to="/dashboard/history" />}
+      />
+
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <ShipperDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/pending"
+          element={
+            <PrivateRoute>
+              <ShipperDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/my-orders"
+          element={
+            <PrivateRoute>
+              <ShipperDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/history"
+          element={
+            <PrivateRoute>
+              <ShipperDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/revenue"
+          element={
+            <PrivateRoute>
+              <ShipperDashboard />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/shipper"
+          element={
+            <PrivateRoute>
+              <Shipper />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/shipper-ranking" element={<ShipperRanking />} />
+        <Route path="/orderdetail/:id" element={<OrderDetails />} />
+        <Route
+          path="/shipper-dashboard"
+          element={<Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/delivered-order/:id"
+          element={<DeliveredOrderDetails />}
+        />
+
+        {/* ** Trang ShipperAccount** */}
+        <Route
+          path="/shipper-account"
+          element={
+            <PrivateRoute>
+              <ShipperAccount />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/update-shipper-info" element={<UpdateShipperInfo />} />
+        <Route path="/finance-management" element={<FinanceManagementPage />} />
+
+       <Route path="/manage-shipper" element={<ManageShipper />} />
+       <Route path="/shipper-detail" element={<ShipperDetail />} />
+       <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
+       <Route path="/contact-management" element={<ContactManagement />} />
+
+      <Route path="/shipper-detail" element={<ShipperDetail />} />
+      <Route path="/revenue-dashboard" element={<RevenueDashboard />} />
+      <Route path="/incident-management" element={<IncidentManagement />} />
+      {/* ** Phan bao cao su co** */}
+      <Route path="/report-issue" element={<ReportIssue />} />
+      <Route path="/admin-report-handling" element={<AdminReportHandling />} />
+      <Route
+        path="/customer-report-tracking"
+        element={<CustomerReportTracking />}
+      />
+
+      {/* ** Phan bao cao su co** */}
+      <Route path="/report-issue" element={<ReportIssue />} />
+      <Route path="/admin-report-handling" element={<AdminReportHandling />} />
+      <Route
+        path="/customer-report-tracking"
+        element={<CustomerReportTracking />}
+      />
+
+        {/* Trang Customer */}
+        <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route
+        path="/customer/orders"
+        element={
+          <PrivateRoute>
+            <CustomerOrderTracking />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/customer/order/:orderId" element={<CustomerOrderDetail />} />
+      <Route path="/shipper-bonus-list" element={< ShipperBonusList/>}/>
+      <Route path="/bonus-settings" element={<BonusSetting/>}/>
+    </Routes>
+  </Router>
+  </React.StrictMode>
+);
+
