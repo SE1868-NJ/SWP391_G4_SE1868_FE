@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/ResetPassword.css';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -13,6 +14,11 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    message: '',
+    type: 'success'
+  });
 
   useEffect(() => {
     if (!email || !resetToken) {
@@ -60,8 +66,17 @@ const ResetPassword = () => {
       );
 
       if (response.data.success) {
-        alert('Mật khẩu đã được cập nhật thành công!');
-        navigate('/login');
+        // Show success popup
+        setPopup({
+          show: true,
+          message: 'Mật khẩu đã được cập nhật thành công!',
+          type: 'success'
+        });
+
+        // Automatically navigate to login after 3 seconds
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
       } else {
         setError(response.data.message || 'Đã xảy ra lỗi.');
       }
@@ -79,8 +94,41 @@ const ResetPassword = () => {
     }
   };
 
+  // Popup component
+  const Popup = ({ show, message, type, onClose }) => {
+    if (!show) return null;
+
+    return (
+      <div className="reset-password-popup-overlay">
+        <div className={`reset-password-popup reset-password-${type}`}>
+          <div className="reset-password-popup-content" style={{color:"white"}}>
+            {type === 'success' ? (
+              <CheckCircle2 className="reset-password-popup-icon success" />
+            ) : (
+              <AlertCircle className="reset-password-popup-icon error" />
+            )}
+            <p>{message}</p>
+          </div>
+          <button 
+            className="reset-password-popup-close-button" 
+            onClick={onClose}
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="reset-password-wrapper">
+      <Popup 
+        show={popup.show}
+        message={popup.message}
+        type={popup.type}
+        onClose={() => setPopup({ ...popup, show: false })}
+      />
+      
       <div className="reset-password-container left">
         <h1 className="reset-password-title">Đặt lại mật khẩu</h1>
         <form className="reset-password-form" onSubmit={handleSubmit}>
@@ -100,12 +148,19 @@ const ResetPassword = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          <button className="reset-password-button" type="submit" disabled={loading}>
+          <button 
+            className="reset-password-button" 
+            type="submit" 
+            disabled={loading}
+          >
             {loading ? 'Đang xử lý...' : 'Cập nhật mật khẩu'}
           </button>
         </form>
         {error && <p className="reset-password-error">{error}</p>}
-        <button className="reset-password-back-button" onClick={() => navigate('/login')}>
+        <button 
+          className="reset-password-back-button" 
+          onClick={() => navigate('/login')}
+        >
           Quay lại đăng nhập
         </button>
       </div>
@@ -121,4 +176,3 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
-

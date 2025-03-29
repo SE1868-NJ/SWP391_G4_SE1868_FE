@@ -10,19 +10,19 @@ import axios from 'axios';
 // Constants for validation and configuration
 const VALIDATION_CONFIG = {
   fullName: {
-    pattern: /^[\p{L}\s]{2,}$/u,
-    maxLength: 100,
-    message: "Họ tên chỉ được chứa chữ cái và khoảng trắng (2-100 ký tự)"
+    pattern: /^[\p{L}]+(\s[\p{L}]+){2,}$/u,
+    maxLength: 30,
+    message: "Họ tên phải có ít nhất 3 từ (VD: Nguyễn Văn A), chỉ chứa chữ cái và khoảng trắng giữa các từ (tối đa 30 ký tự)"
   },
   phone: {
     pattern: /^(0[0-9]{9})$/,
-    maxLength: 15,
-    message: "Số điện thoại không hợp lệ (10 số, bắt đầu bằng số 0)"
+    maxLength: 10,
+    message: "Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)"
   },
   email: {
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    maxLength: 100,
-    message: "Email không hợp lệ"
+    maxLength: 50,
+    message: "Email không hợp lệ (tối đa 50 ký tự)"
   },
   citizenId: {
     pattern: /^[0-9]{12}$/,
@@ -31,13 +31,13 @@ const VALIDATION_CONFIG = {
   },
   licensePlate: {
     pattern: /^[0-9]{2}[A-Z]-[0-9]{4,5}$/,
-    maxLength: 15,
+    maxLength: 9,
     message: "Biển số xe không hợp lệ (VD: 51F-12345)"
   },
   licenseNumber: {
     pattern: /^[A-Z][0-9]{11}$/,
-    maxLength: 20,
-    message: "Số GPLX không hợp lệ (1 chữ cái và 11 số)"
+    maxLength: 12,
+    message: "Số GPLX không hợp lệ (1 chữ cái + 11 số)"
   },
   bankAccount: {
     pattern: /^[0-9]{10,20}$/,
@@ -45,18 +45,44 @@ const VALIDATION_CONFIG = {
     message: "Số tài khoản không hợp lệ (10-20 số)"
   },
   password: {
-    pattern: /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+    pattern: /^[A-Za-z\d]{8,}$/,
     minLength: 8,
-    maxLength: 100,
-    message: "Mật khẩu phải chứa ít nhất 1 chữ cái và 1 số, tối thiểu 8 ký tự"
+    maxLength: 20,
+    message: "Mật khẩu phải chứa chữ cái hoặc số, từ 8-20 ký tự"
+  },
+  houseNumber: {
+    pattern: /^[\p{L}\s\d.,-]{2,}$/u,
+    maxLength: 50,
+    message: "Số nhà và tên đường chỉ chứa chữ cái, số, dấu cách, dấu chấm, dấu phẩy, dấu gạch ngang (2-50 ký tự)"
+  },
+  ward: {
+    pattern: /^[\p{L}\s]{2,}$/u,
+    maxLength: 30,
+    message: "Phường/Xã chỉ chứa chữ cái và dấu cách (2-30 ký tự)"
+  },
+  district: {
+    pattern: /^[\p{L}\s]{2,}$/u,
+    maxLength: 30,
+    message: "Quận/Huyện chỉ chứa chữ cái và dấu cách (2-30 ký tự)"
+  },
+  city: {
+    pattern: /^[\p{L}\s]{2,}$/u,
+    maxLength: 30,
+    message: "Tỉnh/Thành phố chỉ chứa chữ cái và dấu cách (2-30 ký tự)"
+  },
+  imageUrl: {
+    pattern: /^(https?:\/\/[^\s/$.?#].[^\s]*)$/i,
+    maxLength: 150,
+    message: "URL ảnh không hợp lệ (phải bắt đầu bằng http:// hoặc https://, tối đa 150 ký tự)"
   }
 };
 
+
 const BANK_LIST = [
-  "Vietcombank", "Techcombank", "BIDV", "Agribank", "VPBank", 
-  "ACB", "MBBank", "TPBank", "Sacombank", "VietinBank", 
-  "SHB", "HDBank", "Eximbank", "VIB", "SCB", 
-  "OCB", "MSB", "SeABank", "LienVietPostBank", "PVcomBank", 
+  "Vietcombank", "Techcombank", "BIDV", "Agribank", "VPBank",
+  "ACB", "MBBank", "TPBank", "Sacombank", "VietinBank",
+  "SHB", "HDBank", "Eximbank", "VIB", "SCB",
+  "OCB", "MSB", "SeABank", "LienVietPostBank", "PVcomBank",
   "NamABank", "BaoVietBank", "KienLongBank", "DongABank"
 ];
 
@@ -170,100 +196,179 @@ const ShipperRegister = () => {
   };
   const validateField = (name, value) => {
     const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+
     switch (name) {
       case 'FullName':
-        if (!value.trim()) return "Vui lòng nhập họ tên";
-        if (!VALIDATION_CONFIG.fullName.pattern.test(value))
+        if (!value || !value.trim()) return "Vui lòng nhập họ tên";
+        const trimmedValue = value.trim();
+        if (!VALIDATION_CONFIG.fullName.pattern.test(trimmedValue))
           return VALIDATION_CONFIG.fullName.message;
+        if (trimmedValue.length > VALIDATION_CONFIG.fullName.maxLength)
+          return `Họ tên không được vượt quá ${VALIDATION_CONFIG.fullName.maxLength} ký tự`;
         return "";
+
 
       case 'PhoneNumber':
         if (!value) return "Vui lòng nhập số điện thoại";
-        if (!VALIDATION_CONFIG.phone.pattern.test(value))
+        if (!VALIDATION_CONFIG.phone.pattern.test(value) || value.length !== VALIDATION_CONFIG.phone.maxLength)
           return VALIDATION_CONFIG.phone.message;
         return "";
 
+
       case 'CitizenID':
         if (!value) return "Vui lòng nhập số CCCD";
-        if (!VALIDATION_CONFIG.citizenId.pattern.test(value))
+        if (!VALIDATION_CONFIG.citizenId.pattern.test(value) || value.length !== VALIDATION_CONFIG.citizenId.maxLength)
           return VALIDATION_CONFIG.citizenId.message;
         return "";
 
+
       case 'Password':
         if (!value) return "Vui lòng nhập mật khẩu";
-        if (!VALIDATION_CONFIG.password.pattern.test(value))
+        if (!VALIDATION_CONFIG.password.pattern.test(value) || value.length < VALIDATION_CONFIG.password.minLength || value.length > VALIDATION_CONFIG.password.maxLength)
           return VALIDATION_CONFIG.password.message;
         return "";
+
 
       case 'ConfirmPassword':
         if (!value) return "Vui lòng xác nhận mật khẩu";
         if (value !== formData.Password) return "Mật khẩu xác nhận không khớp";
         return "";
 
+
       case 'Email':
-        if (value && !VALIDATION_CONFIG.email.pattern.test(value))
+        if (value && (!VALIDATION_CONFIG.email.pattern.test(value) || value.length > VALIDATION_CONFIG.email.maxLength))
           return VALIDATION_CONFIG.email.message;
         return "";
 
+
       case 'LicensePlate':
         if (!value) return "Vui lòng nhập biển số xe";
-        if (!VALIDATION_CONFIG.licensePlate.pattern.test(value))
+        if (!VALIDATION_CONFIG.licensePlate.pattern.test(value) || value.length > VALIDATION_CONFIG.licensePlate.maxLength)
           return VALIDATION_CONFIG.licensePlate.message;
         return "";
 
+
       case 'LicenseNumber':
         if (!value) return "Vui lòng nhập số GPLX";
-        if (!VALIDATION_CONFIG.licenseNumber.pattern.test(value))
+        if (!VALIDATION_CONFIG.licenseNumber.pattern.test(value) || value.length > VALIDATION_CONFIG.licenseNumber.maxLength)
           return VALIDATION_CONFIG.licenseNumber.message;
         return "";
 
+
       case 'BankAccountNumber':
         if (!value) return "Vui lòng nhập số tài khoản";
-        if (!VALIDATION_CONFIG.bankAccount.pattern.test(value))
+        if (!VALIDATION_CONFIG.bankAccount.pattern.test(value) || value.length > VALIDATION_CONFIG.bankAccount.maxLength)
           return VALIDATION_CONFIG.bankAccount.message;
         return "";
-        case 'RegistrationVehicle':
-          if (!value) return "Vui lòng nhập ngày đăng kiểm xe";
-          const regDate = new Date(value);
-          if (isNaN(regDate.getTime())) return "Ngày đăng kiểm không hợp lệ";
-          if (regDate > today) return "Ngày đăng kiểm không được là ngày trong tương lai";
-          return "";
-    
-        case 'ExpiryVehicle':
-          if (!value) return "Vui lòng nhập ngày hết hạn đăng kiểm";
-          const expiryDate = new Date(value);
-          const regVehicleDate = new Date(formData.RegistrationVehicle);
-          if (isNaN(expiryDate.getTime())) return "Ngày hết hạn đăng kiểm không hợp lệ";
-          if (formData.RegistrationVehicle && expiryDate <= regVehicleDate)
-            return "Ngày hết hạn đăng kiểm phải sau ngày đăng kiểm";
-          return "";
-    
-        case 'LicenseExpiryDate':
-          if (!value) return "Vui lòng nhập ngày hết hạn GPLX";
-          const licenseExpiryDate = new Date(value);
-          if (isNaN(licenseExpiryDate.getTime())) return "Ngày hết hạn GPLX không hợp lệ";
-          if (licenseExpiryDate <= today) return "GPLX đã hết hạn, vui lòng gia hạn trước khi đăng ký";
-          return "";
-      // Validate other required fields
+
+
+      case 'RegistrationVehicle':
+        if (!value) return "Vui lòng nhập ngày đăng kiểm xe";
+        const regDate = new Date(value);
+        if (isNaN(regDate.getTime())) return "Ngày đăng kiểm không hợp lệ";
+        if (regDate > today) return "Ngày đăng kiểm không được là ngày trong tương lai";
+        const tenYearsAgo = new Date(today);
+        tenYearsAgo.setFullYear(today.getFullYear() - 10);
+        if (regDate < tenYearsAgo) return "Ngày đăng kiểm quá cũ (trước 10 năm)";
+        return "";
+
+
+      case 'ExpiryVehicle':
+        if (!value) return "Vui lòng nhập ngày hết hạn đăng kiểm";
+        const expiryDate = new Date(value);
+        const regVehicleDate = new Date(formData.RegistrationVehicle);
+        if (isNaN(expiryDate.getTime())) return "Ngày hết hạn đăng kiểm không hợp lệ";
+        if (formData.RegistrationVehicle && expiryDate <= regVehicleDate)
+          return "Ngày hết hạn đăng kiểm phải sau ngày đăng kiểm";
+        if (expiryDate < today) return "Ngày hết hạn đăng kiểm đã quá hạn";
+        const twoYearsLater = new Date(today);
+        twoYearsLater.setFullYear(today.getFullYear() + 2);
+        if (expiryDate > twoYearsLater) return "Ngày hết hạn đăng kiểm không được quá 2 năm từ hiện tại";
+        return "";
+
+
+      case 'LicenseExpiryDate':
+        if (!value) return "Vui lòng nhập ngày hết hạn GPLX";
+        const licenseExpiryDate = new Date(value);
+        if (isNaN(licenseExpiryDate.getTime())) return "Ngày hết hạn GPLX không hợp lệ";
+        if (licenseExpiryDate <= today) return "GPLX đã hết hạn, vui lòng gia hạn trước khi đăng ký";
+        const tenYearsLater = new Date(today);
+        tenYearsLater.setFullYear(today.getFullYear() + 10);
+        if (licenseExpiryDate > tenYearsLater) return "Ngày hết hạn GPLX không được quá 10 năm từ hiện tại";
+        return "";
+
+
       case 'DateOfBirth':
+        if (!value) return "Vui lòng nhập ngày sinh";
+        const dob = new Date(value);
+        if (isNaN(dob.getTime())) return "Ngày sinh không hợp lệ";
+        if (dob > today) return "Ngày sinh không được là ngày trong tương lai";
+        const age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        const dayDiff = today.getDate() - dob.getDate();
+        if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0))))
+          return "Bạn phải ít nhất 18 tuổi để đăng ký";
+        if (age > 100) return "Ngày sinh không hợp lý (tuổi vượt quá 100)";
+        return "";
+
+
       case 'HouseNumber':
+        if (!value) return "Vui lòng nhập số nhà và tên đường";
+        if (!VALIDATION_CONFIG.houseNumber.pattern.test(value) || value.length > VALIDATION_CONFIG.houseNumber.maxLength)
+          return VALIDATION_CONFIG.houseNumber.message;
+        return "";
+
+
       case 'Ward':
+        if (!value) return "Vui lòng nhập phường/xã";
+        if (!VALIDATION_CONFIG.ward.pattern.test(value) || value.length > VALIDATION_CONFIG.ward.maxLength)
+          return VALIDATION_CONFIG.ward.message;
+        return "";
+
+
       case 'District':
+        if (!value) return "Vui lòng nhập quận/huyện";
+        if (!VALIDATION_CONFIG.district.pattern.test(value) || value.length > VALIDATION_CONFIG.district.maxLength)
+          return VALIDATION_CONFIG.district.message;
+        return "";
+
+
       case 'City':
+        if (!value) return "Vui lòng nhập tỉnh/thành phố";
+        if (!VALIDATION_CONFIG.city.pattern.test(value) || value.length > VALIDATION_CONFIG.city.maxLength)
+          return VALIDATION_CONFIG.city.message;
+        return "";
+
+
       case 'BankName':
+        if (!value) return "Vui lòng chọn ngân hàng";
+        if (!BANK_LIST.includes(value)) return "Ngân hàng không hợp lệ";
+        return "";
+
+
       case 'VehicleType':
+        if (!value) return "Vui lòng chọn loại phương tiện";
+        if (!VEHICLE_TYPES.includes(value)) return "Loại phương tiện không hợp lệ";
+        return "";
+
+
       case 'DriverLicenseImage':
       case 'VehicleRegistrationImage':
       case 'ImageShipper':
       case 'IDCardImage':
-        if (!value) return `Vui lòng điền thông tin này`;
+        if (!value) return `Vui lòng nhập URL ảnh ${name === 'DriverLicenseImage' ? 'GPLX' : name === 'VehicleRegistrationImage' ? 'đăng ký xe' : name === 'ImageShipper' ? 'chân dung' : 'CCCD'}`;
+        if (!VALIDATION_CONFIG.imageUrl.pattern.test(value) || value.length > VALIDATION_CONFIG.imageUrl.maxLength)
+          return VALIDATION_CONFIG.imageUrl.message;
         return "";
+
 
       default:
         return "";
     }
   };
+
 
   const formatDate = (dateString) => {
     if (!dateString) return null;
@@ -407,7 +512,7 @@ const ShipperRegister = () => {
         <div className="shipperRegister-register-form-container">
           <form onSubmit={handleSubmit} className="shipperRegister-register-form">
             <h1 className="shipperRegister-form-title">Đăng Ký Tài Khoản Shipper</h1>
-  
+
             {/* Personal Information Section */}
             <section className="shipperRegister-form-section">
               <h2>Thông tin cá nhân</h2>
@@ -424,7 +529,7 @@ const ShipperRegister = () => {
                   maxLength={100}
                   placeholder="Nguyễn Văn A"
                 />
-  
+
                 <FormInput
                   label="Số điện thoại"
                   name="PhoneNumber"
@@ -437,7 +542,7 @@ const ShipperRegister = () => {
                   maxLength={15}
                   placeholder="0901234567"
                 />
-  
+
                 <FormInput
                   label="Email"
                   name="Email"
@@ -448,7 +553,7 @@ const ShipperRegister = () => {
                   error={errors.Email}
                   placeholder="example@email.com"
                 />
-  
+
                 <FormInput
                   label="Ngày sinh"
                   name="DateOfBirth"
@@ -462,7 +567,7 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-  
+
             {/* Address Section */}
             <section className="shipperRegister-form-section">
               <h2>Địa chỉ</h2>
@@ -478,7 +583,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="123 Đường ABC"
                 />
-  
+
                 <FormInput
                   label="Phường/Xã"
                   name="Ward"
@@ -490,7 +595,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="Phường XYZ"
                 />
-  
+
                 <FormInput
                   label="Quận/Huyện"
                   name="District"
@@ -502,7 +607,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="Quận 1"
                 />
-  
+
                 <FormInput
                   label="Tỉnh/Thành phố"
                   name="City"
@@ -516,7 +621,7 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-  
+
             {/* Bank Information Section */}
             <section className="shipperRegister-form-section">
               <h2>Thông tin ngân hàng</h2>
@@ -543,7 +648,7 @@ const ShipperRegister = () => {
                     <span className="shipperRegister-error-message">{errors.BankName}</span>
                   )}
                 </div>
-  
+
                 <FormInput
                   label="Số tài khoản"
                   name="BankAccountNumber"
@@ -557,7 +662,7 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-  
+
             {/* Vehicle Information Section */}
             <section className="shipperRegister-form-section">
               <h2>Thông tin phương tiện</h2>
@@ -584,7 +689,7 @@ const ShipperRegister = () => {
                     <span className="shipperRegister-error-message">{errors.VehicleType}</span>
                   )}
                 </div>
-  
+
                 <FormInput
                   label="Biển số xe"
                   name="LicensePlate"
@@ -596,7 +701,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="51F-12345"
                 />
-  
+
                 <FormInput
                   label="Số GPLX"
                   name="LicenseNumber"
@@ -608,7 +713,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="B123456789"
                 />
-  
+
                 <FormInput
                   label="Ngày đăng kiểm xe"
                   name="RegistrationVehicle"
@@ -619,7 +724,7 @@ const ShipperRegister = () => {
                   error={errors.RegistrationVehicle}
                   required
                 />
-  
+
                 <FormInput
                   label="Ngày hết hạn đăng kiểm"
                   name="ExpiryVehicle"
@@ -630,7 +735,7 @@ const ShipperRegister = () => {
                   error={errors.ExpiryVehicle}
                   required
                 />
-  
+
                 <FormInput
                   label="Ngày hết hạn GPLX"
                   name="LicenseExpiryDate"
@@ -643,7 +748,7 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-  
+
             {/* Documents Section */}
             <section className="shipperRegister-form-section">
               <h2>Giấy tờ tùy thân</h2>
@@ -660,7 +765,7 @@ const ShipperRegister = () => {
                   maxLength={12}
                   placeholder="012345678901"
                 />
-  
+
                 <FormInput
                   label="Ảnh GPLX"
                   name="DriverLicenseImage"
@@ -672,7 +777,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="URL ảnh GPLX"
                 />
-  
+
                 <FormInput
                   label="Ảnh đăng ký xe"
                   name="VehicleRegistrationImage"
@@ -684,7 +789,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="URL ảnh đăng ký xe"
                 />
-  
+
                 <FormInput
                   label="Ảnh CCCD"
                   name="IDCardImage"
@@ -696,7 +801,7 @@ const ShipperRegister = () => {
                   required
                   placeholder="URL ảnh CCCD"
                 />
-  
+
                 <FormInput
                   label="Ảnh Shipper"
                   name="ImageShipper"
@@ -710,7 +815,7 @@ const ShipperRegister = () => {
                 />
               </div>
             </section>
-  
+
             {/* Password Section */}
             <section className="shipperRegister-form-section">
               <h2>Bảo mật</h2>
@@ -743,7 +848,7 @@ const ShipperRegister = () => {
                     <span className="shipperRegister-error-message">{errors.Password}</span>
                   )}
                 </div>
-  
+
                 <div className="shipperRegister-password-input-wrapper">
                   <label htmlFor="ConfirmPassword">
                     Xác nhận mật khẩu <span className="shipperRegister-required">*</span>

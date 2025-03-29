@@ -246,6 +246,12 @@ export class Header extends React.Component {
                       >
                         Doanh thu
                       </a>
+                      <a
+                        href="/shipper-ranking"
+                        className={styles.dropdownItem}
+                      >
+                        Xếp hạng
+                      </a>
                       <button
                         onClick={this.handleLogout}
                         className={styles.dropdownItem}

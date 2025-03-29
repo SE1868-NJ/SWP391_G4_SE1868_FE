@@ -7,7 +7,7 @@ import HeaderOperator from './HeaderOperator'; // Assuming this is the correct i
 
 function Footer() {
   return (
-    <footer className="RevenueDashboard-footer" style={{color:"#ffffff"}}>
+    <footer className="RevenueDashboard-footer" style={{ color: "#ffffff" }}>
       © 2025 View Revenue System | <a href="#">Trợ giúp</a> | <a href="#">Liên hệ</a>
     </footer>
   );
@@ -38,9 +38,9 @@ const ShipperBonusList = () => {
     setError(null);
     try {
       const response = await axios.get(`http://localhost:4000/api/bonus/list`, {
-        params: { 
-          month: selectedMonth, 
-          ratingFilter: ratingFilter 
+        params: {
+          month: selectedMonth,
+          ratingFilter: ratingFilter
         }
       });
       const shipperDataWithStatus = response.data.data.map(shipper => ({
@@ -67,13 +67,13 @@ const ShipperBonusList = () => {
     setError(null);
     try {
       const response = await axios.get(`http://localhost:4000/api/bonus/search`, {
-        params: { 
-          searchTerm, 
-          month: selectedMonth, 
-          ratingFilter: ratingFilter 
+        params: {
+          searchTerm,
+          month: selectedMonth,
+          ratingFilter: ratingFilter
         }
       });
-      
+
       setShipperData(response.data.data);
       setSummaryData(response.data.summary);
     } catch (error) {
@@ -83,7 +83,7 @@ const ShipperBonusList = () => {
       setLoading(false);
     }
   };
-  
+
   const handlePayBonus = async (shipper) => {
     setConfirmationModal({
       shipper: shipper,
@@ -95,7 +95,7 @@ const ShipperBonusList = () => {
     if (!confirmationModal || !confirmationModal.shipper) return;
 
     const shipper = confirmationModal.shipper;
-    
+
     try {
       setLoading(true);
       const response = await axios.post('http://localhost:4000/api/bonus/pay', {
@@ -103,10 +103,10 @@ const ShipperBonusList = () => {
         BonusAmount: shipper.BonusAmount,
         Month: selectedMonth
       });
-      
-      const updatedShipperData = shipperData.map(s => 
-        s.ShipperID === shipper.ShipperID 
-          ? { ...s, Status: 'PAID' } 
+
+      const updatedShipperData = shipperData.map(s =>
+        s.ShipperID === shipper.ShipperID
+          ? { ...s, Status: 'PAID' }
           : s
       );
       setShipperData(updatedShipperData);
@@ -131,9 +131,9 @@ const ShipperBonusList = () => {
       setConfirmationModal(null);
     } catch (error) {
       console.error('Error paying bonus:', error);
-      
-      const errorMessage = error.response?.data?.error || 
-        error.message || 
+
+      const errorMessage = error.response?.data?.error ||
+        error.message ||
         'Thanh toán không thành công';
 
       const errorModal = document.createElement('div');
@@ -171,14 +171,14 @@ const ShipperBonusList = () => {
             <p><strong>Tháng:</strong> {selectedMonth}</p>
           </div>
           <div className="shipper-bonuslist-confirmation-modal-actions">
-            <button 
-              className="shipper-bonuslist-confirm-btn" 
+            <button
+              className="shipper-bonuslist-confirm-btn"
               onClick={confirmPayment}
             >
               Xác Nhận
             </button>
-            <button 
-              className="shipper-bonuslist-cancel-btn" 
+            <button
+              className="shipper-bonuslist-cancel-btn"
               onClick={cancelPayment}
             >
               Hủy
@@ -192,16 +192,16 @@ const ShipperBonusList = () => {
   const handleExportExcel = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:4000/api/bonus/export', 
-        { 
-          params: { 
-            month: selectedMonth, 
-            ratingFilter: ratingFilter 
+        'http://localhost:4000/api/bonus/export',
+        {
+          params: {
+            month: selectedMonth,
+            ratingFilter: ratingFilter
           }
         },
         { responseType: 'blob', timeout: 10000 }
       );
-      
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -227,10 +227,10 @@ const ShipperBonusList = () => {
 
   const getSortedData = () => {
     if (!shipperData.length) return [];
-    
+
     const sorted = [...shipperData].sort((a, b) => {
       let comparison = 0;
-      switch(sortField) {
+      switch (sortField) {
         case 'ShipperID':
           comparison = a.ShipperID.localeCompare(b.ShipperID);
           break;
@@ -268,7 +268,7 @@ const ShipperBonusList = () => {
       if (bonusDistributionChartRef.current) {
         bonusDistributionChartRef.current.destroy();
       }
-      
+
       const bonusDistributionCtx = document.getElementById('bonusDistribution')?.getContext('2d');
       if (bonusDistributionCtx) {
         const high = shipperData.filter(s => s.AvgRating >= 4.5).length;
@@ -295,7 +295,7 @@ const ShipperBonusList = () => {
       if (ratingTrendChartRef.current) {
         ratingTrendChartRef.current.destroy();
       }
-      
+
       const ratingTrendCtx = document.getElementById('ratingTrend')?.getContext('2d');
       if (ratingTrendCtx) {
         const generateRatingDistributionData = (shipperData) => {
@@ -343,13 +343,13 @@ const ShipperBonusList = () => {
           options: {
             responsive: true,
             scales: {
-              y: { 
-                beginAtZero: true, 
-                title: { display: true, text: 'Số lượng Shipper' } 
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Số lượng Shipper' }
               },
               x: { title: { display: true, text: 'Phân loại đánh giá' } }
             },
-            plugins: { 
+            plugins: {
               legend: { display: false },
               title: { display: true, text: `Phân phối đánh giá Shipper (${selectedMonth})` }
             }
@@ -374,44 +374,45 @@ const ShipperBonusList = () => {
     <>
       <HeaderOperator />
       <div style={{ textAlign: 'center', margin: '20px 0' }}>
-        <button 
-          className="shipper-bonuslist-nav-button active" 
-          onClick={() => window.location.href = "http://localhost:3000/shipper-bonus-list"}
-        >
-          Danh sách thưởng
-        </button>
-        <button 
-          className="shipper-bonuslist-nav-button" 
-          onClick={() => window.location.href = "http://localhost:3000/bonus-settings"}
-        >
-          Cài đặt
-        </button>
-      </div>
+          <button
+            className="shipper-bonuslist-nav-button active"
+            onClick={() => window.location.href = "http://localhost:3000/shipper-bonus-list"}
+          >
+            Danh sách thưởng
+          </button>
+          <button
+            className="shipper-bonuslist-nav-button"
+            onClick={() => window.location.href = "http://localhost:3000/bonus-settings"}
+          >
+            Cài đặt
+          </button>
+        </div>
 
       <main className="shipper-bonuslist-main">
-        <h1>Quản Lý Thưởng Shipper</h1>
-        <p>Theo dõi và quản lý tiền thưởng cho shipper dựa trên đánh giá và hiệu suất</p>
+        <h1 style={{color: "#2c9d32"}}>Quản Lý Thưởng Shipper</h1>
+
+        
 
         <div className="shipper-bonuslist-dashboard">
           <div className="shipper-bonuslist-card">
             <h3>Tổng tiền thưởng ({selectedMonth.slice(5)}/{selectedMonth.slice(0, 4)})</h3>
             <div className="shipper-bonuslist-value">{Number(summaryData.totalBonus).toLocaleString()} VNĐ</div>
             <div className="shipper-bonuslist-change shipper-bonuslist-positive">
-              <i className="fas fa-arrow-up"></i> 
+              <i className="fas fa-arrow-up"></i>
             </div>
           </div>
           <div className="shipper-bonuslist-card">
             <h3>Số shipper nhận thưởng</h3>
             <div className="shipper-bonuslist-value">{summaryData.shipperCount}</div>
             <div className="shipper-bonuslist-change shipper-bonuslist-positive">
-              <i className="fas fa-arrow-up"></i> 
+              <i className="fas fa-arrow-up"></i>
             </div>
           </div>
           <div className="shipper-bonuslist-card">
             <h3>Đánh giá trung bình</h3>
             <div className="shipper-bonuslist-value">{summaryData.avgRating.toFixed(2)} <small>/ 5</small></div>
             <div className="shipper-bonuslist-change shipper-bonuslist-positive">
-              <i className="fas fa-arrow-up"></i> 
+              <i className="fas fa-arrow-up"></i>
             </div>
           </div>
         </div>
@@ -430,9 +431,9 @@ const ShipperBonusList = () => {
               <option value="2025-01">Tháng 1/2025</option>
               <option value="2024-12">Tháng 12/2024</option>
             </select>
-            <select 
-              id="rating-filter" 
-              value={ratingFilter} 
+            <select
+              id="rating-filter"
+              value={ratingFilter}
               onChange={(e) => setRatingFilter(e.target.value)}
             >
               <option value="all">Tất cả đánh giá</option>
@@ -440,23 +441,23 @@ const ShipperBonusList = () => {
               <option value="medium">Trung bình (3.5-4.4)</option>
               <option value="low">Thấp (0-3.4)</option>
             </select>
-            <div className="shipper-bonuslist-search" style={{display: 'flex'}}>
-              <input 
-                type="text" 
-                placeholder="Tìm kiếm theo ID hoặc tên shipper" 
+            <div className="shipper-bonuslist-search" style={{ display: 'flex' }}>
+              <input
+                type="text"
+                placeholder="Tìm kiếm theo ID hoặc tên shipper"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                style={{width: '200px'}}
+                style={{ width: '200px' }}
               />
               <button onClick={handleSearch} >
-                <i className="fas fa-search" style={{height: "22px"}}></i>
+                <i className="fas fa-search" style={{ height: "22px" }}></i>
               </button>
             </div>
           </div>
           <div className="shipper-bonuslist-actions">
-            <button 
-              className="shipper-bonuslist-secondary" 
+            <button
+              className="shipper-bonuslist-secondary"
               onClick={handleExportExcel}
             >
               <i className="fas fa-download"></i> Xuất Excel
@@ -468,8 +469,8 @@ const ShipperBonusList = () => {
           <div className="shipper-bonuslist-data-header">
             <h2>Danh sách thưởng tháng {selectedMonth.slice(5)}/{selectedMonth.slice(0, 4)}</h2>
             <div className="shipper-bonuslist-actions">
-              <button 
-                className="shipper-bonuslist-secondary" 
+              <button
+                className="shipper-bonuslist-secondary"
                 onClick={fetchBonusData}
               >
                 <i className="fas fa-sync-alt"></i>
@@ -523,7 +524,7 @@ const ShipperBonusList = () => {
                       {shipper.Status.toLowerCase() === 'paid' ? (
                         <span className="shipper-bonuslist-paid-status">Đã thanh toán</span>
                       ) : (
-                        <button 
+                        <button
                           className="shipper-bonuslist-pay-btn"
                           onClick={() => handlePayBonus(shipper)}
                         >
@@ -545,14 +546,14 @@ const ShipperBonusList = () => {
           )}
 
           <div className="shipper-bonuslist-pagination">
-            <button 
-              className="shipper-bonuslist-secondary" 
+            <button
+              className="shipper-bonuslist-secondary"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
               <i className="fas fa-chevron-left"></i>
             </button>
-            
+
             {[...Array(totalPages)].map((_, index) => {
               const pageNumber = index + 1;
               if (
@@ -578,7 +579,7 @@ const ShipperBonusList = () => {
               return null;
             })}
 
-            <button 
+            <button
               className="shipper-bonuslist-secondary"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
@@ -595,12 +596,12 @@ const ShipperBonusList = () => {
           </div>
           <div className="shipper-bonuslist-chart-card">
             <h3>Phân phối đánh giá Shipper</h3>
-            <canvas id="ratingTrend" style={{height:"350px"}}></canvas>
+            <canvas id="ratingTrend" style={{ height: "350px" }}></canvas>
           </div>
         </div>
         {renderConfirmationModal()}
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 };
